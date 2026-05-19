@@ -348,6 +348,52 @@ select.ci{cursor:pointer}
     gap: 10px !important;
   }
 }
+
+/* =====================================================================
+   АДАПТИВНІСТЬ ЧЕРЕЗ ГОЛОВНИЙ ID (ДЛЯ ТЕЛЕФОНІВ)
+   ===================================================================== */
+@media screen and (max-width: 950px) {
+  /* Дозволяємо всьому сайту гортатися вниз на смартфонах */
+  html, body {
+    overflow-y: auto !important;
+    height: auto !important;
+  }
+
+  /* Перемикаємо головний екран з горизонтального у вертикальний стовпчик */
+  #main-game-container {
+    flex-direction: column !important;
+    width: 100% !important;
+    height: auto !important;
+    overflow-y: auto !important;
+    padding: 10px !important;
+  }
+
+  /* Адаптуємо ліву панель з кімнатою лисички */
+  #main-game-container > div:first-child {
+    width: 100% !important;
+    max-width: 550px !important; /* Рідна ширина вашої кімнати */
+    height: 400px !important;    /* Рідна висота вашої кімнати */
+    margin: 0 auto !important;   /* Центруємо кімнату на екрані телефона */
+    flex-shrink: 0 !important;
+    position: relative !important;
+  }
+
+  /* Адаптуємо праву панель з квестами, вкладками та магазином */
+  #main-game-container > div:last-child {
+    width: 100% !important;
+    max-width: 100% !important;
+    height: auto !important;
+    margin-top: 15px !important;
+    overflow: visible !important;
+  }
+
+  /* Кнопки меню та стата більше не вилазять за межі екрана */
+  div[style*="justify-content: space-between"] {
+    flex-wrap: wrap !important;
+    gap: 8px !important;
+  }
+}
+
 </style>
 </head>
 <body>
@@ -2983,13 +3029,12 @@ console.log('🦊 Dopamine Task RPG v3 — IndexedDB + Cosmic Connect!');
 
 <script>
   if ('serviceWorker' in navigator) {
-    // Чекаємо, поки сторінка ПОВНІСТЮ завантажиться і відмалюється
     window.addEventListener('load', () => {
       setTimeout(() => {
         navigator.serviceWorker.register('/dopamine-rpg/sw.js')
           .then(reg => console.log('PWA успішно активовано!', reg.scope))
           .catch(err => console.log('Помилка реєстрації PWA:', err));
-      }, 2000); // Затримка 2 секунди, щоб телефон не панікував від об'єму файлу
+      }, 2000);
     });
   }
 </script>
