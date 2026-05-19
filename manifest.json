@@ -1,0 +1,25 @@
+{
+  "short_name": "DopamineRPG",
+  "name": "Dopamine Task RPG",
+  "description": "Мобільний застосунок-гра для підвищення продуктивності з вашим особистим талісманом.",
+  "icons": [
+    {
+      "src": "icon-192.png",
+      "type": "image/png",
+      "sizes": "192x192",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "icon-512.png",
+      "type": "image/png",
+      "sizes": "512x512",
+      "purpose": "any maskable"
+    }
+  ],
+  "start_url": "./index.html",
+  "background_color": "#FFF8F0",
+  "display": "standalone",
+  "scope": "./",
+  "theme_color": "#F4A261",
+  "orientation": "portrait"
+}
