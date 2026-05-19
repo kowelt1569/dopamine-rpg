@@ -2936,7 +2936,7 @@ console.log('🦊 Dopamine Task RPG v3 — IndexedDB + Cosmic Connect!');
   <script>
   if ('serviceWorker' in navigator) {
     window.addEventListener('load', () => {
-      navigator.serviceWorker.register('./sw.js')
+      navigator.serviceWorker.register('/dopamine-rpg/sw.js')
         .then(reg => console.log('PWA активовано!', reg.scope))
         .catch(err => console.log('Помилка реєстрації PWA:', err));
     });
