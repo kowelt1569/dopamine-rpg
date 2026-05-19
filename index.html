@@ -300,6 +300,53 @@ select.ci{cursor:pointer}
 .divider{border:none;border-top:1.5px solid var(--peach);margin:10px 0}
 .badge{display:inline-block;background:var(--peach);border-radius:8px;padding:2px 7px;font-size:10px;font-weight:700;color:var(--accent)}
 .section-lbl{font-size:10px;font-weight:700;color:var(--text-med);letter-spacing:0.5px;text-transform:uppercase;margin-bottom:6px;margin-top:10px}
+/* =====================================================================
+   АДАПТИВНІСТЬ ДЛЯ МОБІЛЬНИХ ПРИСТРОЇВ (PWA)
+   ===================================================================== */
+@media screen and (max-width: 900px) {
+  /* Перебудовуємо головні блоки гри у вертикальний стовпчик */
+  body {
+    overflow-y: auto !important; /* Дозволяємо прокрутку вниз на телефоні */
+    font-size: 14px;
+  }
+  
+  /* Головний контейнер (якщо у вас використовується flex чи grid) */
+  div[style*="display: flex"], 
+  .app-container, 
+  body > div {
+    flex-direction: column !important;
+    height: auto !important;
+    padding: 8px !important;
+    gap: 15px !important;
+  }
+
+  /* Адаптуємо блок кімнати з лисичкою */
+  #room-view, .room-view, div[style*="width: 550px"], div[style*="width:550px"] {
+    width: 100% !important;
+    max-width: 100% !important;
+    height: auto !important;
+    aspect-ratio: 550 / 400; /* Зберігаємо пропорції кімнати */
+    position: relative !important;
+  }
+
+  /* Адаптуємо бічну панель із завданнями */
+  #sidebar, .sidebar, div[style*="flex: 1"] {
+    width: 100% !important;
+    max-width: 100% !important;
+    height: auto !important;
+  }
+
+  /* Зменшуємо верхню панель з кнопками, щоб вони не вилазили за екран */
+  .top-bar, div[style*="justify-content: space-between"] {
+    flex-wrap: wrap !important;
+    gap: 8px !important;
+  }
+
+  /* Зменшуємо картки магазину та інвентаря, щоб ставали по 2 в ряд */
+  .shop-grid, .inventory-grid {
+    grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)) !important;
+  }
+}
 </style>
 </head>
 <body>
