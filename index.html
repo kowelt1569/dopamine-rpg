@@ -2,7 +2,10 @@
 <html lang="uk">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <title>Dopamine Task RPG 🦊</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
@@ -15,8 +18,27 @@
   --accent:#E07B54;--text-dark:#4A3728;--text-med:#7A5C4A;--shadow:rgba(74,55,40,0.13);
   --green-dark:#5A9A6A;--sky:#B8E4F7;--grass:#7DBF6E;
 }
-body{font-family:'Nunito',sans-serif;background:#E8DCC8;display:flex;align-items:center;justify-content:center;min-height:100vh;padding:10px}
-#app{width:720px;height:600px;background:var(--wall);position:relative;overflow:hidden;border-radius:20px;box-shadow:0 20px 60px rgba(0,0,0,0.25)}
+body{font-family:'Nunito',sans-serif;background:#E8DCC8;display:flex;align-items:flex-start;justify-content:center;min-height:100vh;min-height:100dvh;padding:0;margin:0;overflow-x:hidden}
+#app{
+  width:720px;height:600px;
+  background:var(--wall);position:relative;overflow:hidden;
+  border-radius:20px;box-shadow:0 20px 60px rgba(0,0,0,0.25);
+  flex-shrink:0;
+}
+
+/* ===== MOBILE SCALING ===== */
+@media(max-width:740px){
+  body{padding:0;align-items:flex-start;background:#1A1410}
+  #app{
+    width:100vw;height:100dvh;
+    border-radius:0;
+    box-shadow:none;
+    /* Scale the fixed 720×600 internal layout to fill the screen */
+    transform-origin:top left;
+  }
+}
+
+/* Scale trick: handled by JS resizeApp() */
 
 /* ===== SCENES ===== */
 .scene{position:absolute;inset:0;display:none;overflow:hidden}
@@ -55,10 +77,13 @@ body{font-family:'Nunito',sans-serif;background:#E8DCC8;display:flex;align-items
 
 /* ===== BOTTOM NAV ===== */
 #bottom-nav{position:absolute;bottom:0;left:0;right:0;height:54px;background:rgba(255,248,240,0.97);border-top:2px solid var(--peach);display:flex;align-items:center;justify-content:space-around;padding:0 4px;z-index:30}
-.nav-btn{display:flex;flex-direction:column;align-items:center;gap:1px;background:none;border:none;cursor:pointer;padding:4px 8px;border-radius:10px;color:var(--text-med);font-family:'Nunito',sans-serif;font-size:9px;font-weight:700;transition:all 0.15s;min-width:52px}
-.nav-btn i{font-size:20px}
-.nav-btn:hover{background:var(--peach);color:var(--accent)}
+.nav-btn{display:flex;flex-direction:column;align-items:center;gap:1px;background:none;border:none;cursor:pointer;padding:4px 6px;border-radius:10px;color:var(--text-med);font-family:'Nunito',sans-serif;font-size:8px;font-weight:700;transition:all 0.15s;min-width:44px;min-height:44px;justify-content:center;-webkit-tap-highlight-color:transparent}
+.nav-btn svg{flex-shrink:0}
+.nav-btn:hover,.nav-btn:active{background:var(--peach);color:var(--accent)}
 .nav-btn.active{background:var(--peach);color:var(--accent)}
+
+/* ===== MODAL MOBILE ===== */
+.mbox{background:var(--cream);border-radius:20px;padding:18px;width:340px;max-height:500px;overflow-y:auto;box-shadow:0 16px 50px rgba(74,55,40,0.35);position:relative;border:3px solid var(--peach)}
 
 /* ===== EDIT MODE BUTTON ===== */
 #edit-btn{position:absolute;top:46px;right:8px;z-index:25;background:var(--lavender);border:2px solid #B0A0D0;border-radius:12px;padding:4px 10px;font-family:'Nunito',sans-serif;font-size:10px;font-weight:700;color:#6A50A0;cursor:pointer;transition:all 0.2s;display:flex;align-items:center;gap:4px}
@@ -299,261 +324,6 @@ select.ci{cursor:pointer}
 .divider{border:none;border-top:1.5px solid var(--peach);margin:10px 0}
 .badge{display:inline-block;background:var(--peach);border-radius:8px;padding:2px 7px;font-size:10px;font-weight:700;color:var(--accent)}
 .section-lbl{font-size:10px;font-weight:700;color:var(--text-med);letter-spacing:0.5px;text-transform:uppercase;margin-bottom:6px;margin-top:10px}
-/* =====================================================
-   MOBILE ADAPTIVE FIX
-   ===================================================== */
-
-@media (max-width: 900px) {
-
-  body {
-    padding: 0;
-    align-items: flex-start;
-  }
-
-  #app {
-    width: 100vw;
-    height: calc(100vw * 0.83);
-    max-height: 100vh;
-    border-radius: 0;
-  }
-
-  #top-bar {
-    height: 48px;
-    padding: 0 8px;
-    gap: 6px;
-    flex-wrap: wrap;
-  }
-
-  .top-stat {
-    font-size: 10px;
-    padding: 3px 7px;
-  }
-
-  .loc-tab {
-    padding: 4px 8px;
-    font-size: 9px;
-  }
-
-  #bottom-nav {
-    height: 58px;
-  }
-
-  .nav-btn {
-    font-size: 8px;
-    min-width: auto;
-    padding: 2px 4px;
-  }
-
-  .nav-btn i {
-    font-size: 18px;
-  }
-
-  #edit-btn {
-    top: 54px;
-    right: 6px;
-    font-size: 9px;
-    padding: 4px 8px;
-  }
-
-  .mbox {
-    width: 92vw;
-    max-width: 360px;
-    max-height: 82vh;
-    padding: 14px;
-  }
-}
-
-/* =====================================================
-   SMARTPHONES
-   ===================================================== */
-
-@media (max-width: 600px) {
-
-  #app {
-    width: 100vw;
-    height: 100dvh;
-    max-width: 100vw;
-    border-radius: 0;
-  }
-
-  .scene {
-    transform: scale(0.78);
-    transform-origin: top center;
-    width: 128%;
-    height: 128%;
-    left: -14%;
-    top: 30px;
-  }
-
-  #top-bar {
-    height: auto;
-    min-height: 52px;
-    padding: 4px 6px;
-    gap: 4px;
-  }
-
-  .top-stat {
-    font-size: 9px;
-    padding: 2px 6px;
-    border-radius: 14px;
-  }
-
-  .top-loc-tabs {
-    gap: 2px;
-  }
-
-  .loc-tab {
-    font-size: 8px;
-    padding: 4px 6px;
-  }
-
-  #bottom-nav {
-    height: 62px;
-    padding-bottom: env(safe-area-inset-bottom);
-  }
-
-  .nav-btn {
-    font-size: 7px;
-    gap: 0;
-  }
-
-  .nav-btn i {
-    font-size: 17px;
-  }
-
-  #edit-btn {
-    top: 72px;
-    right: 6px;
-    font-size: 8px;
-    padding: 3px 7px;
-    border-radius: 10px;
-  }
-
-  #edit-hint {
-    width: 90%;
-    text-align: center;
-    font-size: 8px;
-    white-space: normal;
-    top: 98px;
-  }
-
-  .tip {
-    display: none;
-  }
-
-  .mbox {
-    width: 95vw;
-    max-width: none;
-    max-height: 85vh;
-    border-radius: 16px;
-    padding: 12px;
-  }
-
-  .m-title {
-    font-size: 14px;
-    padding-right: 30px;
-  }
-
-  .task-item {
-    padding: 8px;
-    gap: 6px;
-  }
-
-  .t-text {
-    font-size: 11px;
-  }
-
-  .ci,
-  .cb {
-    font-size: 11px;
-  }
-
-  .inv-grid {
-    grid-template-columns: repeat(2, 1fr);
-  }
-
-  .pomo-circle {
-    width: 92px;
-    height: 92px;
-    font-size: 22px;
-  }
-}
-  /* =====================================================*/
-    padding: 12px;
-  }
-
-  .m-title {
-    font-size: 14px;
-    padding-right: 30px;
-  }
-
-  .task-item {
-    padding: 8px;
-    gap: 6px;
-  }
-
-  .t-text {
-    font-size: 11px;
-  }
-
-  .ci,
-  .cb {
-    font-size: 11px;
-  }
-
-  .inv-grid {
-    grid-template-columns: repeat(2, 1fr);
-  }
-
-  .pomo-circle {
-    width: 92px;
-    height: 92px;
-    font-size: 22px;
-  }
-}
-
-/* =====================================================
-   VERY SMALL PHONES
-   ===================================================== */
-
-@media (max-width: 420px) {
-
-  .scene {
-    transform: scale(0.68);
-    width: 148%;
-    height: 148%;
-    left: -24%;
-    top: 40px;
-  }
-
-  #top-bar {
-    padding: 3px;
-  }
-
-  .top-stat {
-    font-size: 8px;
-    padding: 2px 5px;
-  }
-
-  .loc-tab {
-    font-size: 7px;
-    padding: 3px 5px;
-  }
-
-  .nav-btn i {
-    font-size: 15px;
-  }
-
-  .nav-btn {
-    font-size: 6px;
-  }
-
-  #edit-btn {
-    top: 82px;
-    transform: scale(0.9);
-    transform-origin: top right;
-  }
-}
 </style>
 </head>
 <body>
@@ -2347,8 +2117,49 @@ function darkenColor(hex,amount){
 
 
 // =====================================================================
-// COSMIC CONNECT MINI GAME 🌟
+// RESPONSIVE SCALING — scales the fixed 720×600 app to any screen
 // =====================================================================
+function resizeApp(){
+  const app=$('app');
+  const vw=window.innerWidth;
+  const vh=window.innerHeight;
+  if(vw>=740){
+    // Desktop: fixed size, centered
+    app.style.transform='none';
+    app.style.width='720px';
+    app.style.height='600px';
+    app.style.borderRadius='20px';
+    document.body.style.alignItems='center';
+    document.body.style.padding='10px';
+    document.body.style.minHeight='100vh';
+    // Make sure modal box fits
+    document.querySelectorAll('.mbox').forEach(m=>{m.style.width='340px';});
+    return;
+  }
+  // Mobile: scale to fill screen
+  const scaleX=vw/720;
+  const scaleY=vh/600;
+  const scale=Math.min(scaleX,scaleY);
+  app.style.transformOrigin='top left';
+  app.style.transform=`scale(${scale})`;
+  app.style.width='720px';
+  app.style.height='600px';
+  app.style.borderRadius='0';
+  // Center horizontally if scaled width < vw
+  const scaledW=720*scale;
+  app.style.marginLeft=scaledW<vw?((vw-scaledW)/2)+'px':'0';
+  document.body.style.padding='0';
+  document.body.style.alignItems='flex-start';
+  // Set body height so no scrolling
+  document.body.style.height=vh+'px';
+  document.body.style.overflow='hidden';
+  // Modal box wider on mobile
+  document.querySelectorAll('.mbox').forEach(m=>{
+    m.style.width=Math.min(340,Math.round(vw/scale*0.92))+'px';
+  });
+}
+window.addEventListener('resize',resizeApp);
+window.addEventListener('orientationchange',()=>setTimeout(resizeApp,150));
 const CC_PRESETS = [
   {name:'Кассіопея',stars:[{x:60,y:200},{x:130,y:100},{x:200,y:160},{x:270,y:100},{x:340,y:200}],order:[0,1,2,3,4]},
   {name:'Оріон',stars:[{x:120,y:80},{x:240,y:80},{x:80,y:160},{x:180,y:140},{x:280,y:160},{x:140,y:240},{x:220,y:240}],order:[0,2,3,1,4,6,5]},
@@ -2678,26 +2489,44 @@ function mgInit(){
   if(!MG.canvas)return;
   MG.ctx=MG.canvas.getContext('2d');
   MG.ship={x:190,y:400,w:28,h:34};
+  MG.firing=false; // continuous fire flag
 
-  // Keyboard
+  // Keyboard — set key state only, shooting handled in loop
   MG.keys={};
-  window._mgKeyDown=e=>{MG.keys[e.code]=true;if(e.code==='Space'){e.preventDefault();mgShoot();}};
+  window._mgKeyDown=e=>{
+    MG.keys[e.code]=true;
+    if(e.code==='Space')e.preventDefault();
+  };
   window._mgKeyUp=e=>{MG.keys[e.code]=false;};
   document.addEventListener('keydown',window._mgKeyDown);
   document.addEventListener('keyup',window._mgKeyUp);
 
-  // Mouse/touch control
+  // Mouse: move = aim, hold = fire
   MG.canvas.addEventListener('mousemove',e=>{
     const r=MG.canvas.getBoundingClientRect();
-    MG.ship.x=Math.max(0,Math.min(e.clientX-r.left-MG.ship.w/2,410-MG.ship.w));
+    const scale=410/r.width;
+    MG.ship.x=Math.max(0,Math.min((e.clientX-r.left)*scale-MG.ship.w/2,410-MG.ship.w));
   });
-  MG.canvas.addEventListener('click',()=>mgShoot());
+  MG.canvas.addEventListener('mousedown',e=>{e.preventDefault();MG.firing=true;});
+  MG.canvas.addEventListener('mouseup',()=>{MG.firing=false;});
+  MG.canvas.addEventListener('mouseleave',()=>{MG.firing=false;});
+
+  // Touch: move finger = aim, hold = fire
+  MG.canvas.addEventListener('touchstart',e=>{
+    e.preventDefault();
+    MG.firing=true;
+    const r=MG.canvas.getBoundingClientRect();
+    const scale=410/r.width;
+    MG.ship.x=Math.max(0,Math.min((e.touches[0].clientX-r.left)*scale-MG.ship.w/2,410-MG.ship.w));
+  },{passive:false});
   MG.canvas.addEventListener('touchmove',e=>{
     e.preventDefault();
     const r=MG.canvas.getBoundingClientRect();
-    MG.ship.x=Math.max(0,Math.min(e.touches[0].clientX-r.left-MG.ship.w/2,410-MG.ship.w));
+    const scale=410/r.width;
+    MG.ship.x=Math.max(0,Math.min((e.touches[0].clientX-r.left)*scale-MG.ship.w/2,410-MG.ship.w));
   },{passive:false});
-  MG.canvas.addEventListener('touchstart',e=>{e.preventDefault();mgShoot();},{passive:false});
+  MG.canvas.addEventListener('touchend',()=>{MG.firing=false;});
+  MG.canvas.addEventListener('touchcancel',()=>{MG.firing=false;});
 }
 
 function mgStart(){
@@ -2706,6 +2535,7 @@ function mgStart(){
   $('mg-bg-gallery').style.display='none';
   MG.running=true;MG.lives=5;MG.score=0;MG.level=1;
   MG.meteors=[];MG.bullets=[];MG.particles=[];MG.frame=0;
+  MG.firing=false;
   MG.ship={x:190,y:400,w:28,h:34};
   mgUpdateUI();
   if(MG.raf)cancelAnimationFrame(MG.raf);
@@ -2727,7 +2557,8 @@ function mgShoot(){
 
 function mgSpawnMeteor(){
   const r=12+Math.random()*20;
-  const spd=1.5+MG.level*0.4+Math.random()*1.5;
+  // Reduced base speed: starts at 0.8, grows slowly with level
+  const spd=0.8+MG.level*0.2+Math.random()*0.8;
   const colors=['#C87040','#A05828','#E09050','#D86030','#B84820'];
   MG.meteors.push({
     x:r+Math.random()*(410-r*2),y:-r*2,r,
@@ -2746,7 +2577,10 @@ function mgLoop(){
   // Ship keyboard control
   if(MG.keys['ArrowLeft']||MG.keys['KeyA'])MG.ship.x=Math.max(0,MG.ship.x-4);
   if(MG.keys['ArrowRight']||MG.keys['KeyD'])MG.ship.x=Math.min(W-MG.ship.w,MG.ship.x+4);
-  if(MG.keys['Space']&&MG.frame%8===0)mgShoot();
+
+  // Fire while space held OR mouse/touch held — every 10 frames
+  const isFiring=MG.firing||MG.keys['Space'];
+  if(isFiring&&MG.frame%10===0)mgShoot();
 
   // Spawn meteors
   const spawnRate=Math.max(20,60-MG.level*4);
@@ -2952,7 +2786,7 @@ async function loadMGState(){
 const DRAGGABLE_IDS=[
   'window-obj','clock-obj','cal-wall-obj','notepad-obj','door-obj',
   'desk-obj','monitor','bed-obj','rug-obj','shelf-obj','cactus-obj','radio-obj','cactus-stand',
-  'cassiopeia-painting',
+  'cassiopeia-painting','moon-lamp',
   'yard-tree1','yard-tree2','yard-bench','yard-sport',
   'kit-fridge-wrap','kit-stove-wrap','kit-sink-wrap',
   'shop-shelf1','shop-shelf2','shop-shelf3',
@@ -3151,6 +2985,7 @@ async function init(){
   await loadMGState();
   updateTopBar();
   updateClutter();
+  resizeApp();
   // Re-apply mascot cosmetics
   if(S.mascotColor&&S.mascotColor!=='#F4A261')setTimeout(()=>changeFur(S.mascotColor),100);
   if(S.mascotEyeColor&&S.mascotEyeColor!=='#2C1A0E')setTimeout(()=>changeEyes(S.mascotEyeColor),100);
