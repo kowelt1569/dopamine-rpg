@@ -18,7 +18,7 @@
   --green-dark:#5A9A6A;--sky:#B8E4F7;--grass:#7DBF6E;
 }
 body{font-family:'Nunito',sans-serif;background:#E8DCC8;display:flex;align-items:center;justify-content:center;min-height:100vh;padding:10px}
-#app{width:720px;height:600px;background:var(--wall);position:relative;overflow:hidden;border-radius:20px;box-shadow:0 20px 60px rgba(0,0,0,0.25);flex-shrink:0;touch-action:none;-webkit-transform:translateZ(0);transform:translateZ(0)}
+#app{width:720px;height:600px;background:var(--wall);position:relative;overflow:hidden;border-radius:20px;box-shadow:0 20px 60px rgba(0,0,0,0.25);flex-shrink:0}
 
 /* ===== SCENES ===== */
 .scene{position:absolute;inset:0;display:none;overflow:hidden}
@@ -58,7 +58,7 @@ body{font-family:'Nunito',sans-serif;background:#E8DCC8;display:flex;align-items
 /* ===== BOTTOM NAV ===== */
 #bottom-nav{position:absolute;bottom:0;left:0;right:0;height:54px;background:rgba(255,248,240,0.97);border-top:2px solid var(--peach);display:flex;align-items:center;justify-content:space-around;padding:0 4px;z-index:30}
 .nav-btn{display:flex;flex-direction:column;align-items:center;gap:1px;background:none;border:none;cursor:pointer;padding:4px 6px;border-radius:10px;color:var(--text-med);font-family:'Nunito',sans-serif;font-size:8px;font-weight:700;transition:all 0.15s;min-width:44px;min-height:44px;justify-content:center;-webkit-tap-highlight-color:transparent}
-.nav-btn svg{flex-shrink:0;touch-action:none}
+.nav-btn svg{flex-shrink:0}
 .nav-btn:hover,.nav-btn:active{background:var(--peach);color:var(--accent)}
 .nav-btn.active{background:var(--peach);color:var(--accent)}
 
@@ -237,7 +237,7 @@ select.ci{cursor:pointer}
 .radio-item{background:white;border:2px solid var(--peach);border-radius:12px;padding:9px 12px;margin-bottom:7px;display:flex;align-items:center;gap:9px;cursor:pointer;transition:all 0.15s}
 .radio-item:hover{border-color:var(--teal);background:#F0FAF5}
 .radio-item.playing{border-color:var(--teal);background:#E8F5F0}
-.r-icon{width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;touch-action:none}
+.r-icon{width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0}
 .r-name{font-size:13px;font-weight:700;color:var(--text-dark)}
 .r-desc{font-size:10px;color:var(--text-med)}
 .play-bars{margin-left:auto;display:flex;gap:2px;align-items:flex-end;height:20px}
@@ -271,7 +271,7 @@ select.ci{cursor:pointer}
 .inv-item .equipped-badge{position:absolute;top:-4px;right:-4px;background:var(--teal);color:#2A7A5A;border-radius:50%;width:16px;height:16px;font-size:8px;font-weight:800;display:flex;align-items:center;justify-content:center}
 
 /* ===== PROFILE CUSTOMIZATION ===== */
-.color-swatch{width:30px;height:30px;border-radius:50%;cursor:pointer;border:3px solid white;box-shadow:0 2px 6px rgba(0,0,0,0.15);transition:transform 0.15s;flex-shrink:0;touch-action:none}
+.color-swatch{width:30px;height:30px;border-radius:50%;cursor:pointer;border:3px solid white;box-shadow:0 2px 6px rgba(0,0,0,0.15);transition:transform 0.15s;flex-shrink:0}
 .color-swatch:hover{transform:scale(1.2)}
 .color-swatch.selected{box-shadow:0 0 0 3px var(--orange)}
 
@@ -362,37 +362,27 @@ select.ci{cursor:pointer}
    ========================================= */
 
 @media (max-width: 600px){
-  #app { 
-    width: 100vw; 
-    height: 100dvh; 
-    max-width: 100vw; 
-    max-height: 100dvh; 
-    border-radius: 0; 
-  } 
-  
-  /* Прибираємо зсув сітки та масштабування, робимо сцени на весь екран смартфона */
-  .scene { 
-    transform: none !important;
-    width: 100% !important; 
-    height: 100% !important; 
-    left: 0 !important; 
-    top: 0 !important; 
-    padding-top: 54px; /* щоб контент не ховався під top-bar */
-    padding-bottom: 62px; /* щоб контент не ховався під bottom-nav */
-  /* Щоб предмети не перекривали один одного на вузькому екрані смартфона */
-  #clock-obj {
-    right: 15px !important;
-    top: 60px !important;
+
+  #app{
+    width:100vw;
+    height:100dvh;
+
+    max-width:100vw;
+    max-height:100dvh;
+
+    border-radius:0;
   }
-  #shelf-obj {
-    right: 10px !important;
-    width: 110px !important;
+
+  .scene{
+    transform:scale(0.78);
+    transform-origin:top center;
+
+    width:128%;
+    height:128%;
+
+    left:-14%;
+    top:24px;
   }
-  #edit-btn {
-    top: 60px !important;
-    right: 15px !important;
-  }
-}
 
   #top-bar{
     height:auto;
@@ -443,16 +433,12 @@ select.ci{cursor:pointer}
 
   .scene{
     transform:scale(0.68);
-    transform-origin:top left;
 
-    width:147%;
-    height:147%;
+    width:148%;
+    height:148%;
 
-    left:0;
-    top:62px;
-
-    overflow:visible;
-    pointer-events:auto;
+    left:-24%;
+    top:36px;
   }
 
   .top-stat{
@@ -555,7 +541,14 @@ select.ci{cursor:pointer}
     <!-- Desk (center) — monitor sits ON the desk surface -->
     <div id="desk-obj" onclick="openModal('tasks','Робота')">
       <div style="position:relative">
-        <!-- monitor removed: independent draggable monitor is used below -->
+        <!-- Monitor sitting ON the desk top -->
+        <div id="monitor" style="position:absolute;bottom:18px;left:50%;transform:translateX(-50%);width:78px;height:54px;background:#2C2C3A;border:3px solid #4A3A5A;border-radius:6px;overflow:visible;display:flex;align-items:center;justify-content:center;z-index:3">
+          <div class="mon-screen" id="mon-txt"><span>FOCUS</span><span style="font-size:6px;opacity:0.6" id="mon-sub">▂▄▆▄▂</span></div>
+          <!-- Stand neck -->
+          <div style="position:absolute;bottom:-10px;left:50%;transform:translateX(-50%);width:12px;height:10px;background:#3A3A4A"></div>
+          <!-- Stand base -->
+          <div style="position:absolute;bottom:-14px;left:50%;transform:translateX(-50%);width:28px;height:5px;background:#4A4A5A;border-radius:3px"></div>
+        </div>
         <div class="desk-top" style="position:relative;z-index:2"></div>
         <div class="desk-body" style="position:relative;z-index:2">
           <div class="keyboard"></div>
@@ -3064,12 +3057,7 @@ function toggleEditMode(){
   if(S.editMode){
     btn.innerHTML='<i class="ti ti-device-floppy" style="font-size:13px"></i> Зберегти';
     btn.classList.add('editing');hint.style.display='block';
-    
-    // Додаємо клас для базових об'єктів
     DRAGGABLE_IDS.forEach(id=>{const el=$(id);if(el)el.classList.add('editable')});
-    // ДОДАНО: Знаходимо всі виставлені меблі в кімнаті й теж робимо їх editable
-    document.querySelectorAll('[id^="placed-furn-"]').forEach(el => el.classList.add('editable'));
-
     // Show reset button
     let rb=$('reset-pos-btn');
     if(!rb){rb=document.createElement('button');rb.id='reset-pos-btn';
@@ -3080,60 +3068,25 @@ function toggleEditMode(){
   } else {
     btn.innerHTML='<i class="ti ti-edit" style="font-size:13px"></i> Редагувати';
     btn.classList.remove('editing');hint.style.display='none';
-    
-    // Прибираємо клас із базових об'єктів
     DRAGGABLE_IDS.forEach(id=>{const el=$(id);if(el)el.classList.remove('editable')});
-    // ДОДАНО: Прибираємо клас із меблів
-    document.querySelectorAll('[id^="placed-furn-"]').forEach(el => el.classList.remove('editable'));
-
     removeEPanel();
     const rb=$('reset-pos-btn');if(rb)rb.remove();
-
-    // Синхронізуємо переміщені меблі з масивом стану гри S.placedFurniture, якщо вони рухалися по сітці
-    Object.keys(OBJ_STATE).forEach(id => {
-      if (id.startsWith('placed-furn-')) {
-        const idx = parseInt(id.split('-').pop(), 10);
-        if (S.placedFurniture && S.placedFurniture[idx]) {
-          // Прив'язка до сітки 40х40 пікселів (якщо твоя кімната на сітці)
-          // Якщо сітки немає, а переміщення вільне — замініть ці 3 рядки на: S.placedFurniture[idx].x = OBJ_STATE[id].x; S.placedFurniture[idx].y = OBJ_STATE[id].y;
-          S.placedFurniture[idx].x = Math.round(OBJ_STATE[id].x / 40);
-          S.placedFurniture[idx].y = Math.round(OBJ_STATE[id].y / 40);
-          OBJ_STATE[id].x = S.placedFurniture[idx].x * 40;
-          OBJ_STATE[id].y = S.placedFurniture[idx].y * 40;
-          
-          const el = $(id);
-          if (el) applyState(el, OBJ_STATE[id]);
-        }
-      }
-    });
-
+    // IMPORTANT: Only save elements that were explicitly moved (already in OBJ_STATE)
+    // Do NOT auto-capture untouched elements — their CSS positions are device-independent
     saveObjPositions();
-    if (typeof saveGameState === 'function') saveGameState(); // Зберігаємо загальний стан гри (масив меблів)
     showNotif('✅ Збережено!',null);
   }
 }
 
 async function resetAllPositions(){
   if(!confirm('Скинути всі позиції до стандартних?'))return;
-  
-  // Очищаємо базові об'єкти
   DRAGGABLE_IDS.forEach(id=>{
     delete OBJ_STATE[id];
     const el=$(id);if(!el)return;
+    // Remove inline position overrides — CSS defaults will take over
     el.style.left='';el.style.top='';el.style.bottom='';el.style.right='';
     el.style.transform='';el.style.position='';
   });
-
-  // ДОДАНО: Очищаємо позиції кастомних меблів з OBJ_STATE
-  Object.keys(OBJ_STATE).forEach(id => {
-    if (id.startsWith('placed-furn-')) {
-      delete OBJ_STATE[id];
-      // Якщо у тебе є функція renderRoom(), яка малює кімнату за початковим масивом:
-      // Перемальовуємо, щоб меблі стали на стандартні місця з S.placedFurniture
-    }
-  });
-  if (typeof renderRoom === 'function') renderRoom(); 
-
   await idbSet('objPos','all',{});
   showNotif('↺ Позиції скинуто!',null);
 }
@@ -3162,20 +3115,8 @@ function doDrag(cx,cy){
   // Use element's actual size for boundary clamping so it can't disappear off-screen
   const ew=eDrag.offsetWidth||10;
   const eh=eDrag.offsetHeight||10;
-  const nx=Math.max(
-  0,
-  Math.min(
-    cx - ar.left - eOX,
-    (app.clientWidth / currentSceneScale()) - ew
-  )
-);
-  const ny=Math.max(
-  42,
-  Math.min(
-    cy - ar.top - eOY,
-    ((app.clientHeight / currentSceneScale()) - 54) - eh
-  )
-);
+  const nx=Math.max(0,Math.min(cx-ar.left-eOX,ar.width-ew));
+  const ny=Math.max(42,Math.min(cy-ar.top-eOY,ar.height-54-eh));
   OBJ_STATE[eDrag.id].x=nx;OBJ_STATE[eDrag.id].y=ny;
   eDrag.style.left=nx+'px';eDrag.style.top=ny+'px';
   eDrag.style.bottom='auto';eDrag.style.right='auto';
