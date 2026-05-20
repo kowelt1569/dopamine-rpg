@@ -292,7 +292,13 @@ select.ci{cursor:pointer}
 .shop-shelf:hover{filter:brightness(1.08)}
 
 /* ===== EDIT MODE DRAG ===== */
-.editable{cursor:move!important;outline:2px dashed rgba(100,80,160,0.5);outline-offset:3px;border-radius:8px}
+.editable{
+  cursor:move!important;
+  outline:2px dashed rgba(100,80,160,0.5);
+  outline-offset:3px;
+  border-radius:8px;
+  touch-action:none;
+}
 .editable:hover{outline-color:rgba(100,80,160,0.9)}
 
 /* ===== START TASK BUTTON ===== */
@@ -3123,6 +3129,117 @@ function applyState(el,st){
   el.style.transformOrigin='center center';
   el.style.transform=`rotate(${st.rot||0}deg) scaleX(${st.sx||1}) scaleY(${st.sy||1})`;
 }
+  let draggedEl=null;
+let dragOffsetX=0;
+let dragOffsetY=0;
+
+function startDrag(e,el){
+
+  if(!editMode)return;
+
+  draggedEl=el;
+
+  const app=$('app');
+
+  const appR=app.getBoundingClientRect();
+  const r=el.getBoundingClientRect();
+
+  const clientX=e.touches
+    ? e.touches[0].clientX
+    : e.clientX;
+
+  const clientY=e.touches
+    ? e.touches[0].clientY
+    : e.clientY;
+
+  dragOffsetX=clientX-r.left;
+  dragOffsetY=clientY-r.top;
+
+  el.classList.add('dragging');
+
+  e.preventDefault();
+}
+
+function dragMove(e){
+
+  if(!draggedEl)return;
+
+  const app=$('app');
+
+  const appR=app.getBoundingClientRect();
+
+  const clientX=e.touches
+    ? e.touches[0].clientX
+    : e.clientX;
+
+  const clientY=e.touches
+    ? e.touches[0].clientY
+    : e.clientY;
+
+  let x=clientX-appR.left-dragOffsetX;
+  let y=clientY-appR.top-dragOffsetY;
+
+  // =========================================
+  // LIMITS
+  // =========================================
+
+  const maxX=
+    app.clientWidth-draggedEl.offsetWidth;
+
+  const maxY=
+    app.clientHeight-draggedEl.offsetHeight-60;
+
+  x=Math.max(0,Math.min(x,maxX));
+  y=Math.max(40,Math.min(y,maxY));
+
+  if(!OBJ_STATE[draggedEl.id]){
+    OBJ_STATE[draggedEl.id]={};
+  }
+
+  OBJ_STATE[draggedEl.id].x=x;
+  OBJ_STATE[draggedEl.id].y=y;
+
+  applyState(
+    draggedEl,
+    OBJ_STATE[draggedEl.id]
+  );
+
+  e.preventDefault();
+}
+
+function endDrag(){
+
+  if(!draggedEl)return;
+
+  draggedEl.classList.remove('dragging');
+
+  draggedEl=null;
+}
+
+// =========================================
+// GLOBAL EVENTS
+// =========================================
+
+document.addEventListener(
+  'mousemove',
+  dragMove
+);
+
+document.addEventListener(
+  'mouseup',
+  endDrag
+);
+
+document.addEventListener(
+  'touchmove',
+  dragMove,
+  {passive:false}
+);
+
+document.addEventListener(
+  'touchend',
+  endDrag
+);
 
 // IndexedDB
 let _idb=null;
@@ -3212,51 +3329,204 @@ function toggleEditMode(){
     showNotif('✅ Збережено!',null);
   }
 }
+// =====================================================================
+// MOBILE SAFE DRAG SYSTEM
+// =====================================================================
 
-// Drag state
-let eDrag=null,eOX=0,eOY=0;
+let eDrag=null;
+let eOX=0;
+let eOY=0;
+
 function findDrag(target){
-  let el=target;
-  while(el&&el!==document){
-    if(el.id&&(DRAGGABLE_IDS.includes(el.id)||el.classList.contains('editable')))return el;
-    el=el.parentElement;
-  }return null;
-}
-function startDrag(el,cx,cy){
-  eDrag=el;captureState(el);
-  const r=el.getBoundingClientRect();
-  eOX=cx-r.left;eOY=cy-r.top;
-  el.style.zIndex='30';showEPanel(el);
-}
-function doDrag(cx,cy){
-  if(!eDrag)return;
-  const ar=appRect();
-  const nx=Math.max(0,Math.min(cx-ar.left-eOX,ar.width-10));
-  const ny=Math.max(42,Math.min(cy-ar.top-eOY,ar.height-82));
-  OBJ_STATE[eDrag.id].x=nx;OBJ_STATE[eDrag.id].y=ny;
-  eDrag.style.left=nx+'px';eDrag.style.top=ny+'px';
-  eDrag.style.bottom='auto';eDrag.style.right='auto';
-}
-function endDrag(){if(eDrag){eDrag.style.zIndex='';eDrag=null;}}
 
-document.addEventListener('mousedown',e=>{
+  let el=target;
+
+  while(el&&el!==document){
+
+    if(
+      el.id&&(
+        DRAGGABLE_IDS.includes(el.id)||
+        el.classList.contains('editable')
+      )
+    ){
+      return el;
+    }
+
+    el=el.parentElement;
+  }
+
+  return null;
+}
+
+function startDrag(el,cx,cy){
+
   if(!S.editMode)return;
-  const d=findDrag(e.target);if(!d)return;
-  e.preventDefault();e.stopPropagation();
-  startDrag(d,e.clientX,e.clientY);
-},true);
-document.addEventListener('mousemove',e=>{if(S.editMode&&eDrag)doDrag(e.clientX,e.clientY);},true);
-document.addEventListener('mouseup',e=>{if(S.editMode)endDrag();},true);
-document.addEventListener('touchstart',e=>{
-  if(!S.editMode)return;
-  const d=findDrag(e.target);if(!d)return;
-  e.preventDefault();e.stopPropagation();
-  startDrag(d,e.touches[0].clientX,e.touches[0].clientY);
-},{passive:false});
-document.addEventListener('touchmove',e=>{
-  if(S.editMode&&eDrag){e.preventDefault();doDrag(e.touches[0].clientX,e.touches[0].clientY);}
-},{passive:false});
-document.addEventListener('touchend',()=>{if(S.editMode)endDrag();});
+
+  eDrag=el;
+
+  captureState(el);
+
+  const r=el.getBoundingClientRect();
+
+  eOX=cx-r.left;
+  eOY=cy-r.top;
+
+  el.style.zIndex='30';
+
+  el.classList.add('dragging');
+
+  showEPanel(el);
+}
+
+function doDrag(cx,cy){
+
+  if(!eDrag)return;
+
+  const app=$('app');
+
+  const ar=app.getBoundingClientRect();
+
+  let nx=cx-ar.left-eOX;
+  let ny=cy-ar.top-eOY;
+
+  // =========================================
+  // SAFE LIMITS
+  // =========================================
+
+  const maxX=
+    app.clientWidth-eDrag.offsetWidth;
+
+  const maxY=
+    app.clientHeight-eDrag.offsetHeight-60;
+
+  nx=Math.max(
+    0,
+    Math.min(nx,maxX)
+  );
+
+  ny=Math.max(
+    42,
+    Math.min(ny,maxY)
+  );
+
+  OBJ_STATE[eDrag.id].x=nx;
+  OBJ_STATE[eDrag.id].y=ny;
+
+  applyState(
+    eDrag,
+    OBJ_STATE[eDrag.id]
+  );
+}
+
+function endDrag(){
+
+  if(!eDrag)return;
+
+  eDrag.style.zIndex='';
+
+  eDrag.classList.remove('dragging');
+
+  eDrag=null;
+}
+
+/* =========================================
+   DESKTOP EVENTS
+   ========================================= */
+
+document.addEventListener(
+  'mousedown',
+  e=>{
+
+    if(!S.editMode)return;
+
+    const d=findDrag(e.target);
+
+    if(!d)return;
+
+    e.preventDefault();
+    e.stopPropagation();
+
+    startDrag(
+      d,
+      e.clientX,
+      e.clientY
+    );
+  },
+  true
+);
+
+document.addEventListener(
+  'mousemove',
+  e=>{
+
+    if(S.editMode&&eDrag){
+
+      doDrag(
+        e.clientX,
+        e.clientY
+      );
+    }
+  },
+  true
+);
+
+document.addEventListener(
+  'mouseup',
+  ()=>{
+    if(S.editMode)endDrag();
+  },
+  true
+);
+
+/* =========================================
+   MOBILE EVENTS
+   ========================================= */
+
+document.addEventListener(
+  'touchstart',
+  e=>{
+
+    if(!S.editMode)return;
+
+    const d=findDrag(e.target);
+
+    if(!d)return;
+
+    e.preventDefault();
+    e.stopPropagation();
+
+    startDrag(
+      d,
+      e.touches[0].clientX,
+      e.touches[0].clientY
+    );
+  },
+  {passive:false}
+);
+
+document.addEventListener(
+  'touchmove',
+  e=>{
+
+    if(S.editMode&&eDrag){
+
+      e.preventDefault();
+
+      doDrag(
+        e.touches[0].clientX,
+        e.touches[0].clientY
+      );
+    }
+  },
+  {passive:false}
+);
+
+document.addEventListener(
+  'touchend',
+  ()=>{
+    if(S.editMode)endDrag();
+  }
+);
 
 loadObjPositions();
 // =====================================================================
