@@ -18,7 +18,7 @@
   --green-dark:#5A9A6A;--sky:#B8E4F7;--grass:#7DBF6E;
 }
 body{font-family:'Nunito',sans-serif;background:#E8DCC8;display:flex;align-items:center;justify-content:center;min-height:100vh;padding:10px}
-#app{width:720px;height:600px;background:var(--wall);position:relative;overflow:hidden;border-radius:20px;box-shadow:0 20px 60px rgba(0,0,0,0.25);flex-shrink:0;touch-action:none}
+#app{width:720px;height:600px;background:var(--wall);position:relative;overflow:hidden;border-radius:20px;box-shadow:0 20px 60px rgba(0,0,0,0.25);flex-shrink:0;touch-action:none;-webkit-transform:translateZ(0);transform:translateZ(0)}
 
 /* ===== SCENES ===== */
 .scene{position:absolute;inset:0;display:none;overflow:hidden}
@@ -433,15 +433,16 @@ select.ci{cursor:pointer}
 
   .scene{
     transform:scale(0.68);
-    transform-origin:top center;
+    transform-origin:top left;
 
-    width:100%;
-    height:100%;
+    width:147%;
+    height:147%;
 
     left:0;
-    top:36px;
+    top:62px;
 
     overflow:visible;
+    pointer-events:auto;
   }
 
   .top-stat{
@@ -544,14 +545,7 @@ select.ci{cursor:pointer}
     <!-- Desk (center) — monitor sits ON the desk surface -->
     <div id="desk-obj" onclick="openModal('tasks','Робота')">
       <div style="position:relative">
-        <!-- Monitor sitting ON the desk top -->
-        <div id="monitor" style="position:absolute;bottom:18px;left:50%;transform:translateX(-50%);width:78px;height:54px;background:#2C2C3A;border:3px solid #4A3A5A;border-radius:6px;overflow:visible;display:flex;align-items:center;justify-content:center;z-index:3">
-          <div class="mon-screen" id="mon-txt"><span>FOCUS</span><span style="font-size:6px;opacity:0.6" id="mon-sub">▂▄▆▄▂</span></div>
-          <!-- Stand neck -->
-          <div style="position:absolute;bottom:-10px;left:50%;transform:translateX(-50%);width:12px;height:10px;background:#3A3A4A"></div>
-          <!-- Stand base -->
-          <div style="position:absolute;bottom:-14px;left:50%;transform:translateX(-50%);width:28px;height:5px;background:#4A4A5A;border-radius:3px"></div>
-        </div>
+        <!-- monitor removed: independent draggable monitor is used below -->
         <div class="desk-top" style="position:relative;z-index:2"></div>
         <div class="desk-body" style="position:relative;z-index:2">
           <div class="keyboard"></div>
@@ -3122,14 +3116,14 @@ function doDrag(cx,cy){
   0,
   Math.min(
     cx - ar.left - eOX,
-    app.clientWidth - ew
+    (app.clientWidth / currentSceneScale()) - ew
   )
 );
   const ny=Math.max(
   42,
   Math.min(
     cy - ar.top - eOY,
-    app.clientHeight - 54 - eh
+    ((app.clientHeight / currentSceneScale()) - 54) - eh
   )
 );
   OBJ_STATE[eDrag.id].x=nx;OBJ_STATE[eDrag.id].y=ny;
