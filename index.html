@@ -4,7 +4,6 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Dopamine Task RPG 🦊</title>
-<link rel="manifest" href="./manifest.json"> <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
@@ -17,7 +16,7 @@
   --green-dark:#5A9A6A;--sky:#B8E4F7;--grass:#7DBF6E;
 }
 body{font-family:'Nunito',sans-serif;background:#E8DCC8;display:flex;align-items:center;justify-content:center;min-height:100vh;padding:10px}
-#app{width:720px;height:600px;background:var(--wall);position:relative;overflow:hidden;border-radius:20px;box-shadow:0 20px 60px rgba(0,0,0,0.25)}
+#app{width:720px;height:600px;background:var(--wall);position:relative;overflow:hidden;border-radius:20px;box-shadow:0 20px 60px rgba(0,0,0,0.25);flex-shrink:0}
 
 /* ===== SCENES ===== */
 .scene{position:absolute;inset:0;display:none;overflow:hidden}
@@ -56,10 +55,13 @@ body{font-family:'Nunito',sans-serif;background:#E8DCC8;display:flex;align-items
 
 /* ===== BOTTOM NAV ===== */
 #bottom-nav{position:absolute;bottom:0;left:0;right:0;height:54px;background:rgba(255,248,240,0.97);border-top:2px solid var(--peach);display:flex;align-items:center;justify-content:space-around;padding:0 4px;z-index:30}
-.nav-btn{display:flex;flex-direction:column;align-items:center;gap:1px;background:none;border:none;cursor:pointer;padding:4px 8px;border-radius:10px;color:var(--text-med);font-family:'Nunito',sans-serif;font-size:9px;font-weight:700;transition:all 0.15s;min-width:52px}
-.nav-btn i{font-size:20px}
-.nav-btn:hover{background:var(--peach);color:var(--accent)}
+.nav-btn{display:flex;flex-direction:column;align-items:center;gap:1px;background:none;border:none;cursor:pointer;padding:4px 6px;border-radius:10px;color:var(--text-med);font-family:'Nunito',sans-serif;font-size:8px;font-weight:700;transition:all 0.15s;min-width:44px;min-height:44px;justify-content:center;-webkit-tap-highlight-color:transparent}
+.nav-btn svg{flex-shrink:0}
+.nav-btn:hover,.nav-btn:active{background:var(--peach);color:var(--accent)}
 .nav-btn.active{background:var(--peach);color:var(--accent)}
+
+/* ===== MODAL MOBILE ===== */
+.mbox{background:var(--cream);border-radius:20px;padding:18px;width:340px;max-height:500px;overflow-y:auto;box-shadow:0 16px 50px rgba(74,55,40,0.35);position:relative;border:3px solid var(--peach)}
 
 /* ===== EDIT MODE BUTTON ===== */
 #edit-btn{position:absolute;top:46px;right:8px;z-index:25;background:var(--lavender);border:2px solid #B0A0D0;border-radius:12px;padding:4px 10px;font-family:'Nunito',sans-serif;font-size:10px;font-weight:700;color:#6A50A0;cursor:pointer;transition:all 0.2s;display:flex;align-items:center;gap:4px}
@@ -300,261 +302,6 @@ select.ci{cursor:pointer}
 .divider{border:none;border-top:1.5px solid var(--peach);margin:10px 0}
 .badge{display:inline-block;background:var(--peach);border-radius:8px;padding:2px 7px;font-size:10px;font-weight:700;color:var(--accent)}
 .section-lbl{font-size:10px;font-weight:700;color:var(--text-med);letter-spacing:0.5px;text-transform:uppercase;margin-bottom:6px;margin-top:10px}
-/* =====================================================
-   MOBILE ADAPTIVE FIX
-   ===================================================== */
-
-@media (max-width: 900px) {
-
-  body {
-    padding: 0;
-    align-items: flex-start;
-  }
-
-  #app {
-    width: 100vw;
-    height: calc(100vw * 0.83);
-    max-height: 100vh;
-    border-radius: 0;
-  }
-
-  #top-bar {
-    height: 48px;
-    padding: 0 8px;
-    gap: 6px;
-    flex-wrap: wrap;
-  }
-
-  .top-stat {
-    font-size: 10px;
-    padding: 3px 7px;
-  }
-
-  .loc-tab {
-    padding: 4px 8px;
-    font-size: 9px;
-  }
-
-  #bottom-nav {
-    height: 58px;
-  }
-
-  .nav-btn {
-    font-size: 8px;
-    min-width: auto;
-    padding: 2px 4px;
-  }
-
-  .nav-btn i {
-    font-size: 18px;
-  }
-
-  #edit-btn {
-    top: 54px;
-    right: 6px;
-    font-size: 9px;
-    padding: 4px 8px;
-  }
-
-  .mbox {
-    width: 92vw;
-    max-width: 360px;
-    max-height: 82vh;
-    padding: 14px;
-  }
-}
-
-/* =====================================================
-   SMARTPHONES
-   ===================================================== */
-
-@media (max-width: 600px) {
-
-  #app {
-    width: 100vw;
-    height: 100dvh;
-    max-width: 100vw;
-    border-radius: 0;
-  }
-
-  .scene {
-    transform: scale(0.78);
-    transform-origin: top center;
-    width: 128%;
-    height: 128%;
-    left: -14%;
-    top: 30px;
-  }
-
-  #top-bar {
-    height: auto;
-    min-height: 52px;
-    padding: 4px 6px;
-    gap: 4px;
-  }
-
-  .top-stat {
-    font-size: 9px;
-    padding: 2px 6px;
-    border-radius: 14px;
-  }
-
-  .top-loc-tabs {
-    gap: 2px;
-  }
-
-  .loc-tab {
-    font-size: 8px;
-    padding: 4px 6px;
-  }
-
-  #bottom-nav {
-    height: 62px;
-    padding-bottom: env(safe-area-inset-bottom);
-  }
-
-  .nav-btn {
-    font-size: 7px;
-    gap: 0;
-  }
-
-  .nav-btn i {
-    font-size: 17px;
-  }
-
-  #edit-btn {
-    top: 72px;
-    right: 6px;
-    font-size: 8px;
-    padding: 3px 7px;
-    border-radius: 10px;
-  }
-
-  #edit-hint {
-    width: 90%;
-    text-align: center;
-    font-size: 8px;
-    white-space: normal;
-    top: 98px;
-  }
-
-  .tip {
-    display: none;
-  }
-
-  .mbox {
-    width: 95vw;
-    max-width: none;
-    max-height: 85vh;
-    border-radius: 16px;
-    padding: 12px;
-  }
-
-  .m-title {
-    font-size: 14px;
-    padding-right: 30px;
-  }
-
-  .task-item {
-    padding: 8px;
-    gap: 6px;
-  }
-
-  .t-text {
-    font-size: 11px;
-  }
-
-  .ci,
-  .cb {
-    font-size: 11px;
-  }
-
-  .inv-grid {
-    grid-template-columns: repeat(2, 1fr);
-  }
-
-  .pomo-circle {
-    width: 92px;
-    height: 92px;
-    font-size: 22px;
-  }
-}
-  /* =====================================================*/
-    padding: 12px;
-  }
-
-  .m-title {
-    font-size: 14px;
-    padding-right: 30px;
-  }
-
-  .task-item {
-    padding: 8px;
-    gap: 6px;
-  }
-
-  .t-text {
-    font-size: 11px;
-  }
-
-  .ci,
-  .cb {
-    font-size: 11px;
-  }
-
-  .inv-grid {
-    grid-template-columns: repeat(2, 1fr);
-  }
-
-  .pomo-circle {
-    width: 92px;
-    height: 92px;
-    font-size: 22px;
-  }
-}
-
-/* =====================================================
-   VERY SMALL PHONES
-   ===================================================== */
-
-@media (max-width: 420px) {
-
-  .scene {
-    transform: scale(0.68);
-    width: 148%;
-    height: 148%;
-    left: -24%;
-    top: 40px;
-  }
-
-  #top-bar {
-    padding: 3px;
-  }
-
-  .top-stat {
-    font-size: 8px;
-    padding: 2px 5px;
-  }
-
-  .loc-tab {
-    font-size: 7px;
-    padding: 3px 5px;
-  }
-
-  .nav-btn i {
-    font-size: 15px;
-  }
-
-  .nav-btn {
-    font-size: 6px;
-  }
-
-  #edit-btn {
-    top: 82px;
-    transform: scale(0.9);
-    transform-origin: top right;
-  }
-}
 </style>
 </head>
 <body>
@@ -782,77 +529,76 @@ select.ci{cursor:pointer}
     <!-- Mascot -->
     <div id="mascot">
       <svg id="mascot-svg" viewBox="0 0 70 82" xmlns="http://www.w3.org/2000/svg">
-        <!-- Tail -->
-        <ellipse cx="59" cy="64" rx="13" ry="9" fill="#F4A261" transform="rotate(-22 59 64)"/>
-        <ellipse cx="63" cy="60" rx="7.5" ry="5.5" fill="white" transform="rotate(-22 63 60)"/>
-        <!-- Body -->
-        <ellipse cx="35" cy="57" rx="17" ry="19" fill="#F4A261"/>
-        <!-- Tummy (white fluffy - NO green bag) -->
-        <ellipse cx="35" cy="60" rx="10" ry="12" fill="#FDDCBA"/>
-        <!-- Hind paws (clearly visible, left and right) -->
-        <ellipse cx="23" cy="74" rx="9" ry="5.5" fill="#E07B54"/>
-        <ellipse cx="47" cy="74" rx="9" ry="5.5" fill="#E07B54"/>
-        <ellipse cx="22" cy="76" rx="7" ry="3.5" fill="#D06840"/>
-        <ellipse cx="48" cy="76" rx="7" ry="3.5" fill="#D06840"/>
-        <!-- Little toe marks -->
-        <circle cx="18" cy="77" r="1.5" fill="#C05830"/>
-        <circle cx="22" cy="78.5" r="1.5" fill="#C05830"/>
-        <circle cx="26" cy="77" r="1.5" fill="#C05830"/>
-        <circle cx="44" cy="77" r="1.5" fill="#C05830"/>
-        <circle cx="48" cy="78.5" r="1.5" fill="#C05830"/>
-        <circle cx="52" cy="77" r="1.5" fill="#C05830"/>
-        <!-- Outfit cottagecore (just a bow/ribbon, no bag) -->
-        <path d="M22 53 Q35 48 48 53 Q45 68 35 70 Q25 68 22 53Z" fill="#7FB3CC" opacity="0.65"/>
-        <path d="M27 52 Q35 48 43 52" stroke="rgba(255,255,255,0.55)" stroke-width="1.5" fill="none"/>
-        <!-- Ribbon bow -->
-        <ellipse cx="35" cy="50" rx="4.5" ry="3" fill="#E85A7A"/>
-        <path d="M30.5 49 Q33 46 35 48.5 Q37 46 39.5 49" stroke="#C84060" stroke-width="1.2" fill="none"/>
-        <!-- Front paws (arms, clearly visible) -->
-        <ellipse cx="17" cy="59" rx="6" ry="4.5" fill="#F4A261" transform="rotate(25 17 59)"/>
-        <ellipse cx="13" cy="63" rx="5.5" ry="4" fill="#FDDCBA" transform="rotate(25 13 63)"/>
-        <circle cx="10" cy="64" r="1.5" fill="#E0B090"/>
-        <circle cx="13" cy="66" r="1.5" fill="#E0B090"/>
-        <circle cx="16" cy="65" r="1.5" fill="#E0B090"/>
-        <ellipse cx="53" cy="59" rx="6" ry="4.5" fill="#F4A261" transform="rotate(-25 53 59)"/>
-        <ellipse cx="57" cy="63" rx="5.5" ry="4" fill="#FDDCBA" transform="rotate(-25 57 63)"/>
-        <circle cx="60" cy="64" r="1.5" fill="#E0B090"/>
-        <circle cx="57" cy="66" r="1.5" fill="#E0B090"/>
-        <circle cx="54" cy="65" r="1.5" fill="#E0B090"/>
-        <!-- Head -->
-        <circle cx="35" cy="29" r="20" fill="#F4A261" id="m-head"/>
-        <!-- Ears -->
-        <polygon points="13,9 21,26 27,13" fill="#F4A261"/>
-        <polygon points="16,11 21,23 25,14" fill="#E07B54"/>
-        <polygon points="17,12 21,21 24,14" fill="#F8C8A0"/>
-        <polygon points="57,9 49,26 43,13" fill="#F4A261"/>
-        <polygon points="54,11 49,23 45,14" fill="#E07B54"/>
-        <polygon points="53,12 49,21 46,14" fill="#F8C8A0"/>
-        <!-- Fluffy cheek ruffs -->
-        <ellipse cx="17" cy="34" rx="8" ry="6" fill="white" opacity="0.45"/>
-        <ellipse cx="53" cy="34" rx="8" ry="6" fill="white" opacity="0.45"/>
-        <!-- Face markings -->
-        <path d="M22 29 Q35 23 48 29" fill="#E07B54" opacity="0.28"/>
-        <!-- Eyes - large chibi -->
-        <ellipse cx="27" cy="27" rx="5.5" ry="6.5" fill="#2C1A0E" id="m-eye-l"/>
-        <ellipse cx="43" cy="27" rx="5.5" ry="6.5" fill="#2C1A0E" id="m-eye-r"/>
-        <circle cx="29" cy="24.5" r="2.2" fill="white"/>
-        <circle cx="45" cy="24.5" r="2.2" fill="white"/>
-        <circle cx="30" cy="25.5" r="1" fill="white" opacity="0.7"/>
-        <!-- Blink animation layer -->
-        <rect x="21" y="21" width="13" height="0" rx="3" fill="#F4A261" id="m-blink-l" style="transition:height 0.1s"/>
-        <rect x="37" y="21" width="13" height="0" rx="3" fill="#F4A261" id="m-blink-r" style="transition:height 0.1s"/>
-        <!-- Blush -->
-        <ellipse cx="18" cy="34" rx="5" ry="3" fill="#F08080" opacity="0.32"/>
-        <ellipse cx="52" cy="34" rx="5" ry="3" fill="#F08080" opacity="0.32"/>
-        <!-- Nose -->
-        <ellipse cx="35" cy="35" rx="3" ry="2" fill="#C84040"/>
-        <!-- Mouth happy -->
-        <path d="M30 39 Q35 43.5 40 39" stroke="#C84040" stroke-width="1.8" fill="none" stroke-linecap="round" id="m-mouth"/>
-        <circle cx="29" cy="39" r="1.2" fill="#E08080"/>
-        <circle cx="41" cy="39" r="1.2" fill="#E08080"/>
-        <!-- Head marking -->
-        <path d="M32 15 Q35 10.5 38 15" stroke="#E07B54" stroke-width="2.2" fill="none" stroke-linecap="round"/>
-        <!-- Accessories layer (hat etc) -->
+        <!-- TAIL -->
+        <ellipse cx="57" cy="66" rx="13" ry="9" fill="#E8722A" transform="rotate(-18 57 66)"/>
+        <ellipse cx="60" cy="63" rx="8" ry="5.5" fill="#F5C49A" transform="rotate(-18 60 63)"/>
+        <ellipse cx="63" cy="60" rx="5" ry="3.5" fill="white" transform="rotate(-18 63 60)"/>
+        <!-- BODY -->
+        <ellipse cx="35" cy="58" rx="18" ry="20" fill="#E8722A"/>
+        <!-- WHITE BELLY large prominent -->
+        <ellipse cx="35" cy="60" rx="12" ry="15" fill="#FAF0E6"/>
+        <!-- HIND PAWS sitting pose -->
+        <ellipse cx="22" cy="75" rx="10" ry="6" fill="#E8722A"/>
+        <ellipse cx="21" cy="77" rx="8" ry="4" fill="#D4602A"/>
+        <circle cx="17" cy="78" r="2" fill="#C45020"/>
+        <circle cx="21" cy="79.5" r="2" fill="#C45020"/>
+        <circle cx="25" cy="78" r="2" fill="#C45020"/>
+        <ellipse cx="48" cy="75" rx="10" ry="6" fill="#E8722A"/>
+        <ellipse cx="49" cy="77" rx="8" ry="4" fill="#D4602A"/>
+        <circle cx="45" cy="78" r="2" fill="#C45020"/>
+        <circle cx="49" cy="79.5" r="2" fill="#C45020"/>
+        <circle cx="53" cy="78" r="2" fill="#C45020"/>
+        <!-- FRONT PAWS sitting forward -->
+        <ellipse cx="23" cy="66" rx="8" ry="5" fill="#E8722A" transform="rotate(10 23 66)"/>
+        <ellipse cx="22" cy="69" rx="7" ry="4" fill="#FAF0E6"/>
+        <circle cx="18" cy="70" r="1.8" fill="#DDB898"/>
+        <circle cx="22" cy="71.5" r="1.8" fill="#DDB898"/>
+        <circle cx="26" cy="70" r="1.8" fill="#DDB898"/>
+        <ellipse cx="47" cy="66" rx="8" ry="5" fill="#E8722A" transform="rotate(-10 47 66)"/>
+        <ellipse cx="48" cy="69" rx="7" ry="4" fill="#FAF0E6"/>
+        <circle cx="44" cy="70" r="1.8" fill="#DDB898"/>
+        <circle cx="48" cy="71.5" r="1.8" fill="#DDB898"/>
+        <circle cx="52" cy="70" r="1.8" fill="#DDB898"/>
+        <!-- HEAD large round chibi -->
+        <circle cx="35" cy="28" r="22" fill="#E8722A" id="m-head"/>
+        <!-- EARS small round with dark inner -->
+        <circle cx="16" cy="12" r="9" fill="#E8722A"/>
+        <circle cx="16" cy="12" r="6" fill="#C85020"/>
+        <circle cx="16" cy="12" r="3.5" fill="#2A1008"/>
+        <circle cx="54" cy="12" r="9" fill="#E8722A"/>
+        <circle cx="54" cy="12" r="6" fill="#C85020"/>
+        <circle cx="54" cy="12" r="3.5" fill="#2A1008"/>
+        <!-- FACE: forehead pale patch -->
+        <ellipse cx="35" cy="18" rx="9" ry="7" fill="#FAF0E6" opacity="0.55"/>
+        <!-- FACE: darker eye area patches -->
+        <ellipse cx="26" cy="27" rx="9.5" ry="8.5" fill="#C85020" opacity="0.3"/>
+        <ellipse cx="44" cy="27" rx="9.5" ry="8.5" fill="#C85020" opacity="0.3"/>
+        <!-- WHITE FLUFFY CHEEKS -->
+        <ellipse cx="13" cy="35" rx="8" ry="6" fill="white" opacity="0.75"/>
+        <ellipse cx="57" cy="35" rx="8" ry="6" fill="white" opacity="0.75"/>
+        <!-- EYES large dark round -->
+        <circle cx="26" cy="27" r="7.5" fill="#1A0A06" id="m-eye-l"/>
+        <circle cx="44" cy="27" r="7.5" fill="#1A0A06" id="m-eye-r"/>
+        <!-- Eye shine large -->
+        <circle cx="28.5" cy="23.5" r="3.2" fill="white"/>
+        <circle cx="46.5" cy="23.5" r="3.2" fill="white"/>
+        <!-- Secondary shine small -->
+        <circle cx="31" cy="29" r="1.3" fill="white" opacity="0.65"/>
+        <circle cx="49" cy="29" r="1.3" fill="white" opacity="0.65"/>
+        <!-- Blink layers -->
+        <rect x="18" y="21" width="16" height="0" rx="3" fill="#E8722A" id="m-blink-l" style="transition:height 0.1s"/>
+        <rect x="36" y="21" width="16" height="0" rx="3" fill="#E8722A" id="m-blink-r" style="transition:height 0.1s"/>
+        <!-- BLUSH -->
+        <ellipse cx="13" cy="36" rx="5.5" ry="3.5" fill="#FF8888" opacity="0.5"/>
+        <ellipse cx="57" cy="36" rx="5.5" ry="3.5" fill="#FF8888" opacity="0.5"/>
+        <!-- NOSE small dark oval -->
+        <ellipse cx="35" cy="35" rx="3.5" ry="2.2" fill="#1A0806"/>
+        <circle cx="34" cy="34.2" r="0.9" fill="rgba(255,255,255,0.45)"/>
+        <!-- MOUTH -->
+        <path d="M30 39 Q35 44 40 39" stroke="#1A0806" stroke-width="1.8" fill="none" stroke-linecap="round" id="m-mouth"/>
+        <circle cx="29.5" cy="39" r="1.5" fill="#E09080" opacity="0.6"/>
+        <circle cx="40.5" cy="39" r="1.5" fill="#E09080" opacity="0.6"/>
+        <!-- ACCESSORIES -->
         <g id="acc-hat"></g>
         <g id="acc-glasses"></g>
         <g id="acc-scarf"></g>
@@ -1274,7 +1020,7 @@ select.ci{cursor:pointer}
 const S = {
   xp:120, gold:45, level:2,
   mascotName:'Руді',
-  mascotColor:'#F4A261',
+  mascotColor:'#E8722A',
   mascotEyeColor:'#2C1A0E',
   tasks:[
     {id:1,text:'Полити кактус',cat:'Рослини',done:false,date:today(),active:false},
@@ -2191,12 +1937,32 @@ const allClothes=[
   {id:'hb2',cat:'Обруч',emoji:'⭐',name:'Зірки',price:28},
 ];
 
+// Active wardrobe tab: 'clothes' | 'backgrounds'
+let _wardrobeTab='clothes';
+
 function renderWardrobe(el){
   const owned=S.inventory;
   const equipped=S.equippedItems;
   const cats=[...new Set(allClothes.map(c=>c.cat))];
+  const unlockedBGs=MG.unlockedBGs||['bg_deep_space'];
+  const activeBG=MG.activeBG||null;
+
   el.innerHTML=mHead('Гардероб','👗')+`
-<div style="font-size:12px;color:var(--text-med);margin-bottom:10px">Придбані речі в <b>Treats Shop</b> з'являються тут. Натисни щоб вдягнути/зняти.</div>
+<!-- Tab switcher -->
+<div style="display:flex;gap:6px;margin-bottom:12px">
+  <button onclick="_wardrobeTab='clothes';renderWardrobe($('modal-content'))"
+    style="flex:1;padding:7px;border:2px solid var(--peach);border-radius:10px;background:${_wardrobeTab==='clothes'?'var(--orange)':'white'};color:${_wardrobeTab==='clothes'?'white':'var(--text-dark)'};font-family:Nunito,sans-serif;font-size:12px;font-weight:700;cursor:pointer;transition:all 0.15s">
+    👗 Одяг (${owned.length})
+  </button>
+  <button onclick="_wardrobeTab='backgrounds';renderWardrobe($('modal-content'))"
+    style="flex:1;padding:7px;border:2px solid var(--peach);border-radius:10px;background:${_wardrobeTab==='backgrounds'?'var(--orange)':'white'};color:${_wardrobeTab==='backgrounds'?'white':'var(--text-dark)'};font-family:Nunito,sans-serif;font-size:12px;font-weight:700;cursor:pointer;transition:all 0.15s">
+    🎨 Фони (${unlockedBGs.length}/${BACKGROUNDS_50.length})
+  </button>
+</div>
+
+${_wardrobeTab==='clothes'?`
+<!-- CLOTHES TAB -->
+<div style="font-size:11px;color:var(--text-med);margin-bottom:8px">Придбані речі у <b>Treats Shop</b>. Натисни щоб вдягнути/зняти.</div>
 ${owned.length===0?'<div style="text-align:center;padding:20px;color:var(--text-med);font-size:13px">🛍️ Поки порожньо! Купи речі у Treats Shop~</div>':''}
 ${cats.map(cat=>{
   const items=allClothes.filter(c=>c.cat===cat&&owned.includes(c.id));
@@ -2208,7 +1974,34 @@ ${cats.map(cat=>{
   <span class="i-emoji">${item.emoji}</span>
   <div class="i-name">${item.name}</div>
 </div>`).join('')}</div>`;
-}).join('')}`;
+}).join('')}
+`:`
+<!-- BACKGROUNDS TAB -->
+<div style="font-size:11px;color:var(--text-med);margin-bottom:8px">
+  Фони розблоковуються у грі <b>Зоряна Буря 🚀</b> (кожні 200 очків). Натисни щоб застосувати.
+</div>
+${activeBG?`<div style="background:var(--peach);border-radius:8px;padding:6px 10px;font-size:11px;font-weight:700;color:var(--accent);margin-bottom:8px">Зараз: ${BACKGROUNDS_50.find(b=>b.id===activeBG)?.name||activeBG}</div>`:''}
+<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px">
+${BACKGROUNDS_50.map(bg=>{
+  const isOwned=unlockedBGs.includes(bg.id);
+  const isActive=activeBG===bg.id;
+  const unlockScore=bg.id==='bg_classic'?0:BACKGROUNDS_50.indexOf(bg)*200;
+  return`<div onclick="${isOwned?`applyRoomBGFromWardrobe('${bg.id}')`:''}"
+    style="border-radius:10px;overflow:hidden;border:2.5px solid ${isActive?'var(--orange)':isOwned?'var(--teal)':'var(--peach)'};
+    cursor:${isOwned?'pointer':'default'};transition:transform 0.15s;${isOwned?'':'opacity:0.55'}"
+    ${isOwned?'onmouseover="this.style.transform=\'scale(1.05)\'" onmouseout="this.style.transform=\'scale(1)\'"':''}>
+    <div style="width:100%;height:46px;background:${bg.css};position:relative">
+      ${isActive?'<div style="position:absolute;top:2px;right:3px;font-size:9px;background:var(--orange);color:white;border-radius:4px;padding:1px 4px;font-weight:700">✓ Активний</div>':''}
+      ${!isOwned?'<div style="position:absolute;inset:0;background:rgba(0,0,0,0.35);display:flex;align-items:center;justify-content:center;font-size:14px">🔒</div>':''}
+    </div>
+    <div style="background:${isOwned?'white':'#F8F4F0'};padding:4px 5px">
+      <div style="font-size:8px;font-weight:700;color:${isOwned?'var(--text-dark)':'var(--text-med)'};line-height:1.2">${bg.name}</div>
+      <div style="font-size:7px;color:${isOwned?'var(--teal)':'#B0A090'};font-weight:600">${isOwned?bg.reward:'🔒 '+unlockScore+' очків'}</div>
+    </div>
+  </div>`;
+}).join('')}
+</div>
+`}`;
 }
 function toggleEquip(id){
   const item=allClothes.find(c=>c.id===id);if(!item)return;
@@ -2290,7 +2083,7 @@ function showNotif(msg,bg){
 // PROFILE & CUSTOMIZATION
 // =====================================================================
 function renderProfile(el){
-  const furColors=['#F4A261','#E07B54','#A0785A','#7FB3CC','#B2DFD0','#D4A0C0','#C8E870','#E8C850','#A088C8'];
+  const furColors=['#E8722A','#F4A261','#C85020','#7FB3CC','#B2DFD0','#D4A0C0','#C8E870','#E8C850','#A088C8'];
   const eyeColors=['#2C1A0E','#1A3A6E','#1A6E3A','#6E1A3A','#6E5A1A','#4A4A8A'];
   el.innerHTML=mHead('Профіль & Персонаж','🦊')+`
 <div style="text-align:center;margin-bottom:14px">
@@ -2326,11 +2119,11 @@ function changeName(){
 function changeFur(c){
   S.mascotColor=c;
   // Update all orange/brown fills in mascot SVG
-  const orangeEls=$('mascot-svg').querySelectorAll('[fill="#F4A261"]');
-  const brownEls=$('mascot-svg').querySelectorAll('[fill="#E07B54"]');
-  orangeEls.forEach(e=>e.setAttribute('fill',c));
-  // Slightly darker version for accents
-  brownEls.forEach(e=>e.setAttribute('fill',darkenColor(c,0.15)));
+  const svg=$('mascot-svg');if(!svg)return;
+  // Target the main orange fill (#E8722A) and darker accent (#D4602A)
+  svg.querySelectorAll('[fill="#E8722A"]').forEach(e=>e.setAttribute('fill',c));
+  svg.querySelectorAll('[fill="#D4602A"]').forEach(e=>e.setAttribute('fill',darkenColor(c,0.1)));
+  svg.querySelectorAll('[fill="#C85020"]').forEach(e=>e.setAttribute('fill',darkenColor(c,0.18)));
   renderProfile($('modal-content'));
 }
 function changeEyes(c){
@@ -2347,9 +2140,6 @@ function darkenColor(hex,amount){
 }
 
 
-// =====================================================================
-// COSMIC CONNECT MINI GAME 🌟
-// =====================================================================
 const CC_PRESETS = [
   {name:'Кассіопея',stars:[{x:60,y:200},{x:130,y:100},{x:200,y:160},{x:270,y:100},{x:340,y:200}],order:[0,1,2,3,4]},
   {name:'Оріон',stars:[{x:120,y:80},{x:240,y:80},{x:80,y:160},{x:180,y:140},{x:280,y:160},{x:140,y:240},{x:220,y:240}],order:[0,2,3,1,4,6,5]},
@@ -2557,6 +2347,8 @@ ${ccState.partProgress>0&&ccState.partProgress%20===0?`<div style="margin-top:8p
 // METEOR STORM MINI GAME 🚀
 // =====================================================================
 const BACKGROUNDS_50=[
+  // ★ Класичний — завжди розблокований, повернення до оригіналу
+  {id:'bg_classic',name:'Класична Кімната',css:'linear-gradient(180deg,#F0E4C8 0%,#EDD9B8 58%,#D4B896 58%,#C8A87A 100%)',reward:'★ Завжди відкритий'},
   // Group: Cosmic
   {id:'bg_deep_space',name:'Глибокий Космос',css:'linear-gradient(135deg,#0B0F19 0%,#1A1A3E 50%,#0D1530 100%)',reward:'Космічна серія'},
   {id:'bg_nebula_pink',name:'Рожева Туманність',css:'linear-gradient(135deg,#1A0830 0%,#3D1060 40%,#8B2080 70%,#1A0830 100%)',reward:'Космічна серія'},
@@ -2620,7 +2412,8 @@ const MG={
   ship:{x:185,y:400,w:30,h:36},
   meteors:[],bullets:[],particles:[],
   keys:{},frame:0,raf:null,
-  unlockedBGs:['bg_deep_space'],
+  unlockedBGs:['bg_classic','bg_deep_space'],
+  activeBG:null,
   canvas:null,ctx:null
 };
 
@@ -2679,26 +2472,44 @@ function mgInit(){
   if(!MG.canvas)return;
   MG.ctx=MG.canvas.getContext('2d');
   MG.ship={x:190,y:400,w:28,h:34};
+  MG.firing=false; // continuous fire flag
 
-  // Keyboard
+  // Keyboard — set key state only, shooting handled in loop
   MG.keys={};
-  window._mgKeyDown=e=>{MG.keys[e.code]=true;if(e.code==='Space'){e.preventDefault();mgShoot();}};
+  window._mgKeyDown=e=>{
+    MG.keys[e.code]=true;
+    if(e.code==='Space')e.preventDefault();
+  };
   window._mgKeyUp=e=>{MG.keys[e.code]=false;};
   document.addEventListener('keydown',window._mgKeyDown);
   document.addEventListener('keyup',window._mgKeyUp);
 
-  // Mouse/touch control
+  // Mouse: move = aim, hold = fire
   MG.canvas.addEventListener('mousemove',e=>{
     const r=MG.canvas.getBoundingClientRect();
-    MG.ship.x=Math.max(0,Math.min(e.clientX-r.left-MG.ship.w/2,410-MG.ship.w));
+    const scale=410/r.width;
+    MG.ship.x=Math.max(0,Math.min((e.clientX-r.left)*scale-MG.ship.w/2,410-MG.ship.w));
   });
-  MG.canvas.addEventListener('click',()=>mgShoot());
+  MG.canvas.addEventListener('mousedown',e=>{e.preventDefault();MG.firing=true;});
+  MG.canvas.addEventListener('mouseup',()=>{MG.firing=false;});
+  MG.canvas.addEventListener('mouseleave',()=>{MG.firing=false;});
+
+  // Touch: move finger = aim, hold = fire
+  MG.canvas.addEventListener('touchstart',e=>{
+    e.preventDefault();
+    MG.firing=true;
+    const r=MG.canvas.getBoundingClientRect();
+    const scale=410/r.width;
+    MG.ship.x=Math.max(0,Math.min((e.touches[0].clientX-r.left)*scale-MG.ship.w/2,410-MG.ship.w));
+  },{passive:false});
   MG.canvas.addEventListener('touchmove',e=>{
     e.preventDefault();
     const r=MG.canvas.getBoundingClientRect();
-    MG.ship.x=Math.max(0,Math.min(e.touches[0].clientX-r.left-MG.ship.w/2,410-MG.ship.w));
+    const scale=410/r.width;
+    MG.ship.x=Math.max(0,Math.min((e.touches[0].clientX-r.left)*scale-MG.ship.w/2,410-MG.ship.w));
   },{passive:false});
-  MG.canvas.addEventListener('touchstart',e=>{e.preventDefault();mgShoot();},{passive:false});
+  MG.canvas.addEventListener('touchend',()=>{MG.firing=false;});
+  MG.canvas.addEventListener('touchcancel',()=>{MG.firing=false;});
 }
 
 function mgStart(){
@@ -2707,6 +2518,7 @@ function mgStart(){
   $('mg-bg-gallery').style.display='none';
   MG.running=true;MG.lives=5;MG.score=0;MG.level=1;
   MG.meteors=[];MG.bullets=[];MG.particles=[];MG.frame=0;
+  MG.firing=false;
   MG.ship={x:190,y:400,w:28,h:34};
   mgUpdateUI();
   if(MG.raf)cancelAnimationFrame(MG.raf);
@@ -2728,7 +2540,8 @@ function mgShoot(){
 
 function mgSpawnMeteor(){
   const r=12+Math.random()*20;
-  const spd=1.5+MG.level*0.4+Math.random()*1.5;
+  // Reduced base speed: starts at 0.8, grows slowly with level
+  const spd=0.8+MG.level*0.2+Math.random()*0.8;
   const colors=['#C87040','#A05828','#E09050','#D86030','#B84820'];
   MG.meteors.push({
     x:r+Math.random()*(410-r*2),y:-r*2,r,
@@ -2747,7 +2560,10 @@ function mgLoop(){
   // Ship keyboard control
   if(MG.keys['ArrowLeft']||MG.keys['KeyA'])MG.ship.x=Math.max(0,MG.ship.x-4);
   if(MG.keys['ArrowRight']||MG.keys['KeyD'])MG.ship.x=Math.min(W-MG.ship.w,MG.ship.x+4);
-  if(MG.keys['Space']&&MG.frame%8===0)mgShoot();
+
+  // Fire while space held OR mouse/touch held — every 10 frames
+  const isFiring=MG.firing||MG.keys['Space'];
+  if(isFiring&&MG.frame%10===0)mgShoot();
 
   // Spawn meteors
   const spawnRate=Math.max(20,60-MG.level*4);
@@ -2917,21 +2733,33 @@ function mgShowBGs(){
   gal.style.display='flex';
   grid.innerHTML=BACKGROUNDS_50.map(bg=>{
     const owned=MG.unlockedBGs.includes(bg.id);
-    return`<div style="border-radius:8px;overflow:hidden;border:2px solid ${owned?'#80A0FF':'#2A3060'};cursor:${owned?'pointer':'default'};position:relative" onclick="${owned?`applyRoomBG('${bg.id}')`:''}">
-  <div style="width:100%;height:50px;background:${bg.css}"></div>
+    const isActive=MG.activeBG===bg.id;
+    return`<div style="border-radius:8px;overflow:hidden;border:2px solid ${isActive?'#FFD166':owned?'#80A0FF':'#2A3060'};cursor:${owned?'pointer':'default'};position:relative" onclick="${owned?`applyRoomBG('${bg.id}')`:''}" ${owned?'onmouseover="this.style.opacity=\'0.85\'" onmouseout="this.style.opacity=\'1\'"':''}>
+  <div style="width:100%;height:50px;background:${bg.css};position:relative">
+    ${isActive?'<div style="position:absolute;top:2px;right:2px;background:#FFD166;color:#8B6000;font-size:7px;font-weight:800;padding:1px 4px;border-radius:3px">✓</div>':''}
+    ${!owned?'<div style="position:absolute;inset:0;background:rgba(0,0,0,0.4);display:flex;align-items:center;justify-content:center;font-size:16px">🔒</div>':''}
+  </div>
   <div style="background:#0A1020;padding:4px 5px">
     <div style="font-size:8px;font-weight:700;color:${owned?'#C0D0FF':'#404060'}">${bg.name}</div>
-    <div style="font-size:7px;color:${owned?'#6080A0':'#303050'}">${owned?'✓ Розблоковано':'🔒 Зароби '+BACKGROUNDS_50.indexOf(bg)*200+' очків'}</div>
+    <div style="font-size:7px;color:${owned?'#6080A0':'#303050'}">${owned?'✓ Розблоковано':'🔒 '+BACKGROUNDS_50.indexOf(bg)*200+' очків'}</div>
   </div>
 </div>`;
   }).join('');
 }
 function mgHideBGs(){const g=$('mg-bg-gallery');if(g)g.style.display='none';}
+function applyRoomBGFromWardrobe(id){
+  applyRoomBG(id);
+  // Stay in wardrobe, just re-render to show active state
+  _wardrobeTab='backgrounds';
+  renderWardrobe($('modal-content'));
+}
+
 function applyRoomBG(id){
   const bg=BACKGROUNDS_50.find(b=>b.id===id);if(!bg)return;
   $('scene-bedroom').style.background=bg.css;
+  MG.activeBG=id;
+  idbSet('gameState','mgActiveBG',id);
   showNotif(`🎨 Фон "${bg.name}" застосовано!`,null);
-  mgHideBGs();closeModal();
 }
 
 // Load meteor game high score
@@ -2940,6 +2768,13 @@ async function loadMGState(){
   if(hs)MG.highScore=hs;
   const bgs=await idbGet('gameState','mgUnlockedBGs');
   if(bgs)MG.unlockedBGs=bgs;
+  const abg=await idbGet('gameState','mgActiveBG');
+  if(abg){
+    MG.activeBG=abg;
+    // Restore background to bedroom
+    const bg=BACKGROUNDS_50.find(b=>b.id===abg);
+    if(bg)setTimeout(()=>{const sc=$('scene-bedroom');if(sc)sc.style.background=bg.css;},100);
+  }
 }
 
 // =====================================================================
@@ -2953,7 +2788,7 @@ async function loadMGState(){
 const DRAGGABLE_IDS=[
   'window-obj','clock-obj','cal-wall-obj','notepad-obj','door-obj',
   'desk-obj','monitor','bed-obj','rug-obj','shelf-obj','cactus-obj','radio-obj','cactus-stand',
-  'cassiopeia-painting',
+  'cassiopeia-painting','moon-lamp',
   'yard-tree1','yard-tree2','yard-bench','yard-sport',
   'kit-fridge-wrap','kit-stove-wrap','kit-sink-wrap',
   'shop-shelf1','shop-shelf2','shop-shelf3',
@@ -3061,10 +2896,10 @@ function toggleEditMode(){
     btn.classList.remove('editing');hint.style.display='none';
     DRAGGABLE_IDS.forEach(id=>{const el=$(id);if(el)el.classList.remove('editable')});
     removeEPanel();
-    // Capture final positions for anything not yet tracked
-    DRAGGABLE_IDS.forEach(id=>{const el=$(id);if(el)captureState(el);});
+    // IMPORTANT: Only save elements that were explicitly moved (already in OBJ_STATE)
+    // Do NOT auto-capture untouched elements — their CSS positions are device-independent
     saveObjPositions();
-    showNotif('✅ Збережено в IndexedDB!',null);
+    showNotif('✅ Збережено!',null);
   }
 }
 
@@ -3170,7 +3005,7 @@ setTimeout(()=>{
 },1000);
 
 // Save on unload
-window.addEventListener('beforeunload',()=>{saveGameState();saveObjPositions();});
+window.addEventListener('beforeunload',()=>{saveGameState();});
 
 // Bathroom tooltips
 [['bath-tub','tip-bathtub'],['bath-sink','tip-sink-bath'],['bath-cabinet','tip-cabinet']].forEach(([id,tip])=>{
@@ -3188,15 +3023,6 @@ if(pt&&ptt){
 console.log('🦊 Dopamine Task RPG v3 — IndexedDB + Cosmic Connect!');
 
 
-</script>
-<script>
-  if ('serviceWorker' in navigator) {
-    window.addEventListener('load', () => {
-      navigator.serviceWorker.register('/dopamine-rpg/sw.js')
-        .then(reg => console.log('PWA активовано успішно!', reg.scope))
-        .catch(err => console.log('Помилка реєстрації PWA:', err));
-    });
-  }
 </script>
 </body>
 </html>
