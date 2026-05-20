@@ -2936,10 +2936,20 @@ const OBJ_STATE={};
 
 function appRect(){return $('app').getBoundingClientRect();}
 
+// Returns the CSS scale applied to .scene elements (accounts for mobile scaling)
+function sceneScale(){
+  const scene=document.querySelector('.scene');
+  if(!scene)return 1;
+  const m=new DOMMatrix(getComputedStyle(scene).transform);
+  // m.a is the X scale component
+  return m.a||1;
+}
+
 function captureState(el){
   if(OBJ_STATE[el.id])return;
   const ar=appRect(),r=el.getBoundingClientRect();
-  OBJ_STATE[el.id]={x:r.left-ar.left,y:r.top-ar.top,rot:0,sx:1,sy:1};
+  const sc=sceneScale();
+  OBJ_STATE[el.id]={x:(r.left-ar.left)/sc,y:(r.top-ar.top)/sc,rot:0,sx:1,sy:1};
 }
 
 function applyState(el,st){
@@ -3097,11 +3107,20 @@ function startDrag(el,cx,cy){
 function doDrag(cx,cy){
   if(!eDrag)return;
   const ar=appRect();
-  // Use element's actual size for boundary clamping so it can't disappear off-screen
+  const sc=sceneScale();
+  // Convert screen-space pointer to scene-space coordinates
+  const sx=(cx-ar.left)/sc;
+  const sy=(cy-ar.top)/sc;
+  const ox=eOX/sc;
+  const oy=eOY/sc;
+  // Scene-space dimensions of the app container
+  const sw=ar.width/sc;
+  const sh=ar.height/sc;
+  // Element's logical (scene-space) size
   const ew=eDrag.offsetWidth||10;
   const eh=eDrag.offsetHeight||10;
-  const nx=Math.max(0,Math.min(cx-ar.left-eOX,ar.width-ew));
-  const ny=Math.max(42,Math.min(cy-ar.top-eOY,ar.height-54-eh));
+  const nx=Math.max(0,Math.min(sx-ox,sw-ew));
+  const ny=Math.max(42/sc,Math.min(sy-oy,sh-54/sc-eh));
   OBJ_STATE[eDrag.id].x=nx;OBJ_STATE[eDrag.id].y=ny;
   eDrag.style.left=nx+'px';eDrag.style.top=ny+'px';
   eDrag.style.bottom='auto';eDrag.style.right='auto';
