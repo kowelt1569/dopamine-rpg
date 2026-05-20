@@ -344,19 +344,18 @@ select.ci{cursor:pointer}
     border-radius: 0;
   }
 
-  /* Scale the scene DOWN and keep it fully inside #app.
-     The scene is position:absolute;inset:0 — we scale around
-     the top-left corner so nothing bleeds outside the container. */
+  /* Scale the scene DOWN — clip it so the oversized pre-scale
+     element never covers top-bar or bottom-nav */
   .scene {
     transform: scale(0.78);
     transform-origin: top left;
-    /* Compensate for the scale so the scene still fills the parent width */
     width: calc(100% / 0.78);
-    height: calc(100% / 0.78);
+    /* Reserve space for top-bar (42px) and bottom-nav (62px).
+       The visible game area sits between them. */
+    height: calc((100dvh - 42px - 62px) / 0.78);
     left: 0;
-    top: 0;
-    /* Prevent the oversized (pre-scale) element from capturing pointer events
-       outside the visible area */
+    top: 42px;          /* start below top-bar */
+    overflow: hidden;   /* clip anything that bleeds outside */
     pointer-events: none;
   }
 
@@ -367,13 +366,13 @@ select.ci{cursor:pointer}
 
   #top-bar {
     height: auto;
-    min-height: 54px;
+    min-height: 42px;
     padding: 4px 6px;
     gap: 4px;
     flex-wrap: wrap;
-    /* Top bar sits ABOVE the scaled scene — keep it unscaled */
     position: absolute;
     z-index: 30;
+    top: 0;
   }
 
   .top-stat {
@@ -390,7 +389,9 @@ select.ci{cursor:pointer}
     height: 62px;
     padding-bottom: env(safe-area-inset-bottom);
     position: absolute;
-    z-index: 30;
+    bottom: 0;
+    z-index: 35;        /* higher than scene so it's always clickable */
+    background: rgba(255,248,240,0.98);
   }
 
   .nav-btn {
@@ -417,9 +418,10 @@ select.ci{cursor:pointer}
     transform: scale(0.65);
     transform-origin: top left;
     width: calc(100% / 0.65);
-    height: calc(100% / 0.65);
+    height: calc((100dvh - 42px - 62px) / 0.65);
     left: 0;
-    top: 0;
+    top: 42px;
+    overflow: hidden;
     pointer-events: none;
   }
 
@@ -2930,7 +2932,6 @@ const DRAGGABLE_IDS=[
   'window-obj','clock-obj','cal-wall-obj','notepad-obj','door-obj',
   'desk-obj','monitor','bed-obj','rug-obj','shelf-obj','cactus-obj','radio-obj','cactus-stand',
   'cassiopeia-painting','moon-lamp',
-  'yard-tree1','yard-tree2','yard-bench','yard-sport',
   'kit-fridge-wrap','kit-stove-wrap','kit-sink-wrap',
   'shop-shelf1','shop-shelf2','shop-shelf3',
   'bath-tub','bath-toilet','bath-sink','bath-mirror','bath-cabinet'
@@ -2950,9 +2951,19 @@ function sceneScale(){
 
 function captureState(el){
   if(OBJ_STATE[el.id])return;
-  const ar=appRect(),r=el.getBoundingClientRect();
   const sc=sceneScale();
-  OBJ_STATE[el.id]={x:(r.left-ar.left)/sc,y:(r.top-ar.top)/sc,rot:0,sx:1,sy:1};
+  // Find the scene containing this element
+  const scene=el.closest('.scene')||document.querySelector('.scene.active');
+  if(scene){
+    // Use the scene's own bounding rect as the coordinate origin
+    const sr=scene.getBoundingClientRect();
+    const r=el.getBoundingClientRect();
+    // Convert screen-space to scene-space (pre-scale)
+    OBJ_STATE[el.id]={x:(r.left-sr.left)/sc,y:(r.top-sr.top)/sc,rot:0,sx:1,sy:1};
+  } else {
+    const ar=appRect(),r=el.getBoundingClientRect();
+    OBJ_STATE[el.id]={x:(r.left-ar.left)/sc,y:(r.top-ar.top)/sc,rot:0,sx:1,sy:1};
+  }
 }
 
 function applyState(el,st){
@@ -3100,29 +3111,33 @@ function findDrag(target){
 function startDrag(el,cx,cy){
   eDrag=el;captureState(el);
   // Normalize element (remove translateX(-50%) etc.) BEFORE computing cursor offset
-  // This prevents the "jump" caused by lingering CSS transforms
   applyState(el,OBJ_STATE[el.id]);
   const r=el.getBoundingClientRect();
-  eOX=cx-r.left;eOY=cy-r.top;
+  const sc=sceneScale();
+  const scene=el.closest('.scene')||document.querySelector('.scene.active');
+  const origin=scene?scene.getBoundingClientRect():appRect();
+  // Store offsets in scene-space (pre-scale) coordinates
+  eOX=(cx-origin.left)/sc - OBJ_STATE[el.id].x;
+  eOY=(cy-origin.top)/sc  - OBJ_STATE[el.id].y;
   el.style.zIndex='50';showEPanel(el);
 }
 function doDrag(cx,cy){
   if(!eDrag)return;
-  const ar=appRect();
   const sc=sceneScale();
+  // Find the active scene
+  const scene=eDrag.closest('.scene')||document.querySelector('.scene.active');
+  const origin=scene?scene.getBoundingClientRect():appRect();
   // Convert screen-space pointer to scene-space coordinates
-  const sx=(cx-ar.left)/sc;
-  const sy=(cy-ar.top)/sc;
-  const ox=eOX/sc;
-  const oy=eOY/sc;
+  const sx=(cx-origin.left)/sc;
+  const sy=(cy-origin.top)/sc;
   // Logical (pre-scale) dimensions of the scene — always 720×600
   const sw=720;
   const sh=600;
   // Element's logical (scene-space) size
   const ew=eDrag.offsetWidth||10;
   const eh=eDrag.offsetHeight||10;
-  const nx=Math.max(0,Math.min(sx-ox,sw-ew));
-  const ny=Math.max(42,Math.min(sy-oy,sh-54-eh));
+  const nx=Math.max(0,Math.min(sx-eOX,sw-ew));
+  const ny=Math.max(0,Math.min(sy-eOY,sh-eh));
   OBJ_STATE[eDrag.id].x=nx;OBJ_STATE[eDrag.id].y=ny;
   eDrag.style.left=nx+'px';eDrag.style.top=ny+'px';
   eDrag.style.bottom='auto';eDrag.style.right='auto';
