@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Dopamine Task RPG 🦊</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🦊</text></svg>">
 <link rel="manifest" href="./manifest.json">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
@@ -2996,7 +2997,21 @@ async function loadObjPositions(){
   const data=await idbGet('objPos','all');
   if(!data)return;
   Object.assign(OBJ_STATE,data);
-  setTimeout(()=>{Object.keys(OBJ_STATE).forEach(id=>{const el=$(id);if(el)applyState(el,OBJ_STATE[id]);});},300);
+  setTimeout(()=>{
+    const ar=appRect();
+    Object.keys(OBJ_STATE).forEach(id=>{
+      const el=$(id);if(!el)return;
+      const st=OBJ_STATE[id];
+      // Clamp saved positions into visible area so elements can never be lost off-screen
+      if(st.x!==undefined){
+        const ew=el.offsetWidth||20;
+        const eh=el.offsetHeight||20;
+        st.x=Math.max(0,Math.min(st.x,(ar.width||720)-ew));
+        st.y=Math.max(42,Math.min(st.y,(ar.height||600)-54-eh));
+      }
+      applyState(el,st);
+    });
+  },300);
 }
 
 // Edit panel
@@ -3043,16 +3058,37 @@ function toggleEditMode(){
     btn.innerHTML='<i class="ti ti-device-floppy" style="font-size:13px"></i> Зберегти';
     btn.classList.add('editing');hint.style.display='block';
     DRAGGABLE_IDS.forEach(id=>{const el=$(id);if(el)el.classList.add('editable')});
+    // Show reset button
+    let rb=$('reset-pos-btn');
+    if(!rb){rb=document.createElement('button');rb.id='reset-pos-btn';
+      rb.style.cssText='position:absolute;top:46px;left:8px;z-index:25;background:#FFD0D0;border:2px solid #E08080;border-radius:12px;padding:4px 10px;font-family:Nunito,sans-serif;font-size:10px;font-weight:700;color:#A04040;cursor:pointer';
+      rb.textContent='↺ Скинути позиції';
+      rb.onclick=resetAllPositions;
+      $('app').appendChild(rb);}
   } else {
     btn.innerHTML='<i class="ti ti-edit" style="font-size:13px"></i> Редагувати';
     btn.classList.remove('editing');hint.style.display='none';
     DRAGGABLE_IDS.forEach(id=>{const el=$(id);if(el)el.classList.remove('editable')});
     removeEPanel();
+    const rb=$('reset-pos-btn');if(rb)rb.remove();
     // IMPORTANT: Only save elements that were explicitly moved (already in OBJ_STATE)
     // Do NOT auto-capture untouched elements — their CSS positions are device-independent
     saveObjPositions();
     showNotif('✅ Збережено!',null);
   }
+}
+
+async function resetAllPositions(){
+  if(!confirm('Скинути всі позиції до стандартних?'))return;
+  DRAGGABLE_IDS.forEach(id=>{
+    delete OBJ_STATE[id];
+    const el=$(id);if(!el)return;
+    // Remove inline position overrides — CSS defaults will take over
+    el.style.left='';el.style.top='';el.style.bottom='';el.style.right='';
+    el.style.transform='';el.style.position='';
+  });
+  await idbSet('objPos','all',{});
+  showNotif('↺ Позиції скинуто!',null);
 }
 
 // Drag state
@@ -3066,15 +3102,21 @@ function findDrag(target){
 }
 function startDrag(el,cx,cy){
   eDrag=el;captureState(el);
+  // Normalize element (remove translateX(-50%) etc.) BEFORE computing cursor offset
+  // This prevents the "jump" caused by lingering CSS transforms
+  applyState(el,OBJ_STATE[el.id]);
   const r=el.getBoundingClientRect();
   eOX=cx-r.left;eOY=cy-r.top;
-  el.style.zIndex='30';showEPanel(el);
+  el.style.zIndex='50';showEPanel(el);
 }
 function doDrag(cx,cy){
   if(!eDrag)return;
   const ar=appRect();
-  const nx=Math.max(0,Math.min(cx-ar.left-eOX,ar.width-10));
-  const ny=Math.max(42,Math.min(cy-ar.top-eOY,ar.height-82));
+  // Use element's actual size for boundary clamping so it can't disappear off-screen
+  const ew=eDrag.offsetWidth||10;
+  const eh=eDrag.offsetHeight||10;
+  const nx=Math.max(0,Math.min(cx-ar.left-eOX,ar.width-ew));
+  const ny=Math.max(42,Math.min(cy-ar.top-eOY,ar.height-54-eh));
   OBJ_STATE[eDrag.id].x=nx;OBJ_STATE[eDrag.id].y=ny;
   eDrag.style.left=nx+'px';eDrag.style.top=ny+'px';
   eDrag.style.bottom='auto';eDrag.style.right='auto';
