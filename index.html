@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Dopamine Task RPG 🦊</title>
+<link rel="manifest" href="./manifest.json">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
@@ -302,6 +303,277 @@ select.ci{cursor:pointer}
 .divider{border:none;border-top:1.5px solid var(--peach);margin:10px 0}
 .badge{display:inline-block;background:var(--peach);border-radius:8px;padding:2px 7px;font-size:10px;font-weight:700;color:var(--accent)}
 .section-lbl{font-size:10px;font-weight:700;color:var(--text-med);letter-spacing:0.5px;text-transform:uppercase;margin-bottom:6px;margin-top:10px}
+/* =====================================================
+   MOBILE ADAPTIVE FIX
+   ===================================================== */
+
+@media (max-width: 900px) {
+
+  body {
+    padding: 0;
+    align-items: flex-start;
+  }
+
+  #app {
+    width: 100vw;
+    height: calc(100vw * 0.83);
+    max-height: 100vh;
+    border-radius: 0;
+  }
+
+  #top-bar {
+    height: 48px;
+    padding: 0 8px;
+    gap: 6px;
+    flex-wrap: wrap;
+  }
+
+  .top-stat {
+    font-size: 10px;
+    padding: 3px 7px;
+  }
+
+  .loc-tab {
+    padding: 4px 8px;
+    font-size: 9px;
+  }
+
+  #bottom-nav {
+    height: 58px;
+  }
+
+  .nav-btn {
+    font-size: 8px;
+    min-width: auto;
+    padding: 2px 4px;
+  }
+
+  .nav-btn i {
+    font-size: 18px;
+  }
+
+  #edit-btn {
+    top: 54px;
+    right: 6px;
+    font-size: 9px;
+    padding: 4px 8px;
+  }
+
+  .mbox {
+    width: 92vw;
+    max-width: 360px;
+    max-height: 82vh;
+    padding: 14px;
+  }
+}
+  /* =====================================================*/
+
+  #top-bar {
+    height: 48px;
+    padding: 0 8px;
+    gap: 6px;
+    flex-wrap: wrap;
+  }
+
+  .top-stat {
+    font-size: 10px;
+    padding: 3px 7px;
+  }
+
+  .loc-tab {
+    padding: 4px 8px;
+    font-size: 9px;
+  }
+
+  #bottom-nav {
+    height: 58px;
+  }
+
+  .nav-btn {
+    font-size: 8px;
+    min-width: auto;
+    padding: 2px 4px;
+  }
+
+  .nav-btn i {
+    font-size: 18px;
+  }
+
+  #edit-btn {
+    top: 54px;
+    right: 6px;
+    font-size: 9px;
+    padding: 4px 8px;
+  }
+
+  .mbox {
+    width: 92vw;
+    max-width: 360px;
+    max-height: 82vh;
+    padding: 14px;
+  }
+}
+
+/* =====================================================
+   SMARTPHONES
+   ===================================================== */
+
+@media (max-width: 600px) {
+
+  #app {
+    width: 100vw;
+    height: 100dvh;
+    max-width: 100vw;
+    border-radius: 0;
+  }
+
+  .scene {
+    transform: scale(0.78);
+    transform-origin: top center;
+    width: 128%;
+    height: 128%;
+    left: -14%;
+    top: 30px;
+  }
+
+  #top-bar {
+    height: auto;
+    min-height: 52px;
+    padding: 4px 6px;
+    gap: 4px;
+  }
+
+  .top-stat {
+    font-size: 9px;
+    padding: 2px 6px;
+    border-radius: 14px;
+  }
+
+  .top-loc-tabs {
+    gap: 2px;
+  }
+
+  .loc-tab {
+    font-size: 8px;
+    padding: 4px 6px;
+  }
+
+  #bottom-nav {
+    height: 62px;
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+
+  .nav-btn {
+    font-size: 7px;
+    gap: 0;
+  }
+
+  .nav-btn i {
+    font-size: 17px;
+  }
+
+  #edit-btn {
+    top: 72px;
+    right: 6px;
+    font-size: 8px;
+    padding: 3px 7px;
+    border-radius: 10px;
+  }
+
+  #edit-hint {
+    width: 90%;
+    text-align: center;
+    font-size: 8px;
+    white-space: normal;
+    top: 98px;
+  }
+
+  .tip {
+    display: none;
+  }
+
+  .mbox {
+    width: 95vw;
+    max-width: none;
+    max-height: 85vh;
+    border-radius: 16px;
+    padding: 12px;
+  }
+
+  .m-title {
+    font-size: 14px;
+    padding-right: 30px;
+  }
+
+  .task-item {
+    padding: 8px;
+    gap: 6px;
+  }
+
+  .t-text {
+    font-size: 11px;
+  }
+
+  .ci,
+  .cb {
+    font-size: 11px;
+  }
+
+  .inv-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .pomo-circle {
+    width: 92px;
+    height: 92px;
+    font-size: 22px;
+  }
+}
+
+/* =====================================================
+   VERY SMALL PHONES
+   ===================================================== */
+
+@media (max-width: 420px) {
+
+  .scene {
+    transform: scale(0.68);
+    width: 148%;
+    height: 148%;
+    left: -24%;
+    top: 40px;
+  }
+
+  #top-bar {
+    padding: 3px;
+  }
+
+  .top-stat {
+    font-size: 8px;
+    padding: 2px 5px;
+  }
+
+  .loc-tab {
+    font-size: 7px;
+    padding: 3px 5px;
+  }
+
+  .nav-btn i {
+    font-size: 15px;
+  }
+
+  .nav-btn {
+    font-size: 6px;
+  }
+
+  #edit-btn {
+    top: 82px;
+    transform: scale(0.9);
+    transform-origin: top right;
+  }
+}
+
+</style>
 </style>
 </head>
 <body>
@@ -3023,6 +3295,17 @@ if(pt&&ptt){
 console.log('🦊 Dopamine Task RPG v3 — IndexedDB + Cosmic Connect!');
 
 
+</script>
+<script>
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+      setTimeout(() => {
+        navigator.serviceWorker.register('/dopamine-rpg/sw.js')
+          .then(reg => console.log('PWA OK!', reg.scope))
+          .catch(err => console.log('PWA Error:', err));
+      }, 2000);
+    });
+  }
 </script>
 </body>
 </html>
