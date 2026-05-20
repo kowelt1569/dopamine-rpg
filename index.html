@@ -297,6 +297,7 @@ select.ci{cursor:pointer}
   outline:2px dashed rgba(100,80,160,0.5);
   outline-offset:3px;
   border-radius:8px;
+
   touch-action:none;
 }
 .editable:hover{outline-color:rgba(100,80,160,0.9)}
@@ -313,60 +314,14 @@ select.ci{cursor:pointer}
    MOBILE ADAPTIVE FIX
    ===================================================== */
 
-@media (max-width: 900px) {
-
-  body{
-  font-family:'Nunito',sans-serif;
-  background:#E8DCC8;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  min-height:100vh;
-  margin:0;
-  overflow:hidden;
-}
-
-/* ОСНОВНИЙ КОНТЕЙНЕР */
-#app{
-  width:min(100vw, 720px);
-  height:min(100vh, 600px);
-
-  aspect-ratio: 720 / 600;
-
-  background:var(--wall);
-  position:relative;
-  overflow:hidden;
-
-  border-radius:20px;
-  box-shadow:0 20px 60px rgba(0,0,0,0.25);
-}
-
-/* =========================================
-   TABLETS
-   ========================================= */
-
 @media (max-width: 900px){
 
   body{
     padding:0;
+    margin:0;
+    overflow:hidden;
     align-items:flex-start;
   }
-
-  #app{
-    width:100vw;
-    height:calc(100vw * 0.83);
-
-    max-height:100vh;
-
-    border-radius:0;
-  }
-}
-
-/* =========================================
-   PHONES
-   ========================================= */
-
-@media (max-width: 600px){
 
   #app{
     width:100vw;
@@ -377,6 +332,13 @@ select.ci{cursor:pointer}
 
     border-radius:0;
   }
+}
+
+/* =========================================
+   PHONES
+   ========================================= */
+
+@media (max-width: 600px){
 
   .scene{
     transform:scale(0.78);
@@ -392,36 +354,13 @@ select.ci{cursor:pointer}
   #top-bar{
     height:auto;
     min-height:54px;
-
     padding:4px 6px;
-
     gap:4px;
     flex-wrap:wrap;
   }
 
-  .top-stat{
-    font-size:9px;
-    padding:2px 6px;
-  }
-
-  .loc-tab{
-    font-size:8px;
-    padding:4px 6px;
-  }
-
   #bottom-nav{
     height:62px;
-    padding-bottom:env(safe-area-inset-bottom);
-  }
-
-  .nav-btn{
-    font-size:7px;
-    min-width:auto;
-    padding:2px 4px;
-  }
-
-  .nav-btn i{
-    font-size:16px;
   }
 
   .mbox{
@@ -431,13 +370,14 @@ select.ci{cursor:pointer}
 }
 
 /* =========================================
-   SMALL PHONES
+   VERY SMALL PHONES
    ========================================= */
 
 @media (max-width: 420px){
 
   .scene{
     transform:scale(0.68);
+    transform-origin:top center;
 
     width:148%;
     height:148%;
@@ -445,148 +385,7 @@ select.ci{cursor:pointer}
     left:-24%;
     top:36px;
   }
-
-  .top-stat{
-    font-size:8px;
-  }
-
-  .nav-btn{
-    font-size:6px;
-  }
-
-  .nav-btn i{
-    font-size:14px;
-  }
 }
-/* =====================================================
-   SMARTPHONES
-   ===================================================== */
-
-@media (max-width: 600px) {
-
-  #app {
-    width: 100vw;
-    height: 100dvh;
-    max-width: 100vw;
-    border-radius: 0;
-  }
-
-  .scene {
-    transform: scale(0.78);
-    transform-origin: top center;
-    width: 128%;
-    height: 128%;
-    left: -14%;
-    top: 30px;
-  }
-
-  #top-bar {
-    height: auto;
-    min-height: 52px;
-    padding: 4px 6px;
-    gap: 4px;
-  }
-
-  .top-stat {
-    font-size: 9px;
-    padding: 2px 6px;
-    border-radius: 14px;
-  }
-
-  .top-loc-tabs {
-    gap: 2px;
-  }
-
-  .loc-tab {
-    font-size: 8px;
-    padding: 4px 6px;
-  }
-
-  #bottom-nav {
-    height: 62px;
-    padding-bottom: env(safe-area-inset-bottom);
-  }
-
-  .nav-btn {
-    font-size: 7px;
-    gap: 0;
-  }
-
-  .nav-btn i {
-    font-size: 17px;
-  }
-
-  #edit-btn {
-    top: 72px;
-    right: 6px;
-    font-size: 8px;
-    padding: 3px 7px;
-    border-radius: 10px;
-  }
-
-  #edit-hint {
-    width: 90%;
-    text-align: center;
-    font-size: 8px;
-    white-space: normal;
-    top: 98px;
-  }
-
-  .tip {
-    display: none;
-  }
-
-  .mbox {
-    width: 95vw;
-    max-width: none;
-    max-height: 85vh;
-    border-radius: 16px;
-    padding: 12px;
-  }
-
-  .m-title {
-    font-size: 14px;
-    padding-right: 30px;
-  }
-
-  .task-item {
-    padding: 8px;
-    gap: 6px;
-  }
-
-  .t-text {
-    font-size: 11px;
-  }
-
-  .ci,
-  .cb {
-    font-size: 11px;
-  }
-
-  .inv-grid {
-    grid-template-columns: repeat(2, 1fr);
-  }
-
-  .pomo-circle {
-    width: 92px;
-    height: 92px;
-    font-size: 22px;
-  }
-}
-
-/* =====================================================
-   VERY SMALL PHONES
-   ===================================================== */
-
-@media (max-width: 420px) {
-
-  .scene {
-    transform: scale(0.68);
-    width: 148%;
-    height: 148%;
-    left: -24%;
-    top: 40px;
-  }
 
   #top-bar {
     padding: 3px;
@@ -3386,18 +3185,30 @@ function doDrag(cx,cy){
 
   const ar=app.getBoundingClientRect();
 
-  let nx=cx-ar.left-eOX;
-  let ny=cy-ar.top-eOY;
+  const scene = document.querySelector('.scene.active');
+
+const scale =
+  window.innerWidth <= 420 ? 0.68 :
+  window.innerWidth <= 600 ? 0.78 :
+  1;
+
+let nx=(cx-ar.left-eOX)/scale;
+let ny=(cy-ar.top-eOY)/scale;
 
   // =========================================
   // SAFE LIMITS
   // =========================================
 
-  const maxX=
-    app.clientWidth-eDrag.offsetWidth;
+  const scale =
+  window.innerWidth <= 420 ? 0.68 :
+  window.innerWidth <= 600 ? 0.78 :
+  1;
 
-  const maxY=
-    app.clientHeight-eDrag.offsetHeight-60;
+const maxX=
+  (app.clientWidth/scale)-eDrag.offsetWidth;
+
+const maxY=
+  (app.clientHeight/scale)-eDrag.offsetHeight-60;
 
   nx=Math.max(
     0,
