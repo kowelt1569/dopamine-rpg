@@ -2955,8 +2955,11 @@ function captureState(el){
 function applyState(el,st){
   if(!el||!st)return;
   el.style.position='absolute';
-  el.style.left=st.x+'px';
-  el.style.top=st.y+'px';
+  // Support both legacy {x,y} (absolute scene px) and new {fx,fy} (fractions of SCENE_W/H)
+  const px=st.fx!==undefined ? st.fx*SCENE_W : st.x;
+  const py=st.fy!==undefined ? st.fy*SCENE_H : st.y;
+  el.style.left=px+'px';
+  el.style.top=py+'px';
   el.style.bottom='auto';el.style.right='auto';
   el.style.transformOrigin='center center';
   el.style.transform=`rotate(${st.rot||0}deg) scaleX(${st.sx||1}) scaleY(${st.sy||1})`;
@@ -2993,16 +2996,20 @@ async function loadObjPositions(){
   if(!data)return;
   Object.assign(OBJ_STATE,data);
   setTimeout(()=>{
-    const ar=appRect();
     Object.keys(OBJ_STATE).forEach(id=>{
       const el=$(id);if(!el)return;
       const st=OBJ_STATE[id];
-      // Clamp saved positions into visible area so elements can never be lost off-screen
-      if(st.x!==undefined){
+      // Migrate legacy {x,y} (absolute scene-px) to {fx,fy} fractions
+      if(st.x!==undefined && st.fx===undefined){
+        st.fx=st.x/SCENE_W; st.fy=st.y/SCENE_H;
+        delete st.x; delete st.y;
+      }
+      // Clamp fractions to safe range
+      if(st.fx!==undefined){
         const ew=el.offsetWidth||20;
         const eh=el.offsetHeight||20;
-        st.x=Math.max(0,Math.min(st.x,(ar.width||720)-ew));
-        st.y=Math.max(42,Math.min(st.y,(ar.height||600)-54-eh));
+        st.fx=Math.max(0,Math.min(st.fx,(SCENE_W-ew)/SCENE_W));
+        st.fy=Math.max(42/SCENE_H,Math.min(st.fy,(SCENE_H-54-eh)/SCENE_H));
       }
       applyState(el,st);
     });
@@ -3108,21 +3115,23 @@ function doDrag(cx,cy){
   if(!eDrag)return;
   const ar=appRect();
   const sc=sceneScale();
-  // Convert screen-space pointer to scene-space coordinates
-  const sx=(cx-ar.left)/sc;
-  const sy=(cy-ar.top)/sc;
-  const ox=eOX/sc;
-  const oy=eOY/sc;
-  // Scene-space dimensions of the app container
-  const sw=ar.width/sc;
-  const sh=ar.height/sc;
-  // Element's logical (scene-space) size
+  // Convert screen-px pointer → scene-px (divide by scale)
+  const spx=(cx-ar.left)/sc - eOX/sc;
+  const spy=(cy-ar.top)/sc  - eOY/sc;
+  // Element's logical size in scene-px
   const ew=eDrag.offsetWidth||10;
   const eh=eDrag.offsetHeight||10;
-  const nx=Math.max(0,Math.min(sx-ox,sw-ew));
-  const ny=Math.max(42/sc,Math.min(sy-oy,sh-54/sc-eh));
-  OBJ_STATE[eDrag.id].x=nx;OBJ_STATE[eDrag.id].y=ny;
-  eDrag.style.left=nx+'px';eDrag.style.top=ny+'px';
+  // Clamp within logical scene bounds
+  const nx=Math.max(0,Math.min(spx,SCENE_W-ew));
+  const ny=Math.max(42,Math.min(spy,SCENE_H-54-eh));
+  // Store as fractions so positions survive viewport changes
+  OBJ_STATE[eDrag.id].fx=nx/SCENE_W;
+  OBJ_STATE[eDrag.id].fy=ny/SCENE_H;
+  // Remove legacy keys if present
+  delete OBJ_STATE[eDrag.id].x;
+  delete OBJ_STATE[eDrag.id].y;
+  eDrag.style.left=nx+'px';
+  eDrag.style.top=ny+'px';
   eDrag.style.bottom='auto';eDrag.style.right='auto';
 }
 function endDrag(){if(eDrag){eDrag.style.zIndex='';eDrag=null;}}
