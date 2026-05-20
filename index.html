@@ -292,14 +292,7 @@ select.ci{cursor:pointer}
 .shop-shelf:hover{filter:brightness(1.08)}
 
 /* ===== EDIT MODE DRAG ===== */
-.editable{
-  cursor:move!important;
-  outline:2px dashed rgba(100,80,160,0.5);
-  outline-offset:3px;
-  border-radius:8px;
-
-  touch-action:none;
-}
+.editable{cursor:move!important;outline:2px dashed rgba(100,80,160,0.5);outline-offset:3px;border-radius:8px}
 .editable:hover{outline-color:rgba(100,80,160,0.9)}
 
 /* ===== START TASK BUTTON ===== */
@@ -310,57 +303,98 @@ select.ci{cursor:pointer}
 .divider{border:none;border-top:1.5px solid var(--peach);margin:10px 0}
 .badge{display:inline-block;background:var(--peach);border-radius:8px;padding:2px 7px;font-size:10px;font-weight:700;color:var(--accent)}
 .section-lbl{font-size:10px;font-weight:700;color:var(--text-med);letter-spacing:0.5px;text-transform:uppercase;margin-bottom:6px;margin-top:10px}
-#app{
-.scene{
-  width:100%;
-  height:100%;
+/* =====================================================
+   MOBILE ADAPTIVE FIX
+   ===================================================== */
+
+@media (max-width: 900px) {
+
+  body{
+  font-family:'Nunito',sans-serif;
+  background:#E8DCC8;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  min-height:100vh;
+  margin:0;
+  overflow:hidden;
 }
 
-@media (max-width:900px){
+/* ОСНОВНИЙ КОНТЕЙНЕР */
+#app{
+  width:min(100vw, 720px);
+  height:min(100vh, 600px);
+
+  aspect-ratio: 720 / 600;
+
+  background:var(--wall);
+  position:relative;
+  overflow:hidden;
+
+  border-radius:20px;
+  box-shadow:0 20px 60px rgba(0,0,0,0.25);
+}
+
+/* =========================================
+   TABLETS
+   ========================================= */
+
+@media (max-width: 900px){
 
   body{
     padding:0;
-    margin:0;
-    overflow:hidden;
     align-items:flex-start;
   }
 
   #app{
     width:100vw;
-    height:100dvh;
+    height:calc(100vw * 0.83);
 
-    max-width:none;
-    max-height:none;
+    max-height:100vh;
 
     border-radius:0;
   }
 }
 
-@media (max-width:700px){
+/* =========================================
+   PHONES
+   ========================================= */
+
+@media (max-width: 600px){
+
+  #app{
+    width:100vw;
+    height:100dvh;
+
+    max-width:100vw;
+    max-height:100dvh;
+
+    border-radius:0;
+  }
+
+  .scene{
+    transform:scale(0.78);
+    transform-origin:top center;
+
+    width:128%;
+    height:128%;
+
+    left:-14%;
+    top:24px;
+  }
 
   #top-bar{
-    min-height:56px;
-    padding:6px;
-    flex-wrap:wrap;
+    height:auto;
+    min-height:54px;
+
+    padding:4px 6px;
+
     gap:4px;
-  }
-
-  #bottom-nav{
-    height:64px;
-  }
-
-  .mbox{
-    width:94vw;
-    max-height:85dvh;
-  }
-
-  #edit-btn{
-    top:72px;
-    right:8px;
+    flex-wrap:wrap;
   }
 
   .top-stat{
-    font-size:10px;
+    font-size:9px;
     padding:2px 6px;
   }
 
@@ -369,10 +403,57 @@ select.ci{cursor:pointer}
     padding:4px 6px;
   }
 
+  #bottom-nav{
+    height:62px;
+    padding-bottom:env(safe-area-inset-bottom);
+  }
+
   .nav-btn{
     font-size:7px;
+    min-width:auto;
+    padding:2px 4px;
+  }
+
+  .nav-btn i{
+    font-size:16px;
+  }
+
+  .mbox{
+    width:95vw;
+    max-height:85vh;
   }
 }
+
+/* =========================================
+   SMALL PHONES
+   ========================================= */
+
+@media (max-width: 420px){
+
+  .scene{
+    transform:scale(0.68);
+
+    width:148%;
+    height:148%;
+
+    left:-24%;
+    top:36px;
+  }
+
+  .top-stat{
+    font-size:8px;
+  }
+
+  .nav-btn{
+    font-size:6px;
+  }
+
+  .nav-btn i{
+    font-size:14px;
+  }
+}
+
+</style>
 </style>
 </head>
 <body>
@@ -2884,117 +2965,6 @@ function applyState(el,st){
   el.style.transformOrigin='center center';
   el.style.transform=`rotate(${st.rot||0}deg) scaleX(${st.sx||1}) scaleY(${st.sy||1})`;
 }
-  let draggedEl=null;
-let dragOffsetX=0;
-let dragOffsetY=0;
-
-function startDrag(e,el){
-
-  if(!editMode)return;
-
-  draggedEl=el;
-
-  const app=$('app');
-
-  const appR=app.getBoundingClientRect();
-  const r=el.getBoundingClientRect();
-
-  const clientX=e.touches
-    ? e.touches[0].clientX
-    : e.clientX;
-
-  const clientY=e.touches
-    ? e.touches[0].clientY
-    : e.clientY;
-
-  dragOffsetX=clientX-r.left;
-  dragOffsetY=clientY-r.top;
-
-  el.classList.add('dragging');
-
-  e.preventDefault();
-}
-
-function dragMove(e){
-
-  if(!draggedEl)return;
-
-  const app=$('app');
-
-  const appR=app.getBoundingClientRect();
-
-  const clientX=e.touches
-    ? e.touches[0].clientX
-    : e.clientX;
-
-  const clientY=e.touches
-    ? e.touches[0].clientY
-    : e.clientY;
-
-  let x=clientX-appR.left-dragOffsetX;
-  let y=clientY-appR.top-dragOffsetY;
-
-  // =========================================
-  // LIMITS
-  // =========================================
-
-  const maxX=
-    app.clientWidth-draggedEl.offsetWidth;
-
-  const maxY=
-    app.clientHeight-draggedEl.offsetHeight-60;
-
-  x=Math.max(0,Math.min(x,maxX));
-  y=Math.max(40,Math.min(y,maxY));
-
-  if(!OBJ_STATE[draggedEl.id]){
-    OBJ_STATE[draggedEl.id]={};
-  }
-
-  OBJ_STATE[draggedEl.id].x=x;
-  OBJ_STATE[draggedEl.id].y=y;
-
-  applyState(
-    draggedEl,
-    OBJ_STATE[draggedEl.id]
-  );
-
-  e.preventDefault();
-}
-
-function endDrag(){
-
-  if(!draggedEl)return;
-
-  draggedEl.classList.remove('dragging');
-
-  draggedEl=null;
-}
-
-// =========================================
-// GLOBAL EVENTS
-// =========================================
-
-document.addEventListener(
-  'mousemove',
-  dragMove
-);
-
-document.addEventListener(
-  'mouseup',
-  endDrag
-);
-
-document.addEventListener(
-  'touchmove',
-  dragMove,
-  {passive:false}
-);
-
-document.addEventListener(
-  'touchend',
-  endDrag
-);
 
 // IndexedDB
 let _idb=null;
@@ -3084,216 +3054,51 @@ function toggleEditMode(){
     showNotif('✅ Збережено!',null);
   }
 }
-// =====================================================================
-// MOBILE SAFE DRAG SYSTEM
-// =====================================================================
 
-let eDrag=null;
-let eOX=0;
-let eOY=0;
-
+// Drag state
+let eDrag=null,eOX=0,eOY=0;
 function findDrag(target){
-
   let el=target;
-
   while(el&&el!==document){
-
-    if(
-      el.id&&(
-        DRAGGABLE_IDS.includes(el.id)||
-        el.classList.contains('editable')
-      )
-    ){
-      return el;
-    }
-
+    if(el.id&&(DRAGGABLE_IDS.includes(el.id)||el.classList.contains('editable')))return el;
     el=el.parentElement;
-  }
-
-  return null;
+  }return null;
 }
-
 function startDrag(el,cx,cy){
-
-  if(!S.editMode)return;
-
-  eDrag=el;
-
-  captureState(el);
-
+  eDrag=el;captureState(el);
   const r=el.getBoundingClientRect();
-
-  eOX=cx-r.left;
-  eOY=cy-r.top;
-
-  el.style.zIndex='30';
-
-  el.classList.add('dragging');
-
-  showEPanel(el);
+  eOX=cx-r.left;eOY=cy-r.top;
+  el.style.zIndex='30';showEPanel(el);
 }
-
 function doDrag(cx,cy){
-
   if(!eDrag)return;
-
-  const app=$('app');
-
-  const ar=app.getBoundingClientRect();
-
-  const scene = document.querySelector('.scene.active');
-
-const scale =
-  window.innerWidth <= 420 ? 0.68 :
-  window.innerWidth <= 600 ? 0.78 :
-  1;
-
-let nx=(cx-ar.left-eOX)/scale;
-let ny=(cy-ar.top-eOY)/scale;
-
-  // =========================================
-  // SAFE LIMITS
-  // =========================================
-
-  const scale =
-  window.innerWidth <= 420 ? 0.68 :
-  window.innerWidth <= 600 ? 0.78 :
-  1;
-
-const maxX=
-  (app.clientWidth/scale)-eDrag.offsetWidth;
-
-const maxY=
-  (app.clientHeight/scale)-eDrag.offsetHeight-60;
-
-  nx=Math.max(
-    0,
-    Math.min(nx,maxX)
-  );
-
-  ny=Math.max(
-    42,
-    Math.min(ny,maxY)
-  );
-
-  OBJ_STATE[eDrag.id].x=nx;
-  OBJ_STATE[eDrag.id].y=ny;
-
-  applyState(
-    eDrag,
-    OBJ_STATE[eDrag.id]
-  );
+  const ar=appRect();
+  const nx=Math.max(0,Math.min(cx-ar.left-eOX,ar.width-10));
+  const ny=Math.max(42,Math.min(cy-ar.top-eOY,ar.height-82));
+  OBJ_STATE[eDrag.id].x=nx;OBJ_STATE[eDrag.id].y=ny;
+  eDrag.style.left=nx+'px';eDrag.style.top=ny+'px';
+  eDrag.style.bottom='auto';eDrag.style.right='auto';
 }
+function endDrag(){if(eDrag){eDrag.style.zIndex='';eDrag=null;}}
 
-function endDrag(){
-
-  if(!eDrag)return;
-
-  eDrag.style.zIndex='';
-
-  eDrag.classList.remove('dragging');
-
-  eDrag=null;
-}
-
-/* =========================================
-   DESKTOP EVENTS
-   ========================================= */
-
-document.addEventListener(
-  'mousedown',
-  e=>{
-
-    if(!S.editMode)return;
-
-    const d=findDrag(e.target);
-
-    if(!d)return;
-
-    e.preventDefault();
-    e.stopPropagation();
-
-    startDrag(
-      d,
-      e.clientX,
-      e.clientY
-    );
-  },
-  true
-);
-
-document.addEventListener(
-  'mousemove',
-  e=>{
-
-    if(S.editMode&&eDrag){
-
-      doDrag(
-        e.clientX,
-        e.clientY
-      );
-    }
-  },
-  true
-);
-
-document.addEventListener(
-  'mouseup',
-  ()=>{
-    if(S.editMode)endDrag();
-  },
-  true
-);
-
-/* =========================================
-   MOBILE EVENTS
-   ========================================= */
-
-document.addEventListener(
-  'touchstart',
-  e=>{
-
-    if(!S.editMode)return;
-
-    const d=findDrag(e.target);
-
-    if(!d)return;
-
-    e.preventDefault();
-    e.stopPropagation();
-
-    startDrag(
-      d,
-      e.touches[0].clientX,
-      e.touches[0].clientY
-    );
-  },
-  {passive:false}
-);
-
-document.addEventListener(
-  'touchmove',
-  e=>{
-
-    if(S.editMode&&eDrag){
-
-      e.preventDefault();
-
-      doDrag(
-        e.touches[0].clientX,
-        e.touches[0].clientY
-      );
-    }
-  },
-  {passive:false}
-);
-
-document.addEventListener(
-  'touchend',
-  ()=>{
-    if(S.editMode)endDrag();
-  }
-);
+document.addEventListener('mousedown',e=>{
+  if(!S.editMode)return;
+  const d=findDrag(e.target);if(!d)return;
+  e.preventDefault();e.stopPropagation();
+  startDrag(d,e.clientX,e.clientY);
+},true);
+document.addEventListener('mousemove',e=>{if(S.editMode&&eDrag)doDrag(e.clientX,e.clientY);},true);
+document.addEventListener('mouseup',e=>{if(S.editMode)endDrag();},true);
+document.addEventListener('touchstart',e=>{
+  if(!S.editMode)return;
+  const d=findDrag(e.target);if(!d)return;
+  e.preventDefault();e.stopPropagation();
+  startDrag(d,e.touches[0].clientX,e.touches[0].clientY);
+},{passive:false});
+document.addEventListener('touchmove',e=>{
+  if(S.editMode&&eDrag){e.preventDefault();doDrag(e.touches[0].clientX,e.touches[0].clientY);}
+},{passive:false});
+document.addEventListener('touchend',()=>{if(S.editMode)endDrag();});
 
 loadObjPositions();
 // =====================================================================
@@ -3372,72 +3177,15 @@ console.log('🦊 Dopamine Task RPG v3 — IndexedDB + Cosmic Connect!');
 
 </script>
 <script>
-  document
-    .querySelectorAll('.editable-object')
-    .forEach(el=>{
-
-      positions[el.id] = {
-        left: el.style.left,
-        top: el.style.top
-      };
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+      setTimeout(() => {
+        navigator.serviceWorker.register('/dopamine-rpg/sw.js')
+          .then(reg => console.log('PWA OK!', reg.scope))
+          .catch(err => console.log('PWA Error:', err));
+      }, 2000);
     });
-
-  localStorage.setItem(
-    'dopamineLayout',
-    JSON.stringify(positions)
-  );
-}
-
-function loadLayout(){
-
-  const saved = localStorage.getItem('dopamineLayout');
-
-  if(!saved) return;
-
-  const positions = JSON.parse(saved);
-
-  Object.keys(positions).forEach(id=>{
-
-    const el = document.getElementById(id);
-
-    if(!el) return;
-
-    el.style.left = positions[id].left;
-    el.style.top = positions[id].top;
-    el.style.transform = 'none';
-  });
-}
-
-[
-  "desk-obj",
-  "bed-obj",
-  "rug-obj",
-  "shelf-obj",
-  "radio-obj",
-  "window-obj",
-  "moon-lamp",
-  "cactus-obj",
-  "clock-obj",
-  "notepad-obj",
-  "cal-wall-obj",
-  "door-obj"
-].forEach(id=>{
-
-  const el = document.getElementById(id);
-
-  if(el){
-
-    el.classList.add("editable-object");
-
-    if(!el.style.position){
-      el.style.position = "absolute";
-    }
-
-    makeDraggable(el);
   }
-});
-
-loadLayout();
 </script>
 </body>
 </html>
