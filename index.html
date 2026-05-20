@@ -3064,7 +3064,12 @@ function toggleEditMode(){
   if(S.editMode){
     btn.innerHTML='<i class="ti ti-device-floppy" style="font-size:13px"></i> Зберегти';
     btn.classList.add('editing');hint.style.display='block';
+    
+    // Додаємо клас для базових об'єктів
     DRAGGABLE_IDS.forEach(id=>{const el=$(id);if(el)el.classList.add('editable')});
+    // ДОДАНО: Знаходимо всі виставлені меблі в кімнаті й теж робимо їх editable
+    document.querySelectorAll('[id^="placed-furn-"]').forEach(el => el.classList.add('editable'));
+
     // Show reset button
     let rb=$('reset-pos-btn');
     if(!rb){rb=document.createElement('button');rb.id='reset-pos-btn';
@@ -3075,25 +3080,60 @@ function toggleEditMode(){
   } else {
     btn.innerHTML='<i class="ti ti-edit" style="font-size:13px"></i> Редагувати';
     btn.classList.remove('editing');hint.style.display='none';
+    
+    // Прибираємо клас із базових об'єктів
     DRAGGABLE_IDS.forEach(id=>{const el=$(id);if(el)el.classList.remove('editable')});
+    // ДОДАНО: Прибираємо клас із меблів
+    document.querySelectorAll('[id^="placed-furn-"]').forEach(el => el.classList.remove('editable'));
+
     removeEPanel();
     const rb=$('reset-pos-btn');if(rb)rb.remove();
-    // IMPORTANT: Only save elements that were explicitly moved (already in OBJ_STATE)
-    // Do NOT auto-capture untouched elements — their CSS positions are device-independent
+
+    // Синхронізуємо переміщені меблі з масивом стану гри S.placedFurniture, якщо вони рухалися по сітці
+    Object.keys(OBJ_STATE).forEach(id => {
+      if (id.startsWith('placed-furn-')) {
+        const idx = parseInt(id.split('-').pop(), 10);
+        if (S.placedFurniture && S.placedFurniture[idx]) {
+          // Прив'язка до сітки 40х40 пікселів (якщо твоя кімната на сітці)
+          // Якщо сітки немає, а переміщення вільне — замініть ці 3 рядки на: S.placedFurniture[idx].x = OBJ_STATE[id].x; S.placedFurniture[idx].y = OBJ_STATE[id].y;
+          S.placedFurniture[idx].x = Math.round(OBJ_STATE[id].x / 40);
+          S.placedFurniture[idx].y = Math.round(OBJ_STATE[id].y / 40);
+          OBJ_STATE[id].x = S.placedFurniture[idx].x * 40;
+          OBJ_STATE[id].y = S.placedFurniture[idx].y * 40;
+          
+          const el = $(id);
+          if (el) applyState(el, OBJ_STATE[id]);
+        }
+      }
+    });
+
     saveObjPositions();
+    if (typeof saveGameState === 'function') saveGameState(); // Зберігаємо загальний стан гри (масив меблів)
     showNotif('✅ Збережено!',null);
   }
 }
 
 async function resetAllPositions(){
   if(!confirm('Скинути всі позиції до стандартних?'))return;
+  
+  // Очищаємо базові об'єкти
   DRAGGABLE_IDS.forEach(id=>{
     delete OBJ_STATE[id];
     const el=$(id);if(!el)return;
-    // Remove inline position overrides — CSS defaults will take over
     el.style.left='';el.style.top='';el.style.bottom='';el.style.right='';
     el.style.transform='';el.style.position='';
   });
+
+  // ДОДАНО: Очищаємо позиції кастомних меблів з OBJ_STATE
+  Object.keys(OBJ_STATE).forEach(id => {
+    if (id.startsWith('placed-furn-')) {
+      delete OBJ_STATE[id];
+      // Якщо у тебе є функція renderRoom(), яка малює кімнату за початковим масивом:
+      // Перемальовуємо, щоб меблі стали на стандартні місця з S.placedFurniture
+    }
+  });
+  if (typeof renderRoom === 'function') renderRoom(); 
+
   await idbSet('objPos','all',{});
   showNotif('↺ Позиції скинуто!',null);
 }
