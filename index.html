@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Dopamine Task RPG 🦊</title>
+<link rel="manifest" href="./manifest.json"> <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
@@ -3187,6 +3188,15 @@ if(pt&&ptt){
 console.log('🦊 Dopamine Task RPG v3 — IndexedDB + Cosmic Connect!');
 
 
+</script>
+<script>
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+      navigator.serviceWorker.register('/dopamine-rpg/sw.js')
+        .then(reg => console.log('PWA активовано успішно!', reg.scope))
+        .catch(err => console.log('Помилка реєстрації PWA:', err));
+    });
+  }
 </script>
 </body>
 </html>
