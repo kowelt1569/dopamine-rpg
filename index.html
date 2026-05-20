@@ -308,153 +308,138 @@ select.ci{cursor:pointer}
    MOBILE ADAPTIVE FIX
    ===================================================== */
 
+/* =========================================
+   TABLETS (≤900px)
+   ========================================= */
 @media (max-width: 900px) {
-
-  body{
-  font-family:'Nunito',sans-serif;
-  background:#E8DCC8;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  min-height:100vh;
-  margin:0;
-  overflow:hidden;
-}
-
-/* ОСНОВНИЙ КОНТЕЙНЕР */
-#app{
-  width:min(100vw, 720px);
-  height:min(100vh, 600px);
-
-  aspect-ratio: 720 / 600;
-
-  background:var(--wall);
-  position:relative;
-  overflow:hidden;
-
-  border-radius:20px;
-  box-shadow:0 20px 60px rgba(0,0,0,0.25);
-}
-
-/* =========================================
-   TABLETS
-   ========================================= */
-
-@media (max-width: 900px){
-
-  body{
-    padding:0;
-    align-items:flex-start;
+  body {
+    padding: 0;
+    align-items: flex-start;
+    overflow: hidden;
   }
 
-  #app{
-    width:100vw;
-    height:calc(100vw * 0.83);
-
-    max-height:100vh;
-
-    border-radius:0;
+  #app {
+    width: 100vw;
+    height: calc(100vw * 0.833);
+    max-height: 100vh;
+    border-radius: 0;
+    flex-shrink: 0;
   }
 }
 
 /* =========================================
-   PHONES
+   PHONES (≤600px)
    ========================================= */
-
-@media (max-width: 600px){
-
-  #app{
-    width:100vw;
-    height:100dvh;
-
-    max-width:100vw;
-    max-height:100dvh;
-
-    border-radius:0;
+@media (max-width: 600px) {
+  body {
+    padding: 0;
+    overflow: hidden;
   }
 
-  .scene{
-    transform:scale(0.78);
-    transform-origin:top center;
-
-    width:128%;
-    height:128%;
-
-    left:-14%;
-    top:24px;
+  #app {
+    width: 100vw;
+    height: 100dvh;
+    max-width: 100vw;
+    max-height: 100dvh;
+    border-radius: 0;
   }
 
-  #top-bar{
-    height:auto;
-    min-height:54px;
-
-    padding:4px 6px;
-
-    gap:4px;
-    flex-wrap:wrap;
+  /* Scale the scene DOWN and keep it fully inside #app.
+     The scene is position:absolute;inset:0 — we scale around
+     the top-left corner so nothing bleeds outside the container. */
+  .scene {
+    transform: scale(0.78);
+    transform-origin: top left;
+    /* Compensate for the scale so the scene still fills the parent width */
+    width: calc(100% / 0.78);
+    height: calc(100% / 0.78);
+    left: 0;
+    top: 0;
+    /* Prevent the oversized (pre-scale) element from capturing pointer events
+       outside the visible area */
+    pointer-events: none;
   }
 
-  .top-stat{
-    font-size:9px;
-    padding:2px 6px;
+  /* Re-enable clicks on interactive children */
+  .scene > * {
+    pointer-events: auto;
   }
 
-  .loc-tab{
-    font-size:8px;
-    padding:4px 6px;
+  #top-bar {
+    height: auto;
+    min-height: 54px;
+    padding: 4px 6px;
+    gap: 4px;
+    flex-wrap: wrap;
+    /* Top bar sits ABOVE the scaled scene — keep it unscaled */
+    position: absolute;
+    z-index: 30;
   }
 
-  #bottom-nav{
-    height:62px;
-    padding-bottom:env(safe-area-inset-bottom);
+  .top-stat {
+    font-size: 9px;
+    padding: 2px 6px;
   }
 
-  .nav-btn{
-    font-size:7px;
-    min-width:auto;
-    padding:2px 4px;
+  .loc-tab {
+    font-size: 8px;
+    padding: 4px 6px;
   }
 
-  .nav-btn i{
-    font-size:16px;
+  #bottom-nav {
+    height: 62px;
+    padding-bottom: env(safe-area-inset-bottom);
+    position: absolute;
+    z-index: 30;
   }
 
-  .mbox{
-    width:95vw;
-    max-height:85vh;
+  .nav-btn {
+    font-size: 7px;
+    min-width: auto;
+    padding: 2px 4px;
+  }
+
+  .nav-btn i {
+    font-size: 16px;
+  }
+
+  .mbox {
+    width: 95vw;
+    max-height: 85vh;
   }
 }
 
 /* =========================================
-   SMALL PHONES
+   SMALL PHONES (≤420px)
    ========================================= */
-
-@media (max-width: 420px){
-
-  .scene{
-    transform:scale(0.68);
-
-    width:148%;
-    height:148%;
-
-    left:-24%;
-    top:36px;
+@media (max-width: 420px) {
+  .scene {
+    transform: scale(0.65);
+    transform-origin: top left;
+    width: calc(100% / 0.65);
+    height: calc(100% / 0.65);
+    left: 0;
+    top: 0;
+    pointer-events: none;
   }
 
-  .top-stat{
-    font-size:8px;
+  .scene > * {
+    pointer-events: auto;
   }
 
-  .nav-btn{
-    font-size:6px;
+  .top-stat {
+    font-size: 8px;
   }
 
-  .nav-btn i{
-    font-size:14px;
+  .nav-btn {
+    font-size: 6px;
+  }
+
+  .nav-btn i {
+    font-size: 14px;
   }
 }
 
-</style>
 </style>
 </head>
 <body>
