@@ -51,7 +51,7 @@ body{font-family:'Nunito',sans-serif;background:#E8DCC8;display:flex;align-items
 #top-bar{position:absolute;top:0;left:0;right:0;height:42px;background:rgba(255,248,240,0.92);border-bottom:2px solid var(--peach);display:flex;align-items:center;justify-content:space-between;padding:0 12px;z-index:30;backdrop-filter:blur(4px)}
 .top-stat{display:flex;align-items:center;gap:5px;background:var(--peach);border-radius:20px;padding:3px 10px;font-size:12px;font-weight:700;color:var(--accent)}
 .top-loc-tabs{display:flex;gap:3px}
-.loc-tab{padding:4px 10px;border-radius:14px;border:none;font-family:'Nunito',sans-serif;font-size:10px;font-weight:700;cursor:pointer;transition:all 0.15s;color:var(--text-med);background:none}
+.loc-tab{padding:4px 10px;border-radius:14px;border:none;font-family:'Nunito',sans-serif;font-size:16px;font-weight:700;cursor:pointer;transition:all 0.15s;color:var(--text-med);background:none}
 .loc-tab.active{background:var(--orange);color:white}
 .loc-tab:not(.active):hover{background:var(--peach);color:var(--accent)}
 
@@ -342,26 +342,34 @@ select.ci{cursor:pointer}
     max-width: 100vw;
     max-height: 100dvh;
     border-radius: 0;
+    overflow: hidden;
   }
 
-  /* Scale the scene DOWN — clip it so the oversized pre-scale
-     element never covers top-bar or bottom-nav */
-  .scene {
-    transform: scale(0.78);
-    transform-origin: top left;
-    width: calc(100% / 0.78);
-    /* Reserve space for top-bar (42px) and bottom-nav (62px).
-       The visible game area sits between them. */
-    height: calc((100dvh - 42px - 62px) / 0.78);
+  /* Scrollable scene container between top-bar and bottom-nav */
+  #scene-viewport {
+    position: absolute;
+    top: 42px;
     left: 0;
-    top: 42px;          /* start below top-bar */
-    overflow: hidden;   /* clip anything that bleeds outside */
-    pointer-events: none;
+    right: 0;
+    bottom: 62px;
+    overflow: scroll;
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior: none;
   }
 
-  /* Re-enable clicks on interactive children */
-  .scene > * {
-    pointer-events: auto;
+  /* Scene itself is 720x600 logical px, no scale transform */
+  .scene {
+    position: relative !important;
+    width: 720px !important;
+    height: 520px !important;
+    transform: none !important;
+    top: 0 !important;
+    left: 0 !important;
+    flex-shrink: 0;
+    display: none;
+  }
+  .scene.active {
+    display: block !important;
   }
 
   #top-bar {
@@ -390,7 +398,7 @@ select.ci{cursor:pointer}
     padding-bottom: env(safe-area-inset-bottom);
     position: absolute;
     bottom: 0;
-    z-index: 35;        /* higher than scene so it's always clickable */
+    z-index: 35;
     background: rgba(255,248,240,0.98);
   }
 
@@ -408,27 +416,26 @@ select.ci{cursor:pointer}
     width: 95vw;
     max-height: 85vh;
   }
+
+  /* Edit/reset buttons adapt position */
+  #edit-btn {
+    top: 46px;
+    z-index: 40;
+  }
+  #edit-hint {
+    top: 72px;
+    z-index: 40;
+  }
+  #reset-pos-btn {
+    top: 46px;
+    z-index: 40;
+  }
 }
 
 /* =========================================
    SMALL PHONES (≤420px)
    ========================================= */
 @media (max-width: 420px) {
-  .scene {
-    transform: scale(0.65);
-    transform-origin: top left;
-    width: calc(100% / 0.65);
-    height: calc((100dvh - 42px - 62px) / 0.65);
-    left: 0;
-    top: 42px;
-    overflow: hidden;
-    pointer-events: none;
-  }
-
-  .scene > * {
-    pointer-events: auto;
-  }
-
   .top-stat {
     font-size: 8px;
   }
@@ -478,6 +485,9 @@ select.ci{cursor:pointer}
   <!-- ===== EDIT BUTTON ===== -->
   <button id="edit-btn" onclick="toggleEditMode()"><i class="ti ti-edit" style="font-size:13px"></i> Редагувати</button>
   <div id="edit-hint">Перетягуй • Обертай🔄 • Масштабуй↔ • Натисни «Зберегти» щоб зафіксувати</div>
+
+  <!-- ===== SCENE VIEWPORT (scrollable on mobile) ===== -->
+  <div id="scene-viewport">
 
   <!-- ===================================================== -->
   <!-- SCENE: BEDROOM                                        -->
@@ -836,6 +846,23 @@ select.ci{cursor:pointer}
       <button class="cb sm" onclick="goScene('bedroom')">← Додому</button>
     </div>
 
+    <!-- Steps counter -->
+    <div id="steps-widget" style="position:absolute;top:48px;right:10px;z-index:10;background:rgba(255,248,240,0.95);border:2px solid var(--orange);border-radius:14px;padding:6px 12px;cursor:pointer;text-align:center;min-width:90px" onclick="openModal('stepsModal')">
+      <div style="font-size:18px">🏃</div>
+      <div id="steps-display" style="font-size:12px;font-weight:800;color:var(--accent)">0 / 10000</div>
+      <div style="font-size:8px;color:var(--text-med);font-weight:700">кроків</div>
+      <div id="steps-bar-wrap" style="background:var(--peach);border-radius:6px;height:5px;margin-top:3px;overflow:hidden"><div id="steps-bar" style="height:100%;background:var(--orange);border-radius:6px;width:0%;transition:width 0.4s"></div></div>
+    </div>
+
+    <!-- Finish flag (right side) -->
+    <div id="finish-flag" style="position:absolute;bottom:104px;right:50px;z-index:6;cursor:pointer" onclick="openModal('stepsModal')">
+      <div style="width:3px;height:60px;background:#8B6354;position:relative">
+        <div style="position:absolute;top:0;left:3px;width:28px;height:18px;background:#E07B54;clip-path:polygon(0 0,100% 50%,0 100%);animation:flagWave 1.5s ease-in-out infinite alternate"></div>
+      </div>
+      <div style="font-size:7px;font-weight:700;color:#E07B54;text-align:center;margin-top:2px">10к!</div>
+    </div>
+    <style>@keyframes flagWave{from{transform:skewY(0deg)}to{transform:skewY(-6deg)}}</style>
+
     <!-- Mascot clone for yard (hidden, mascot moves via JS) -->
   </div><!-- /scene-yard -->
 
@@ -880,7 +907,7 @@ select.ci{cursor:pointer}
     </div>
 
     <!-- Window in kitchen -->
-    <div style="position:absolute;top:62px;left:50%;transform:translateX(-50%);width:130px;height:100px;border:4px solid var(--wood);border-radius:6px;background:#B8E4F7;z-index:5;overflow:hidden">
+    <div id="kit-window" style="position:absolute;top:62px;left:50%;transform:translateX(-50%);width:130px;height:100px;border:4px solid var(--wood);border-radius:6px;background:#B8E4F7;z-index:5;overflow:hidden">
       <div id="kit-sky" style="position:absolute;inset:0;transition:background 3s;background:#B8E4F7"></div>
       <div style="position:absolute;top:50%;left:0;right:0;height:4px;background:var(--wood);transform:translateY(-50%);z-index:2"></div>
       <div style="position:absolute;left:50%;top:0;bottom:0;width:4px;background:var(--wood);transform:translateX(-50%);z-index:2"></div>
@@ -894,6 +921,21 @@ select.ci{cursor:pointer}
     <!-- Back button -->
     <div style="position:absolute;top:48px;left:10px;z-index:10">
       <button class="cb sm" onclick="goScene('bedroom')">← Додому</button>
+    </div>
+
+    <!-- Water glass widget -->
+    <div id="water-widget" style="position:absolute;bottom:140px;right:20px;z-index:8;cursor:pointer;text-align:center" onclick="openModal('waterModal')">
+      <svg width="44" height="58" viewBox="0 0 44 58" style="display:block;margin:0 auto">
+        <!-- Glass outline -->
+        <path d="M8 6 L6 52 L38 52 L36 6 Z" fill="none" stroke="#A0C0D0" stroke-width="2.5" stroke-linejoin="round"/>
+        <!-- Water fill (dynamic via JS) -->
+        <clipPath id="water-clip"><path d="M8 6 L6 52 L38 52 L36 6 Z"/></clipPath>
+        <rect id="water-fill-rect" x="6" y="52" width="32" height="0" fill="#7FB3CC" opacity="0.7" clip-path="url(#water-clip)"/>
+        <!-- Glass highlight -->
+        <path d="M12 10 L10 46" stroke="rgba(255,255,255,0.5)" stroke-width="2" stroke-linecap="round"/>
+      </svg>
+      <div id="water-display" style="font-size:10px;font-weight:800;color:#4A9AD4;margin-top:2px">0/6 💧</div>
+      <div style="background:rgba(127,179,204,0.2);border-radius:4px;height:4px;width:44px;overflow:hidden;margin-top:2px"><div id="water-bar" style="height:100%;background:#4A9AD4;border-radius:4px;width:0%;transition:width 0.4s"></div></div>
     </div>
   </div><!-- /scene-kitchen -->
 
@@ -1090,7 +1132,7 @@ select.ci{cursor:pointer}
     </div>
 
     <!-- Window in bathroom -->
-    <div style="position:absolute;top:60px;left:50%;transform:translateX(-50%);width:110px;height:90px;border:4px solid #A0C0CA;border-radius:6px;background:#B8E4F7;z-index:5;overflow:hidden">
+    <div id="bath-window" style="position:absolute;top:60px;left:50%;transform:translateX(-50%);width:110px;height:90px;border:4px solid #A0C0CA;border-radius:6px;background:#B8E4F7;z-index:5;overflow:hidden">
       <div id="bath-sky" style="position:absolute;inset:0;background:#B8E4F7;transition:background 3s"></div>
       <div style="position:absolute;top:50%;left:0;right:0;height:4px;background:#A0C0CA;transform:translateY(-50%);z-index:2"></div>
       <div style="position:absolute;left:50%;top:0;bottom:0;width:4px;background:#A0C0CA;transform:translateX(-50%);z-index:2"></div>
@@ -1106,6 +1148,8 @@ select.ci{cursor:pointer}
       <button class="cb sm" onclick="goScene('bedroom')">← Додому</button>
     </div>
   </div><!-- /scene-bathroom -->
+
+  </div><!-- /scene-viewport -->
 
   <!-- ===== MODAL OVERLAY ===== -->
   <div id="modal-overlay">
@@ -1178,7 +1222,10 @@ const S = {
   nextTaskId:6, nextNoteId:2,
   shopList:[
     {id:1,text:'Молоко',done:false},{id:2,text:'Хліб',done:false},{id:3,text:'Яблука',done:false},{id:4,text:'Яйця',done:false},{id:5,text:'Йогурт',done:false}
-  ]
+  ],
+  steps:0, stepsGoal:10000, stepsHistory:[],
+  waterGlasses:0, waterGoal:6, waterMl:250,
+  waterHistory:[]
 };
 
 function today(){return new Date().toISOString().slice(0,10)}
@@ -1532,6 +1579,8 @@ function openModal(type,sub){
   else if(type==='shopList')renderShopList(content,sub);
   else if(type==='cosmicConnect')renderCosmicConnect(content);
   else if(type==='meteorGame')renderMeteorGame(content);
+  else if(type==='stepsModal')renderStepsModal(content);
+  else if(type==='waterModal')renderWaterModal(content);
 }
 function closeModal(){
   $('modal-overlay').classList.remove('open');
@@ -1588,6 +1637,7 @@ ${all.map(t=>`
   </div>
   <div class="t-cat">${t.cat}</div>
   ${!t.done?`<button class="start-task-btn" onclick="startTask(${t.id})"><i class="ti ti-player-play" style="font-size:12px"></i>Старт</button>`:''}
+  <button style="background:none;border:2px solid var(--peach);cursor:pointer;color:var(--text-med);font-size:11px;padding:2px 6px;border-radius:6px;margin-left:2px" onclick="editTaskPrompt(${t.id})" title="Редагувати">✏️</button>
   <button style="background:none;border:none;cursor:pointer;color:var(--text-med);font-size:14px;padding:2px 4px" onclick="deleteTask(${t.id})">✕</button>
 </div>`).join('')}
 </div>`;
@@ -1669,12 +1719,24 @@ function toggleTask(id){
     if(S.xp>=S.level*100){S.level++;spawnXPPop('РІВЕНЬ '+S.level+'! 🎉')}
     setMascotState('happy');spawnConfetti();spawnXPPop('+25 XP 🌟');
     playTaskComplete();
+    // Clothes unlock chance from tasks (every 5 completed tasks)
+    const doneCount=S.tasks.filter(x=>x.done).length;
+    if(doneCount>0&&doneCount%5===0){
+      // Find an unpurchased clothing item
+      const unlocked=allClothes.find(c=>!S.inventory.includes(c.id));
+      if(unlocked){
+        S.inventory.push(unlocked.id);
+        setTimeout(()=>showNotif(`🎁 Нова річ за завдання: ${unlocked.emoji} ${unlocked.name}!`,'var(--teal)'),800);
+      }
+    }
     // Remove task after short animation delay
     setTimeout(()=>{
       S.tasks=S.tasks.filter(x=>x.id!==id);
       updateClutter();updateTopBar();saveGameState();
       if($('modal-content')&&currentModal?.type==='tasks')
         renderTasks($('modal-content'),currentModal?.sub||null);
+      if($('modal-content')&&currentModal?.type==='calendar')
+        renderCalendar($('modal-content'));
     },700);
     // Still update UI immediately for animation
     updateClutter();updateTopBar();saveGameState();
@@ -1684,6 +1746,24 @@ function toggleTask(id){
 function deleteTask(id){
   S.tasks=S.tasks.filter(t=>t.id!==id);updateClutter();
   renderTasks($('modal-content'),currentModal?.sub||null);
+}
+function editTaskPrompt(id){
+  const t=S.tasks.find(x=>x.id===id);if(!t)return;
+  // Inline edit: replace text div with input in the task-item
+  const textEl=document.querySelector(`#ti-${id} .t-text`);
+  if(!textEl)return;
+  const old=t.text;
+  const inp=document.createElement('input');
+  inp.value=old;inp.style.cssText='flex:1;padding:3px 6px;border:2px solid var(--orange);border-radius:6px;font-family:Nunito,sans-serif;font-size:12px;color:var(--text-dark);background:white;outline:none';
+  textEl.replaceWith(inp);
+  inp.focus();inp.select();
+  function save(){
+    const v=inp.value.trim();
+    if(v&&v!==old){t.text=v;saveGameState();}
+    renderTasks($('modal-content'),currentModal?.sub||null);
+  }
+  inp.addEventListener('blur',save);
+  inp.addEventListener('keydown',e=>{if(e.key==='Enter')inp.blur();if(e.key==='Escape'){inp.value=old;inp.blur();}});
 }
 function startTask(id){
   S.tasks.forEach(t=>t.active=false);
@@ -1815,7 +1895,7 @@ ${cells}
 </div>
 <div style="margin-top:8px;font-size:10px;color:var(--text-med)">🔵 = є завдання</div>
 ${selStr?`<div class="section-lbl">Завдання на ${selStr}</div>
-<div>${selTasks.length===0?'<p style="font-size:12px;color:var(--text-med);padding:4px 0">Завдань немає~</p>':selTasks.map(t=>`<div style="display:flex;align-items:center;gap:6px;padding:5px 0;border-bottom:1px solid var(--peach)"><span>${catIcon(t.cat)}</span><span style="font-size:12px;color:var(--text-dark);${t.done?'text-decoration:line-through;opacity:0.6':''}">${t.text}</span></div>`).join('')}</div>`:''}
+<div>${selTasks.length===0?'<p style="font-size:12px;color:var(--text-med);padding:4px 0">Завдань немає~</p>':selTasks.map(t=>`<div style="display:flex;align-items:center;gap:6px;padding:5px 0;border-bottom:1px solid var(--peach);cursor:pointer" onclick="toggleTask(${t.id})"><span style="width:18px;height:18px;border:2px solid var(--orange);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;flex-shrink:0;background:${t.done?'var(--orange)':'white'};color:${t.done?'white':'transparent'};transition:all 0.2s">${t.done?'✓':''}</span><span>${catIcon(t.cat)}</span><span style="font-size:12px;color:var(--text-dark);${t.done?'text-decoration:line-through;opacity:0.6':''}">${t.text}</span></div>`).join('')}</div>`:''}
 <div class="section-lbl" style="margin-top:12px">Додати завдання на дату</div>
 <div class="row"><input class="ci" id="cal-ti" placeholder="Нове завдання..."></div>
 <div class="row">
@@ -2037,14 +2117,17 @@ function renderShopList(el,shelf){
   el.innerHTML=mHead('Список Покупок','🛒')+`
 <div style="font-size:12px;color:var(--text-med);margin-bottom:10px">Відмічай товари прямо з полиці 🧺</div>
 <div id="slist">
-${S.shopList.map(item=>`<div class="task-item" id="sl-${item.id}">
+${S.shopList.map(item=>`<div class="task-item" id="sl-${item.id}" style="gap:6px">
   <div class="t-check${item.done?' done':''}" onclick="togShop(${item.id})">${item.done?'✓':''}</div>
-  <div class="t-text${item.done?' done':''}">${item.text}</div>
+  <div class="t-text${item.done?' done':''}" id="slt-${item.id}">${item.text}</div>
+  <button style="background:none;border:2px solid var(--peach);cursor:pointer;color:var(--text-med);font-size:10px;padding:2px 5px;border-radius:6px" onclick="editShopItem(${item.id})">✏️</button>
+  <button style="background:none;border:none;cursor:pointer;color:var(--text-med);font-size:13px;padding:2px 4px" onclick="deleteShopItem(${item.id})">✕</button>
 </div>`).join('')}
 </div>
 <hr class="divider">
 <div class="section-lbl">Додати товар</div>
-<div class="row"><input class="ci" id="sl-inp" placeholder="Назва товару..."><button class="cb" onclick="addShopItem()">+</button></div>`;
+<div class="row"><input class="ci" id="sl-inp" placeholder="Назва товару..."><button class="cb" onclick="addShopItem()">+</button></div>
+<button class="cb sec sm" style="width:100%;margin-top:6px" onclick="clearDoneShopItems()">🗑 Очистити куплені</button>`;
 }
 function togShop(id){
   const item=S.shopList.find(x=>x.id===id);if(!item)return;
@@ -2056,6 +2139,157 @@ function addShopItem(){
   const inp=$('sl-inp');if(!inp||!inp.value.trim())return;
   S.shopList.push({id:Date.now(),text:inp.value.trim(),done:false});
   renderShopList($('modal-content'));
+}
+function deleteShopItem(id){
+  S.shopList=S.shopList.filter(x=>x.id!==id);
+  renderShopList($('modal-content'));
+}
+function editShopItem(id){
+  const item=S.shopList.find(x=>x.id===id);if(!item)return;
+  const textEl=$('slt-'+id);if(!textEl)return;
+  const old=item.text;
+  const inp=document.createElement('input');
+  inp.value=old;inp.style.cssText='flex:1;padding:3px 6px;border:2px solid var(--orange);border-radius:6px;font-family:Nunito,sans-serif;font-size:12px;color:var(--text-dark);background:white;outline:none';
+  textEl.replaceWith(inp);inp.focus();inp.select();
+  function save(){const v=inp.value.trim();if(v)item.text=v;saveGameState();renderShopList($('modal-content'));}
+  inp.addEventListener('blur',save);
+  inp.addEventListener('keydown',e=>{if(e.key==='Enter')inp.blur();if(e.key==='Escape'){inp.value=old;inp.blur();}});
+}
+function clearDoneShopItems(){
+  S.shopList=S.shopList.filter(x=>!x.done);
+  renderShopList($('modal-content'));
+}
+
+// =====================================================================
+// STEPS TRACKER
+// =====================================================================
+function renderStepsModal(el){
+  const pct=Math.min(100,Math.round((S.steps/S.stepsGoal)*100));
+  el.innerHTML=mHead('Кроки сьогодні','🏃')+`
+<div style="text-align:center;margin:10px 0">
+  <div style="font-size:38px;font-weight:800;color:var(--accent)">${S.steps.toLocaleString()}</div>
+  <div style="font-size:12px;color:var(--text-med)">з ${S.stepsGoal.toLocaleString()} кроків (${pct}%)</div>
+  <div style="background:var(--peach);border-radius:10px;height:14px;overflow:hidden;margin:8px 0">
+    <div style="height:100%;background:linear-gradient(90deg,var(--orange),#E85A7A);border-radius:10px;width:${pct}%;transition:width 0.4s"></div>
+  </div>
+  ${pct>=100?'<div style="font-size:18px;font-weight:800;color:#4A9A6A;margin:6px 0">🎉 Ціль досягнута!</div>':''}
+</div>
+<div class="section-lbl">Додати кроки</div>
+<div class="row">
+  <input class="ci" id="steps-inp" type="number" placeholder="Кількість кроків..." min="0" max="50000">
+  <button class="cb" onclick="addSteps()">+</button>
+</div>
+<div class="row" style="flex-wrap:wrap;gap:6px;margin-bottom:10px">
+  ${[500,1000,2000,5000].map(n=>`<button class="cb sec sm" onclick="addStepsN(${n})">+${n}</button>`).join('')}
+</div>
+<div class="section-lbl">Ціль кроків</div>
+<div class="row">
+  <input class="ci" id="steps-goal-inp" type="number" value="${S.stepsGoal}" min="1000" max="100000" step="500">
+  <button class="cb sec" onclick="setStepsGoal()">Зберегти</button>
+</div>
+<div class="section-lbl" style="margin-top:12px">Записати в кінці дня</div>
+<div class="row">
+  <input class="ci" id="steps-total-inp" type="number" placeholder="Всього кроків за день...">
+  <input class="ci" id="steps-date-inp" type="date" value="${today()}" style="max-width:130px">
+  <button class="cb sec" onclick="saveStepsHistory()">💾</button>
+</div>
+<div class="section-lbl">Історія</div>
+<div style="max-height:120px;overflow-y:auto">
+${(S.stepsHistory||[]).slice().reverse().map(h=>`<div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid var(--peach);font-size:12px"><span>${h.date}</span><span style="font-weight:700;color:var(--accent)">${h.steps.toLocaleString()} 🚶</span></div>`).join('')||'<p style="font-size:12px;color:var(--text-med)">Поки немає записів~</p>'}
+</div>`;
+}
+function addSteps(){
+  const inp=$('steps-inp');if(!inp||!inp.value)return;
+  S.steps+=parseInt(inp.value)||0;
+  inp.value='';
+  const prev=S.steps-parseInt(inp.value||0);
+  if(prev<S.stepsGoal&&S.steps>=S.stepsGoal){spawnFireworks();showNotif('🎉 10 000 кроків! Феєрверк!','var(--teal)');}
+  updateStepsWidget();saveGameState();
+  renderStepsModal($('modal-content'));
+}
+function addStepsN(n){S.steps+=n;if(S.steps>=S.stepsGoal&&S.steps-n<S.stepsGoal){spawnFireworks();showNotif('🎉 10 000 кроків! Феєрверк!','var(--teal)');}updateStepsWidget();saveGameState();renderStepsModal($('modal-content'));}
+function setStepsGoal(){const inp=$('steps-goal-inp');if(!inp)return;S.stepsGoal=parseInt(inp.value)||10000;updateStepsWidget();saveGameState();renderStepsModal($('modal-content'));}
+function saveStepsHistory(){
+  const si=$('steps-total-inp'),di=$('steps-date-inp');
+  if(!si||!si.value)return;
+  if(!S.stepsHistory)S.stepsHistory=[];
+  S.stepsHistory.push({date:di.value||today(),steps:parseInt(si.value)||0});
+  S.steps=0;updateStepsWidget();saveGameState();renderStepsModal($('modal-content'));
+}
+function updateStepsWidget(){
+  const d=$('steps-display');const b=$('steps-bar');
+  if(d)d.textContent=`${S.steps.toLocaleString()} / ${S.stepsGoal.toLocaleString()}`;
+  if(b)b.style.width=Math.min(100,(S.steps/S.stepsGoal)*100)+'%';
+}
+function spawnFireworks(){
+  const scene=$('scene-yard')||$('scene-bedroom');
+  const flag=$('finish-flag');
+  const colors=['#FFD166','#E07B54','#B2DFD0','#E85A7A','#7FB3CC','#FFE0A3'];
+  const cx=flag?flag.getBoundingClientRect().left-scene.getBoundingClientRect().left:500;
+  for(let i=0;i<30;i++){
+    const c=document.createElement('div');
+    c.style.cssText=`position:absolute;left:${cx+( Math.random()-0.5)*80}px;top:${50+Math.random()*100}px;width:8px;height:8px;border-radius:50%;background:${colors[~~(Math.random()*colors.length)]};pointer-events:none;animation:cFall 1.5s ease-out ${Math.random()*0.5}s forwards;z-index:20`;
+    scene.appendChild(c);setTimeout(()=>c.remove(),2000);
+  }
+}
+
+// =====================================================================
+// WATER TRACKER
+// =====================================================================
+function renderWaterModal(el){
+  const pct=Math.min(100,Math.round((S.waterGlasses/S.waterGoal)*100));
+  const ml=S.waterGlasses*S.waterMl;
+  const goalMl=S.waterGoal*S.waterMl;
+  el.innerHTML=mHead('Вода сьогодні','💧')+`
+<div style="text-align:center;margin:10px 0">
+  <div style="font-size:34px">💧</div>
+  <div style="font-size:28px;font-weight:800;color:#4A9AD4">${S.waterGlasses} / ${S.waterGoal} стаканів</div>
+  <div style="font-size:12px;color:var(--text-med)">${ml} мл з ${goalMl} мл</div>
+  <div style="background:var(--peach);border-radius:10px;height:14px;overflow:hidden;margin:8px 0">
+    <div style="height:100%;background:linear-gradient(90deg,#7FB3CC,#4A9AD4);border-radius:10px;width:${pct}%;transition:width 0.4s"></div>
+  </div>
+  <div style="display:flex;justify-content:center;gap:6px;margin:8px 0;flex-wrap:wrap">
+    ${Array.from({length:S.waterGoal},(_,i)=>`<div style="font-size:22px;opacity:${i<S.waterGlasses?1:0.25};transition:opacity 0.3s">${i<S.waterGlasses?'🥛':'🫙'}</div>`).join('')}
+  </div>
+  ${pct>=100?'<div style="font-size:14px;font-weight:800;color:#4A9AD4">🎉 Денна норма виконана!</div>':''}
+</div>
+<div style="display:flex;gap:8px;justify-content:center;margin:10px 0">
+  <button class="cb" onclick="addWater(1)" style="background:#4A9AD4;font-size:18px;padding:8px 18px">+💧</button>
+  <button class="cb sec" onclick="addWater(-1)" ${S.waterGlasses===0?'disabled':''}>−1</button>
+</div>
+<hr class="divider">
+<div class="section-lbl">Налаштування</div>
+<div class="row">
+  <div style="flex:1">
+    <div class="lbl">Ціль (стаканів)</div>
+    <input class="ci" type="number" id="wg-goal" value="${S.waterGoal}" min="1" max="20">
+  </div>
+  <div style="flex:1">
+    <div class="lbl">Об'єм склянки (мл)</div>
+    <input class="ci" type="number" id="wg-ml" value="${S.waterMl}" min="100" max="1000" step="50">
+  </div>
+</div>
+<div class="row"><button class="cb sec" style="width:100%" onclick="saveWaterSettings()">Зберегти налаштування</button></div>
+<div class="section-lbl">Скинути день</div>
+<button class="cb sec sm" onclick="resetWater()">↺ Новий день</button>`;
+}
+function addWater(n){
+  S.waterGlasses=Math.max(0,S.waterGlasses+n);
+  if(n>0&&S.waterGlasses===S.waterGoal){showNotif('🎉 Випила денну норму! 💧',null);}
+  updateWaterWidget();saveGameState();renderWaterModal($('modal-content'));
+}
+function saveWaterSettings(){
+  const g=$('wg-goal'),m=$('wg-ml');
+  if(g)S.waterGoal=parseInt(g.value)||6;
+  if(m)S.waterMl=parseInt(m.value)||250;
+  saveGameState();renderWaterModal($('modal-content'));
+}
+function resetWater(){S.waterGlasses=0;updateWaterWidget();saveGameState();renderWaterModal($('modal-content'));}
+function updateWaterWidget(){
+  const d=$('water-display');const b=$('water-bar');const wr=$('water-fill-rect');
+  if(d)d.textContent=`${S.waterGlasses}/${S.waterGoal} 💧`;
+  if(b)b.style.width=Math.min(100,(S.waterGlasses/S.waterGoal)*100)+'%';
+  if(wr){const fillH=Math.min(46,(S.waterGlasses/S.waterGoal)*46);wr.setAttribute('y',52-fillH);wr.setAttribute('height',fillH);}
 }
 
 // =====================================================================
@@ -2865,7 +3099,7 @@ async function mgGameOver(){
   if(fs)fs.textContent=`Рахунок: ${MG.score} | Рівень ${MG.level}`;
   if(nr)nr.textContent=isNew?`🏆 НОВИЙ РЕКОРД! ${MG.score}`:'';
   if(bgr){
-    bgr.textContent=newBG?`🎨 Відкрито новий фон: "${newBG.name}" (${newBG.reward})!`:`+${Math.floor(MG.score/10)}🪙  +${Math.floor(MG.score/5)} XP`;
+    bgr.textContent=newBG?`🎨 Відкрито новий фон: "${newBG.name}" (${newBG.reward})!`:`+${Math.floor(MG.score/10)}🪙  +${Math.floor(MG.score/5)} XP (одяг — лише за завдання 🎯)`;
   }
   if(hsel)hsel.textContent='Рекорд: '+MG.highScore;
 }
@@ -2932,9 +3166,10 @@ const DRAGGABLE_IDS=[
   'window-obj','clock-obj','cal-wall-obj','notepad-obj','door-obj',
   'desk-obj','monitor','bed-obj','rug-obj','shelf-obj','cactus-obj','radio-obj','cactus-stand',
   'cassiopeia-painting','moon-lamp',
-  'kit-fridge-wrap','kit-stove-wrap','kit-sink-wrap',
+  'kit-fridge-wrap','kit-stove-wrap','kit-sink-wrap','kit-window',
+  'yard-tree1','yard-tree2','yard-bench',
   'shop-shelf1','shop-shelf2','shop-shelf3',
-  'bath-tub','bath-toilet','bath-sink','bath-mirror','bath-cabinet'
+  'bath-tub','bath-toilet','bath-sink','bath-mirror','bath-cabinet','bath-window'
 ];
 const OBJ_STATE={};
 
@@ -2947,6 +3182,16 @@ function sceneScale(){
   const m=new DOMMatrix(getComputedStyle(scene).transform);
   // m.a is the X scale component
   return m.a||1;
+}
+
+// Get the origin rect for drag calculations (scene or viewport)
+function getSceneOrigin(sceneEl){
+  const vp=$('scene-viewport');
+  if(vp && getComputedStyle(vp).overflow!=='hidden'){
+    // Mobile scrollable viewport: use scene el itself
+    return sceneEl.getBoundingClientRect();
+  }
+  return sceneEl?sceneEl.getBoundingClientRect():appRect();
 }
 
 function captureState(el){
@@ -3112,7 +3357,6 @@ function startDrag(el,cx,cy){
   eDrag=el;captureState(el);
   // Normalize element (remove translateX(-50%) etc.) BEFORE computing cursor offset
   applyState(el,OBJ_STATE[el.id]);
-  const r=el.getBoundingClientRect();
   const sc=sceneScale();
   const scene=el.closest('.scene')||document.querySelector('.scene.active');
   const origin=scene?scene.getBoundingClientRect():appRect();
@@ -3120,6 +3364,27 @@ function startDrag(el,cx,cy){
   eOX=(cx-origin.left)/sc - OBJ_STATE[el.id].x;
   eOY=(cy-origin.top)/sc  - OBJ_STATE[el.id].y;
   el.style.zIndex='50';showEPanel(el);
+}
+function doDrag(cx,cy){
+  if(!eDrag)return;
+  const sc=sceneScale();
+  // Find the active scene
+  const scene=eDrag.closest('.scene')||document.querySelector('.scene.active');
+  const origin=scene?scene.getBoundingClientRect():appRect();
+  // Convert screen-space pointer to scene-space coordinates
+  const sx=(cx-origin.left)/sc;
+  const sy=(cy-origin.top)/sc;
+  // Logical (pre-scale) dimensions of the scene — always 720×600
+  const sw=720;
+  const sh=600;
+  // Element's logical (scene-space) size
+  const ew=eDrag.offsetWidth||10;
+  const eh=eDrag.offsetHeight||10;
+  const nx=Math.max(0,Math.min(sx-eOX,sw-ew));
+  const ny=Math.max(0,Math.min(sy-eOY,sh-eh));
+  OBJ_STATE[eDrag.id].x=nx;OBJ_STATE[eDrag.id].y=ny;
+  eDrag.style.left=nx+'px';eDrag.style.top=ny+'px';
+  eDrag.style.bottom='auto';eDrag.style.right='auto';
 }
 function doDrag(cx,cy){
   if(!eDrag)return;
@@ -3160,6 +3425,7 @@ document.addEventListener('touchstart',e=>{
 },{passive:false});
 document.addEventListener('touchmove',e=>{
   if(S.editMode&&eDrag){e.preventDefault();doDrag(e.touches[0].clientX,e.touches[0].clientY);}
+  // Don't prevent default otherwise, allow viewport scroll
 },{passive:false});
 document.addEventListener('touchend',()=>{if(S.editMode)endDrag();});
 
@@ -3175,6 +3441,8 @@ async function saveGameState(){
     inventory:S.inventory,equippedItems:S.equippedItems,
     shopList:S.shopList,pomWork:S.pomWork,pomBreak:S.pomBreak,
     nextTaskId:S.nextTaskId,nextNoteId:S.nextNoteId,
+    steps:S.steps,stepsGoal:S.stepsGoal,stepsHistory:S.stepsHistory,
+    waterGlasses:S.waterGlasses,waterGoal:S.waterGoal,waterMl:S.waterMl,waterHistory:S.waterHistory,
     ccCompleted:ccState.completed,ccPoints:ccState.points,
     ccLevel:ccState.level,ccPartProgress:ccState.partProgress
   };
@@ -3184,6 +3452,14 @@ async function loadGameState(){
   const data=await idbGet('gameState','main');
   if(!data)return;
   Object.assign(S,data);
+  // Ensure new fields have defaults
+  if(S.steps===undefined)S.steps=0;
+  if(S.stepsGoal===undefined)S.stepsGoal=10000;
+  if(S.stepsHistory===undefined)S.stepsHistory=[];
+  if(S.waterGlasses===undefined)S.waterGlasses=0;
+  if(S.waterGoal===undefined)S.waterGoal=6;
+  if(S.waterMl===undefined)S.waterMl=250;
+  if(S.waterHistory===undefined)S.waterHistory=[];
   if(data.ccCompleted!==undefined){
     ccState.completed=data.ccCompleted||0;
     ccState.points=data.ccPoints||0;
@@ -3210,6 +3486,7 @@ async function init(){
       const item=allClothes.find(c=>c.id===id);if(item)applyAccessory(item);
     }),150);
   }
+  setTimeout(()=>{updateStepsWidget();updateWaterWidget();},200);
 }
 init();
 
