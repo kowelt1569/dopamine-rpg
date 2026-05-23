@@ -3628,10 +3628,14 @@ const OBJ_STATE={};
 
 function appRect(){return $('app').getBoundingClientRect();}
 
-// Scale is read from the active scene's dataset (set by fitScenes)
+// Returns {x, y} scale factors from the active scene's dataset
 function sceneScale() {
   const s = document.querySelector('.scene.active');
-  return s ? (parseFloat(s.dataset.scale) || 1) : 1;
+  if (!s) return { x: 1, y: 1 };
+  return {
+    x: parseFloat(s.dataset.scaleX) || 1,
+    y: parseFloat(s.dataset.scaleY) || 1
+  };
 }
 function getSceneTx(){ return 0; }
 function getSceneTy(){ return 0; }
@@ -3647,10 +3651,10 @@ function captureState(el){
     const sr=inner.getBoundingClientRect();
     const r=el.getBoundingClientRect();
     // Convert screen-space to scene-space (pre-scale)
-    OBJ_STATE[el.id]={x:(r.left-sr.left)/sc,y:(r.top-sr.top)/sc,rot:0,sx:1,sy:1};
+    OBJ_STATE[el.id]={x:(r.left-sr.left)/sc.x,y:(r.top-sr.top)/sc.y,rot:0,sx:1,sy:1};
   } else {
     const ar=appRect(),r=el.getBoundingClientRect();
-    OBJ_STATE[el.id]={x:(r.left-ar.left)/sc,y:(r.top-ar.top)/sc,rot:0,sx:1,sy:1};
+    OBJ_STATE[el.id]={x:(r.left-ar.left)/sc.x,y:(r.top-ar.top)/sc.y,rot:0,sx:1,sy:1};
   }
 }
 
@@ -3803,8 +3807,8 @@ function startDrag(el,cx,cy){
   const vpR = vp ? vp.getBoundingClientRect() : {left:0,top:0};
   const sc  = sceneScale();
   // Convert from viewport screen-space to scene logical-space
-  const sx = (cx - vpR.left) / sc;
-  const sy = (cy - vpR.top)  / sc;
+  const sx = (cx - vpR.left) / sc.x;
+  const sy = (cy - vpR.top)  / sc.y;
   eOX = sx - OBJ_STATE[el.id].x;
   eOY = sy - OBJ_STATE[el.id].y;
   el.style.zIndex = '50';
@@ -3817,8 +3821,8 @@ function doDrag(cx,cy){
   const vpR = vp ? vp.getBoundingClientRect() : {left:0,top:0};
   const sc  = sceneScale();
   // Convert from viewport screen-space to scene logical-space
-  const sx = (cx - vpR.left) / sc;
-  const sy = (cy - vpR.top)  / sc;
+  const sx = (cx - vpR.left) / sc.x;
+  const sy = (cy - vpR.top)  / sc.y;
   const scene = eDrag.closest('.scene') || document.querySelector('.scene.active');
   const inner = scene ? scene.querySelector('.scene-inner') : null;
   // Use scene-inner (720×560) dimensions for clamping bounds
@@ -3930,7 +3934,6 @@ function fitScenes() {
   const TOP_BAR = 42;
   const BOT_NAV = 54;
 
-  // Position viewport between bars
   vp.style.position = 'absolute';
   vp.style.top      = TOP_BAR + 'px';
   vp.style.left     = '0';
@@ -3941,24 +3944,22 @@ function fitScenes() {
   const vpW = vp.offsetWidth  || app.offsetWidth;
   const vpH = vp.offsetHeight || Math.max(app.offsetHeight - TOP_BAR - BOT_NAV, 100);
 
-  // Scale the content wrapper to fit the viewport width.
-  // The .scene background fills the full viewport (inset:0),
-  // while .scene-inner (720×560) is scaled so objects stay proportional.
-  const scale = vpW < 720 ? vpW / 720 : 1;
+  // Scale scene-inner independently on X and Y so it fills the entire viewport.
+  // Scene reference: 720 × 560 px.
+  const scaleX = vpW / 720;
+  const scaleY = vpH / 560;
 
-  // Keep .scene filling the full viewport (no change to inset:0)
   document.querySelectorAll('.scene').forEach(s => {
-    s.dataset.scale = scale;
-    s.dataset.tx    = 0;
-    s.dataset.ty    = 0;
-    s.dataset.vpW   = vpW;
-    s.dataset.vpH   = vpH;
+    s.dataset.scaleX = scaleX;
+    s.dataset.scaleY = scaleY;
+    s.dataset.scale  = scaleX; // legacy: used for uniform fallback
+    s.dataset.vpW    = vpW;
+    s.dataset.vpH    = vpH;
   });
 
-  // Scale only the inner content wrapper
   document.querySelectorAll('.scene-inner').forEach(inner => {
-    inner.style.transform       = scale < 1 ? `scale(${scale})` : 'none';
     inner.style.transformOrigin = 'top left';
+    inner.style.transform       = `scale(${scaleX}, ${scaleY})`;
   });
 }
 
