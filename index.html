@@ -17,8 +17,8 @@
   --accent:#E07B54;--text-dark:#4A3728;--text-med:#7A5C4A;--shadow:rgba(74,55,40,0.13);
   --green-dark:#5A9A6A;--sky:#B8E4F7;--grass:#7DBF6E;
 }
-body{font-family:'Nunito',sans-serif;background:#E8DCC8;min-height:100vh;overflow:hidden;touch-action:none}
-#app{width:720px;height:600px;background:var(--wall);position:fixed;overflow:hidden;border-radius:20px;box-shadow:0 20px 60px rgba(0,0,0,0.25);transform-origin:top left}
+body{font-family:'Nunito',sans-serif;background:#E8DCC8;display:flex;align-items:center;justify-content:center;min-height:100vh;padding:10px}
+#app{width:720px;height:600px;background:var(--wall);position:relative;overflow:hidden;border-radius:20px;box-shadow:0 20px 60px rgba(0,0,0,0.25);flex-shrink:0}
 
 /* ===== SCENES ===== */
 .scene{position:absolute;inset:0;display:none;overflow:hidden}
@@ -44,15 +44,18 @@ body{font-family:'Nunito',sans-serif;background:#E8DCC8;min-height:100vh;overflo
 #scene-bathroom{background:linear-gradient(180deg,#E8F4F8 0%,#D8EEF4 55%,#B8CED4 55%,#A0B8C0 100%)}
 #scene-bathroom::after{content:'';position:absolute;bottom:82px;left:0;right:0;height:3px;background:#80A8B0;opacity:0.5}
 
+/* ===== WORK ===== */
+#scene-work{background:linear-gradient(180deg,#F2EEE8 0%,#E8E0D4 55%,#C8B89A 55%,#B0A080 100%)}
+#scene-work::after{content:'';position:absolute;bottom:82px;left:0;right:0;height:3px;background:#9A8A6A;opacity:0.5}
+
 /* Bathroom objects must appear ABOVE the scene background */
 .bath-obj{z-index:6!important}
 
 /* ===== TOP BAR ===== */
-#top-bar{position:absolute;top:0;left:0;right:0;height:46px;background:rgba(255,248,240,0.92);border-bottom:2px solid var(--peach);display:flex;align-items:center;justify-content:space-between;padding:0 12px;z-index:30;backdrop-filter:blur(4px)}
+#top-bar{position:absolute;top:0;left:0;right:0;height:42px;background:rgba(255,248,240,0.92);border-bottom:2px solid var(--peach);display:flex;align-items:center;justify-content:space-between;padding:0 12px;z-index:30;backdrop-filter:blur(4px)}
 .top-stat{display:flex;align-items:center;gap:5px;background:var(--peach);border-radius:20px;padding:3px 10px;font-size:12px;font-weight:700;color:var(--accent)}
 .top-loc-tabs{display:flex;gap:3px}
-.loc-tab{padding:5px 10px;border-radius:14px;border:none;font-family:'Nunito',sans-serif;font-size:11px;font-weight:700;cursor:pointer;transition:all 0.15s;color:var(--text-med);background:none;display:flex;align-items:center;gap:3px}
-.loc-tab .lt-icon{font-size:15px}
+.loc-tab{padding:4px 10px;border-radius:14px;border:none;font-family:'Nunito',sans-serif;font-size:16px;font-weight:700;cursor:pointer;transition:all 0.15s;color:var(--text-med);background:none}
 .loc-tab.active{background:var(--orange);color:white}
 .loc-tab:not(.active):hover{background:var(--peach);color:var(--accent)}
 
@@ -67,33 +70,10 @@ body{font-family:'Nunito',sans-serif;background:#E8DCC8;min-height:100vh;overflo
 .mbox{background:var(--cream);border-radius:20px;padding:18px;width:340px;max-height:500px;overflow-y:auto;box-shadow:0 16px 50px rgba(74,55,40,0.35);position:relative;border:3px solid var(--peach)}
 
 /* ===== EDIT MODE BUTTON ===== */
-#edit-btn{position:absolute;top:50px;right:8px;z-index:25;background:var(--lavender);border:2px solid #B0A0D0;border-radius:12px;padding:4px 10px;font-family:'Nunito',sans-serif;font-size:10px;font-weight:700;color:#6A50A0;cursor:pointer;transition:all 0.2s;display:flex;align-items:center;gap:4px}
+#edit-btn{position:absolute;top:46px;right:8px;z-index:25;background:var(--lavender);border:2px solid #B0A0D0;border-radius:12px;padding:4px 10px;font-family:'Nunito',sans-serif;font-size:10px;font-weight:700;color:#6A50A0;cursor:pointer;transition:all 0.2s;display:flex;align-items:center;gap:4px}
 #edit-btn:hover{background:#C8B8E8}
 #edit-btn.editing{background:#7DB87D;border-color:#5A9A5A;color:white}
-#edit-hint{position:absolute;top:76px;left:50%;transform:translateX(-50%);background:rgba(100,80,160,0.85);color:white;border-radius:8px;padding:4px 12px;font-size:10px;font-weight:700;pointer-events:none;z-index:24;display:none;white-space:nowrap}
-
-/* ===== WATER TRACKER ===== */
-#water-tracker{position:absolute;bottom:90px;right:14px;z-index:8;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:2px}
-.water-glass{width:32px;height:42px;background:rgba(160,220,248,0.5);border:2.5px solid #6ABCD8;border-radius:3px 3px 6px 6px;position:relative;overflow:hidden;cursor:pointer;transition:all 0.2s}
-.water-glass.filled{background:rgba(80,180,230,0.7);border-color:#3A9CBF}
-.water-glass:hover{transform:scale(1.08)}
-.water-fill{position:absolute;bottom:0;left:0;right:0;background:linear-gradient(180deg,rgba(120,200,240,0.6),rgba(60,160,220,0.9));transition:height 0.4s;border-radius:0 0 4px 4px}
-.water-lbl{font-size:8px;font-weight:800;color:#3A9CBF;text-align:center}
-
-/* ===== STEP COUNTER (YARD) ===== */
-#step-tracker{position:absolute;bottom:90px;right:14px;z-index:8;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:3px}
-#step-flag{position:absolute;bottom:90px;right:12px;z-index:8}
-.step-progress{font-size:8px;font-weight:800;color:#4A7A5A;text-align:center;background:rgba(255,255,255,0.85);border-radius:8px;padding:2px 7px}
-
-/* ===== WORK SCENE ===== */
-#scene-work{background:linear-gradient(180deg,#EEE8F8 0%,#E0D8F0 55%,#C4B8DC 55%,#B0A4C8 100%)}
-#scene-work::after{content:'';position:absolute;bottom:82px;left:0;right:0;height:3px;background:#9080B0;opacity:0.4}
-
-/* ===== INTERIOR ITEM (editable) ===== */
-.int-item{position:absolute;cursor:pointer;z-index:6;display:flex;flex-direction:column;align-items:center;gap:2px}
-.int-item-lbl{font-size:8px;font-weight:700;color:var(--text-med);background:rgba(255,248,240,0.85);border-radius:5px;padding:1px 5px;max-width:80px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:text;border:1px solid transparent;transition:border-color 0.2s;text-align:center}
-.int-item-lbl:hover{border-color:var(--orange)}
-.int-item-lbl[contenteditable="true"]{border-color:var(--orange);outline:none;background:white}
+#edit-hint{position:absolute;top:72px;left:50%;transform:translateX(-50%);background:rgba(100,80,160,0.85);color:white;border-radius:8px;padding:4px 12px;font-size:10px;font-weight:700;pointer-events:none;z-index:24;display:none;white-space:nowrap}
 
 /* ===== WINDOW ===== */
 #window-obj{position:absolute;top:52px;left:50%;transform:translateX(-50%);width:180px;height:130px;border:5px solid var(--wood);border-radius:8px;cursor:pointer;overflow:hidden;background:#B8E4F7;transition:filter 0.3s;z-index:5}
@@ -333,137 +313,84 @@ select.ci{cursor:pointer}
    ===================================================== */
 
 /* =========================================
-   TABLETS (≤900px)
+   TABLETS (601–900px) — scale scene to fit
    ========================================= */
-@media (max-width: 900px) {
-  body {
-    padding: 0;
-    align-items: flex-start;
-    overflow: hidden;
+@media (max-width:900px) and (min-width:601px){
+  body{padding:0;align-items:flex-start;overflow:hidden}
+  #app{width:100vw;height:100dvh;max-width:100vw;max-height:100dvh;border-radius:0;overflow:hidden}
+  .scene{
+    transform:scale(var(--mob-scale,0.9));
+    transform-origin:top left;
+    width:calc(100vw / var(--mob-scale,0.9)) !important;
+    height:calc((100dvh - 42px - 54px) / var(--mob-scale,0.9)) !important;
+    top:42px;left:0;overflow:hidden;position:absolute!important
   }
-
-  #app {
-    width: 100vw;
-    height: calc(100vw * 0.833);
-    max-height: 100vh;
-    border-radius: 0;
-    flex-shrink: 0;
-  }
+  .scene>*{pointer-events:auto}
 }
 
 /* =========================================
-   PHONES (≤600px)
+   PHONES (≤600px) — scrollable scene canvas
    ========================================= */
-@media (max-width: 600px) {
-  body {
-    padding: 0;
-    overflow: hidden;
+@media (max-width:600px){
+  body{padding:0;overflow:hidden}
+
+  #app{
+    width:100vw;height:100dvh;
+    max-width:100vw;max-height:100dvh;
+    border-radius:0;overflow:hidden
   }
 
-  #app {
-    width: 100vw;
-    height: 100dvh;
-    max-width: 100vw;
-    max-height: 100dvh;
-    border-radius: 0;
+  /* Scrollable canvas between topbar and bottomnav */
+  #scene-viewport{
+    position:absolute;
+    top:42px;left:0;right:0;bottom:54px;
+    overflow:auto;
+    -webkit-overflow-scrolling:touch;
+    overscroll-behavior:contain
   }
 
-  /* Scale the scene DOWN — clip it so the oversized pre-scale
-     element never covers top-bar or bottom-nav */
-  .scene {
-    transform: scale(0.78);
-    transform-origin: top left;
-    width: calc(100% / 0.78);
-    /* Reserve space for top-bar (42px) and bottom-nav (62px).
-       The visible game area sits between them. */
-    height: calc((100dvh - 42px - 62px) / 0.78);
-    left: 0;
-    top: 42px;          /* start below top-bar */
-    overflow: hidden;   /* clip anything that bleeds outside */
-    pointer-events: none;
+  /* Scene is full 720×560 logical — user scrolls to reach edges */
+  .scene{
+    position:relative !important;
+    display:none;
+    width:720px !important;
+    height:560px !important;
+    transform:none !important;
+    top:0 !important; left:0 !important;
+    flex-shrink:0;overflow:hidden
   }
+  .scene.active{display:block !important}
 
-  /* Re-enable clicks on interactive children */
-  .scene > * {
-    pointer-events: auto;
+  #top-bar{
+    position:absolute;top:0;z-index:30;
+    height:42px;padding:0 8px;gap:4px;flex-wrap:nowrap
   }
+  .top-stat{font-size:9px;padding:2px 6px}
+  .loc-tab{font-size:13px;padding:3px 5px}
 
-  #top-bar {
-    height: auto;
-    min-height: 42px;
-    padding: 4px 6px;
-    gap: 4px;
-    flex-wrap: wrap;
-    position: absolute;
-    z-index: 30;
-    top: 0;
+  #bottom-nav{
+    position:absolute;bottom:0;z-index:35;height:54px;
+    padding-bottom:env(safe-area-inset-bottom);
+    background:rgba(255,248,240,0.98)
   }
+  .nav-btn{font-size:7px;min-width:auto;padding:2px 4px}
+  .nav-btn i{font-size:15px}
 
-  .top-stat {
-    font-size: 9px;
-    padding: 2px 6px;
-  }
+  .mbox{width:96vw;max-height:88dvh}
 
-  .loc-tab {
-    font-size: 8px;
-    padding: 4px 6px;
-  }
-
-  #bottom-nav {
-    height: 62px;
-    padding-bottom: env(safe-area-inset-bottom);
-    position: absolute;
-    bottom: 0;
-    z-index: 35;        /* higher than scene so it's always clickable */
-    background: rgba(255,248,240,0.98);
-  }
-
-  .nav-btn {
-    font-size: 7px;
-    min-width: auto;
-    padding: 2px 4px;
-  }
-
-  .nav-btn i {
-    font-size: 16px;
-  }
-
-  .mbox {
-    width: 95vw;
-    max-height: 85vh;
-  }
+  #edit-btn{top:46px;z-index:40}
+  #edit-hint{top:72px;z-index:40;font-size:10px}
+  #reset-pos-btn{top:46px;z-index:40}
 }
 
 /* =========================================
-   SMALL PHONES (≤420px)
+   SMALL PHONES (≤400px)
    ========================================= */
-@media (max-width: 420px) {
-  .scene {
-    transform: scale(0.65);
-    transform-origin: top left;
-    width: calc(100% / 0.65);
-    height: calc((100dvh - 42px - 62px) / 0.65);
-    left: 0;
-    top: 42px;
-    overflow: hidden;
-    pointer-events: none;
-  }
-
-  .scene > * {
-    pointer-events: auto;
-  }
-
-  .top-stat {
-    font-size: 8px;
-  }
-
-  .nav-btn {
-    font-size: 6px;
-  }
-
-  .nav-btn i {
-    font-size: 14px;
-  }
+@media (max-width:400px){
+  .top-stat{font-size:8px}
+  .nav-btn{font-size:6px}
+  .nav-btn i{font-size:13px}
+  .loc-tab{font-size:11px;padding:2px 4px}
 }
 
 </style>
@@ -488,12 +415,12 @@ select.ci{cursor:pointer}
       </div>
     </div>
     <div class="top-loc-tabs">
-      <button class="loc-tab active" onclick="goScene('bedroom')"><span class="lt-icon">🏠</span></button>
-      <button class="loc-tab" onclick="goScene('bathroom')"><span class="lt-icon">🛁</span></button>
-      <button class="loc-tab" onclick="goScene('kitchen')"><span class="lt-icon">🍳</span></button>
-      <button class="loc-tab" onclick="goScene('yard')"><span class="lt-icon">🌿</span></button>
-      <button class="loc-tab" onclick="goScene('shop')"><span class="lt-icon">🛒</span></button>
-      <button class="loc-tab" onclick="goScene('work')"><span class="lt-icon">💼</span></button>
+      <button class="loc-tab active" onclick="goScene('bedroom')">🏠</button>
+      <button class="loc-tab" onclick="goScene('bathroom')">🛁</button>
+      <button class="loc-tab" onclick="goScene('kitchen')">🍳</button>
+      <button class="loc-tab" onclick="goScene('yard')">🌿</button>
+      <button class="loc-tab" onclick="goScene('shop')">🛒</button>
+      <button class="loc-tab" onclick="goScene('work')">💼</button>
     </div>
     <div style="display:flex;gap:6px;align-items:center">
       <div class="top-stat" id="mascot-name-display">🦊 Руді</div>
@@ -503,6 +430,9 @@ select.ci{cursor:pointer}
   <!-- ===== EDIT BUTTON ===== -->
   <button id="edit-btn" onclick="toggleEditMode()"><i class="ti ti-edit" style="font-size:13px"></i> Редагувати</button>
   <div id="edit-hint">Перетягуй • Обертай🔄 • Масштабуй↔ • Натисни «Зберегти» щоб зафіксувати</div>
+
+  <!-- ===== SCENE VIEWPORT (scrollable on mobile) ===== -->
+  <div id="scene-viewport">
 
   <!-- ===================================================== -->
   <!-- SCENE: BEDROOM                                        -->
@@ -687,43 +617,43 @@ select.ci{cursor:pointer}
     <div id="mascot">
       <svg id="mascot-svg" viewBox="0 0 70 82" xmlns="http://www.w3.org/2000/svg">
         <!-- TAIL -->
-        <ellipse cx="57" cy="66" rx="13" ry="9" fill="#E8722A" transform="rotate(-18 57 66)"/>
+        <ellipse cx="57" cy="66" rx="13" ry="9" class="fur-main" fill="#E8722A" transform="rotate(-18 57 66)"/>
         <ellipse cx="60" cy="63" rx="8" ry="5.5" fill="#F5C49A" transform="rotate(-18 60 63)"/>
         <ellipse cx="63" cy="60" rx="5" ry="3.5" fill="white" transform="rotate(-18 63 60)"/>
         <!-- BODY -->
-        <ellipse cx="35" cy="58" rx="18" ry="20" fill="#E8722A"/>
+        <ellipse cx="35" cy="58" rx="18" ry="20" class="fur-main" fill="#E8722A"/>
         <!-- WHITE BELLY large prominent -->
         <ellipse cx="35" cy="60" rx="12" ry="15" fill="#FAF0E6"/>
         <!-- HIND PAWS sitting pose -->
-        <ellipse cx="22" cy="75" rx="10" ry="6" fill="#E8722A"/>
-        <ellipse cx="21" cy="77" rx="8" ry="4" fill="#D4602A"/>
-        <circle cx="17" cy="78" r="2" fill="#C45020"/>
-        <circle cx="21" cy="79.5" r="2" fill="#C45020"/>
-        <circle cx="25" cy="78" r="2" fill="#C45020"/>
-        <ellipse cx="48" cy="75" rx="10" ry="6" fill="#E8722A"/>
-        <ellipse cx="49" cy="77" rx="8" ry="4" fill="#D4602A"/>
-        <circle cx="45" cy="78" r="2" fill="#C45020"/>
-        <circle cx="49" cy="79.5" r="2" fill="#C45020"/>
-        <circle cx="53" cy="78" r="2" fill="#C45020"/>
+        <ellipse cx="22" cy="75" rx="10" ry="6" class="fur-main" fill="#E8722A"/>
+        <ellipse cx="21" cy="77" rx="8" ry="4" class="fur-dark" fill="#D4602A"/>
+        <circle cx="17" cy="78" r="2" class="fur-darker" fill="#C45020"/>
+        <circle cx="21" cy="79.5" r="2" class="fur-darker" fill="#C45020"/>
+        <circle cx="25" cy="78" r="2" class="fur-darker" fill="#C45020"/>
+        <ellipse cx="48" cy="75" rx="10" ry="6" class="fur-main" fill="#E8722A"/>
+        <ellipse cx="49" cy="77" rx="8" ry="4" class="fur-dark" fill="#D4602A"/>
+        <circle cx="45" cy="78" r="2" class="fur-darker" fill="#C45020"/>
+        <circle cx="49" cy="79.5" r="2" class="fur-darker" fill="#C45020"/>
+        <circle cx="53" cy="78" r="2" class="fur-darker" fill="#C45020"/>
         <!-- FRONT PAWS sitting forward -->
-        <ellipse cx="23" cy="66" rx="8" ry="5" fill="#E8722A" transform="rotate(10 23 66)"/>
+        <ellipse cx="23" cy="66" rx="8" ry="5" class="fur-main" fill="#E8722A" transform="rotate(10 23 66)"/>
         <ellipse cx="22" cy="69" rx="7" ry="4" fill="#FAF0E6"/>
         <circle cx="18" cy="70" r="1.8" fill="#DDB898"/>
         <circle cx="22" cy="71.5" r="1.8" fill="#DDB898"/>
         <circle cx="26" cy="70" r="1.8" fill="#DDB898"/>
-        <ellipse cx="47" cy="66" rx="8" ry="5" fill="#E8722A" transform="rotate(-10 47 66)"/>
+        <ellipse cx="47" cy="66" rx="8" ry="5" class="fur-main" fill="#E8722A" transform="rotate(-10 47 66)"/>
         <ellipse cx="48" cy="69" rx="7" ry="4" fill="#FAF0E6"/>
         <circle cx="44" cy="70" r="1.8" fill="#DDB898"/>
         <circle cx="48" cy="71.5" r="1.8" fill="#DDB898"/>
         <circle cx="52" cy="70" r="1.8" fill="#DDB898"/>
         <!-- HEAD large round chibi -->
-        <circle cx="35" cy="28" r="22" fill="#E8722A" id="m-head"/>
+        <circle cx="35" cy="28" r="22" class="fur-main" fill="#E8722A" id="m-head"/>
         <!-- EARS small round with dark inner -->
-        <circle cx="16" cy="12" r="9" fill="#E8722A"/>
-        <circle cx="16" cy="12" r="6" fill="#C85020"/>
+        <circle cx="16" cy="12" r="9" class="fur-main" fill="#E8722A"/>
+        <circle cx="16" cy="12" r="6" class="fur-darker" fill="#C85020"/>
         <circle cx="16" cy="12" r="3.5" fill="#2A1008"/>
-        <circle cx="54" cy="12" r="9" fill="#E8722A"/>
-        <circle cx="54" cy="12" r="6" fill="#C85020"/>
+        <circle cx="54" cy="12" r="9" class="fur-main" fill="#E8722A"/>
+        <circle cx="54" cy="12" r="6" class="fur-darker" fill="#C85020"/>
         <circle cx="54" cy="12" r="3.5" fill="#2A1008"/>
         <!-- FACE: forehead pale patch -->
         <ellipse cx="35" cy="18" rx="9" ry="7" fill="#FAF0E6" opacity="0.55"/>
@@ -856,24 +786,27 @@ select.ci{cursor:pointer}
     <div class="tip" id="tip-yard-sport" style="bottom:198px;left:280px">🏃 Спорт / Тренування</div>
     <div class="tip" id="tip-yard-walk" style="bottom:178px;left:160px">🚶 Прогулянка</div>
 
-    <!-- Finish Flag + Step Tracker -->
-    <div id="step-flag" style="position:absolute;bottom:82px;right:20px;z-index:8;cursor:pointer" onclick="openModal('stepTracker')">
-      <svg width="36" height="80" viewBox="0 0 36 80">
-        <!-- Pole -->
-        <rect x="16" y="8" width="3" height="70" rx="1.5" fill="#8B6354"/>
-        <!-- Flag -->
-        <polygon points="19,8 36,18 19,28" fill="#E85A7A"/>
-        <polygon points="19,8 36,18 19,28" fill="none" stroke="#C84060" stroke-width="1"/>
-      </svg>
-      <div id="step-count-lbl" class="step-progress">0/10k 👟</div>
-    </div>
-    <!-- Fireworks container for steps -->
-    <div id="step-fireworks" style="position:absolute;inset:0;pointer-events:none;z-index:9"></div>
-
     <!-- Back button -->
-    <div style="position:absolute;top:52px;left:10px;z-index:10">
+    <div style="position:absolute;top:48px;left:10px;z-index:10">
       <button class="cb sm" onclick="goScene('bedroom')">← Додому</button>
     </div>
+
+    <!-- Steps counter -->
+    <div id="steps-widget" style="position:absolute;top:48px;right:10px;z-index:10;background:rgba(255,248,240,0.95);border:2px solid var(--orange);border-radius:14px;padding:6px 12px;cursor:pointer;text-align:center;min-width:90px" onclick="openModal('stepsModal')">
+      <div style="font-size:18px">🏃</div>
+      <div id="steps-display" style="font-size:12px;font-weight:800;color:var(--accent)">0 / 10000</div>
+      <div style="font-size:8px;color:var(--text-med);font-weight:700">кроків</div>
+      <div id="steps-bar-wrap" style="background:var(--peach);border-radius:6px;height:5px;margin-top:3px;overflow:hidden"><div id="steps-bar" style="height:100%;background:var(--orange);border-radius:6px;width:0%;transition:width 0.4s"></div></div>
+    </div>
+
+    <!-- Finish flag (right side) -->
+    <div id="finish-flag" style="position:absolute;bottom:104px;right:50px;z-index:6;cursor:pointer" onclick="openModal('stepsModal')">
+      <div style="width:3px;height:60px;background:#8B6354;position:relative">
+        <div style="position:absolute;top:0;left:3px;width:28px;height:18px;background:#E07B54;clip-path:polygon(0 0,100% 50%,0 100%);animation:flagWave 1.5s ease-in-out infinite alternate"></div>
+      </div>
+      <div style="font-size:7px;font-weight:700;color:#E07B54;text-align:center;margin-top:2px">10к!</div>
+    </div>
+    <style>@keyframes flagWave{from{transform:skewY(0deg)}to{transform:skewY(-6deg)}}</style>
 
     <!-- Mascot clone for yard (hidden, mascot moves via JS) -->
   </div><!-- /scene-yard -->
@@ -886,7 +819,7 @@ select.ci{cursor:pointer}
     <div style="position:absolute;top:42px;left:0;right:0;bottom:82px;background:transparent;z-index:0;pointer-events:none"></div>
 
     <!-- Fridge -->
-    <div class="kit-obj" id="kit-fridge-wrap" style="position:absolute;bottom:82px;left:30px;width:90px;height:170px;background:#E8F0F8;border:3px solid #C8D8E8;border-radius:8px 8px 0 0;z-index:5;cursor:pointer" onclick="openModal('tasks','Кухня')">
+    <div class="kit-obj" id="kit-fridge-wrap" style="position:absolute;bottom:82px;left:30px;width:90px;height:170px;background:#E8F0F8;border:3px solid #C8D8E8;border-radius:8px 8px 0 0;z-index:5;cursor:pointer" onclick="openModal('mealsMenu')">
       <div style="position:absolute;top:0;left:0;right:0;height:90px;background:#F0F8FF;border-bottom:3px solid #C8D8E8;border-radius:8px 8px 0 0"></div>
       <div style="position:absolute;top:35px;right:10px;width:8px;height:30px;background:#C8D8E8;border-radius:4px"></div>
       <div style="position:absolute;top:120px;right:10px;width:8px;height:24px;background:#C8D8E8;border-radius:4px"></div>
@@ -919,7 +852,7 @@ select.ci{cursor:pointer}
     </div>
 
     <!-- Window in kitchen -->
-    <div id="kit-window" style="position:absolute;top:62px;left:50%;transform:translateX(-50%);width:130px;height:100px;border:4px solid var(--wood);border-radius:6px;background:#B8E4F7;z-index:5;overflow:hidden;cursor:pointer">
+    <div id="kit-window" style="position:absolute;top:62px;left:50%;transform:translateX(-50%);width:130px;height:100px;border:4px solid var(--wood);border-radius:6px;background:#B8E4F7;z-index:5;overflow:hidden">
       <div id="kit-sky" style="position:absolute;inset:0;transition:background 3s;background:#B8E4F7"></div>
       <div style="position:absolute;top:50%;left:0;right:0;height:4px;background:var(--wood);transform:translateY(-50%);z-index:2"></div>
       <div style="position:absolute;left:50%;top:0;bottom:0;width:4px;background:var(--wood);transform:translateX(-50%);z-index:2"></div>
@@ -930,23 +863,24 @@ select.ci{cursor:pointer}
     <div class="tip" id="tip-stove" style="bottom:196px;left:148px">🍳 Готувати їсти</div>
     <div class="tip" id="tip-sink" style="bottom:190px;right:30px">🍽 Мити посуд</div>
 
-    <!-- Water Tracker -->
-    <div id="water-tracker" onclick="openModal('waterTracker')" title="Трекер води">
-      <svg width="34" height="46" viewBox="0 0 34 46" style="cursor:pointer">
-        <rect x="5" y="8" width="24" height="34" rx="4" fill="rgba(160,220,248,0.4)" stroke="#6ABCD8" stroke-width="2.5"/>
-        <rect x="5" y="24" width="24" height="18" rx="0 0 4 4" fill="rgba(80,180,230,0.6)" id="water-fill-svg"/>
-        <line x1="5" y1="24" x2="29" y2="24" stroke="rgba(255,255,255,0.5)" stroke-width="1.5"/>
-        <!-- Handle -->
-        <path d="M29 14 Q38 14 38 20 Q38 26 29 26" stroke="#6ABCD8" stroke-width="2.5" fill="none" stroke-linecap="round"/>
-        <!-- Label -->
-        <text x="17" y="5" text-anchor="middle" font-size="8" font-weight="800" fill="#3A9CBF" font-family="Nunito,sans-serif" id="water-count-svg">0/6</text>
-      </svg>
-      <div class="water-lbl">💧 Вода</div>
+    <!-- Back button -->
+    <div style="position:absolute;top:48px;left:10px;z-index:10">
+      <button class="cb sm" onclick="goScene('bedroom')">← Додому</button>
     </div>
 
-    <!-- Back button -->
-    <div style="position:absolute;top:52px;left:10px;z-index:10">
-      <button class="cb sm" onclick="goScene('bedroom')">← Додому</button>
+    <!-- Water glass widget -->
+    <div id="water-widget" style="position:absolute;bottom:140px;right:20px;z-index:8;cursor:pointer;text-align:center" onclick="openModal('waterModal')">
+      <svg width="44" height="58" viewBox="0 0 44 58" style="display:block;margin:0 auto">
+        <!-- Glass outline -->
+        <path d="M8 6 L6 52 L38 52 L36 6 Z" fill="none" stroke="#A0C0D0" stroke-width="2.5" stroke-linejoin="round"/>
+        <!-- Water fill (dynamic via JS) -->
+        <clipPath id="water-clip"><path d="M8 6 L6 52 L38 52 L36 6 Z"/></clipPath>
+        <rect id="water-fill-rect" x="6" y="52" width="32" height="0" fill="#7FB3CC" opacity="0.7" clip-path="url(#water-clip)"/>
+        <!-- Glass highlight -->
+        <path d="M12 10 L10 46" stroke="rgba(255,255,255,0.5)" stroke-width="2" stroke-linecap="round"/>
+      </svg>
+      <div id="water-display" style="font-size:10px;font-weight:800;color:#4A9AD4;margin-top:2px">0/6 💧</div>
+      <div style="background:rgba(127,179,204,0.2);border-radius:4px;height:4px;width:44px;overflow:hidden;margin-top:2px"><div id="water-bar" style="height:100%;background:#4A9AD4;border-radius:4px;width:0%;transition:width 0.4s"></div></div>
     </div>
   </div><!-- /scene-kitchen -->
 
@@ -1038,40 +972,34 @@ select.ci{cursor:pointer}
       <div style="text-align:center;font-size:10px;font-weight:700;color:#6A50A0;margin-top:2px">🥦 Відділ 3</div>
     </div>
 
-    <!-- Cash Register -->
-    <div id="shop-cashier" style="position:absolute;bottom:82px;right:20px;z-index:6;cursor:pointer" onclick="openModal('tasks','Покупки')">
-      <svg width="90" height="100" viewBox="0 0 90 100">
-        <!-- Counter base -->
-        <rect x="5" y="60" width="80" height="38" rx="6" fill="#8B6354"/>
-        <rect x="5" y="60" width="80" height="10" rx="3" fill="#A07848"/>
-        <!-- Register body -->
-        <rect x="15" y="20" width="60" height="44" rx="6" fill="#3A3A4A"/>
-        <!-- Screen -->
-        <rect x="22" y="26" width="46" height="22" rx="3" fill="#0F1A30"/>
-        <text x="45" y="38" text-anchor="middle" font-size="7" fill="#7BE8D4" font-family="monospace">COZY MART</text>
-        <text x="45" y="46" text-anchor="middle" font-size="6" fill="#7BE8D4" font-family="monospace">💰 Каса</text>
-        <!-- Keypad -->
-        <rect x="22" y="52" width="8" height="6" rx="1" fill="#5A5A6A"/>
-        <rect x="33" y="52" width="8" height="6" rx="1" fill="#5A5A6A"/>
-        <rect x="44" y="52" width="8" height="6" rx="1" fill="#5A5A6A"/>
-        <rect x="55" y="52" width="8" height="6" rx="1" fill="#E07B54"/>
-        <!-- Drawer -->
-        <rect x="22" y="65" width="46" height="8" rx="2" fill="#6A6A7A"/>
-        <rect x="40" y="68" width="10" height="3" rx="1" fill="#8A8A9A"/>
-      </svg>
-      <div style="text-align:center;font-size:9px;font-weight:800;color:#6A50A0">🧾 Каса</div>
-    </div>
-
     <!-- Store sign -->
-    <div style="position:absolute;top:50px;left:50%;transform:translateX(-50%);background:#7A5CA8;color:white;border-radius:8px;padding:4px 18px;font-size:11px;font-weight:800;letter-spacing:1px;z-index:10">🛒 COZY MART</div>
+    <div style="position:absolute;top:46px;left:50%;transform:translateX(-50%);background:#7A5CA8;color:white;border-radius:8px;padding:4px 18px;font-size:11px;font-weight:800;letter-spacing:1px;z-index:10">🛒 COZY MART</div>
 
     <!-- Tooltips shop -->
     <div class="tip" id="tip-sh1" style="top:180px;left:30px">🧺 Список покупок</div>
     <div class="tip" id="tip-sh2" style="top:180px;left:220px">🥫 Список покупок</div>
     <div class="tip" id="tip-sh3" style="top:180px;right:30px">🥦 Список покупок</div>
 
+    <!-- Cash Register (expense tracker) -->
+    <div id="shop-register" style="position:absolute;bottom:82px;right:20px;width:80px;height:90px;z-index:7;cursor:pointer" onclick="openModal('expenseTracker')">
+      <!-- Register body -->
+      <div style="position:absolute;bottom:0;left:5px;right:5px;height:70px;background:#D4B896;border:2px solid #A07848;border-radius:6px 6px 2px 2px"></div>
+      <!-- Screen -->
+      <div style="position:absolute;bottom:44px;left:10px;right:10px;height:26px;background:#B8E4B8;border:1.5px solid #80A880;border-radius:3px;display:flex;align-items:center;justify-content:center;font-size:7px;font-weight:800;color:#2A5A2A">💰 КАСА</div>
+      <!-- Keys -->
+      <div style="position:absolute;bottom:18px;left:10px;right:10px;display:grid;grid-template-columns:repeat(4,1fr);gap:2px">
+        ${[...Array(8)].map(()=>`<div style="height:8px;background:#C4A070;border-radius:1px;border:1px solid #A07848"></div>`).join('')}
+      </div>
+      <!-- Drawer -->
+      <div style="position:absolute;bottom:2px;left:8px;right:8px;height:14px;background:#C4A070;border-radius:2px;border:1.5px solid #A07848"></div>
+      <!-- Print paper -->
+      <div style="position:absolute;top:0;left:28px;width:24px;height:14px;background:white;border-radius:2px 2px 0 0;border:1px solid #C0B0A0"></div>
+      <div style="position:absolute;bottom:-18px;left:0;right:0;font-size:8px;font-weight:800;color:#6A50A0;text-align:center">Витрати</div>
+    </div>
+    <div class="tip" id="tip-register" style="bottom:190px;right:10px">💰 Каса — облік витрат</div>
+
     <!-- Back button -->
-    <div style="position:absolute;top:52px;left:10px;z-index:10">
+    <div style="position:absolute;top:48px;left:10px;z-index:10">
       <button class="cb sm" onclick="goScene('bedroom')">← Додому</button>
     </div>
   </div><!-- /scene-shop -->
@@ -1167,7 +1095,7 @@ select.ci{cursor:pointer}
     </div>
 
     <!-- Window in bathroom -->
-    <div id="bath-window" style="position:absolute;top:60px;left:50%;transform:translateX(-50%);width:110px;height:90px;border:4px solid #A0C0CA;border-radius:6px;background:#B8E4F7;z-index:5;overflow:hidden;cursor:pointer">
+    <div id="bath-window" style="position:absolute;top:60px;left:50%;transform:translateX(-50%);width:110px;height:90px;border:4px solid #A0C0CA;border-radius:6px;background:#B8E4F7;z-index:5;overflow:hidden">
       <div id="bath-sky" style="position:absolute;inset:0;background:#B8E4F7;transition:background 3s"></div>
       <div style="position:absolute;top:50%;left:0;right:0;height:4px;background:#A0C0CA;transform:translateY(-50%);z-index:2"></div>
       <div style="position:absolute;left:50%;top:0;bottom:0;width:4px;background:#A0C0CA;transform:translateX(-50%);z-index:2"></div>
@@ -1179,41 +1107,144 @@ select.ci{cursor:pointer}
     <div class="tip" id="tip-cabinet" style="top:50px;right:108px">💊 Засоби по догляду</div>
 
     <!-- Back button -->
-    <div style="position:absolute;top:52px;left:10px;z-index:10">
+    <div style="position:absolute;top:48px;left:10px;z-index:10">
       <button class="cb sm" onclick="goScene('bedroom')">← Додому</button>
     </div>
   </div><!-- /scene-bathroom -->
 
   <!-- ===================================================== -->
-  <!-- SCENE: WORK                                          -->
+  <!-- SCENE: WORK                                           -->
   <!-- ===================================================== -->
   <div class="scene" id="scene-work">
-    <!-- Wall -->
-    <div style="position:absolute;top:46px;left:0;right:0;height:3px;background:#9080B0;opacity:0.3;z-index:2"></div>
 
-    <!-- Window -->
-    <div id="work-window" style="position:absolute;top:56px;left:50%;transform:translateX(-50%);width:130px;height:90px;border:4px solid #9080B0;border-radius:6px;background:#B8D4F7;z-index:5;overflow:hidden;cursor:pointer">
-      <div id="work-sky" style="position:absolute;inset:0;background:#B8D4F7;transition:background 3s"></div>
-      <div style="position:absolute;top:50%;left:0;right:0;height:4px;background:#9080B0;transform:translateY(-50%);z-index:2"></div>
-      <div style="position:absolute;left:50%;top:0;bottom:0;width:4px;background:#9080B0;transform:translateX(-50%);z-index:2"></div>
+    <!-- Work window -->
+    <div id="work-window" style="position:absolute;top:62px;left:50%;transform:translateX(-50%);width:130px;height:90px;border:4px solid #9A8A6A;border-radius:6px;background:#B8D8F0;z-index:5;overflow:hidden">
+      <div style="position:absolute;inset:0;background:linear-gradient(180deg,#B8D8F0,#D0E8F8);transition:background 3s"></div>
+      <div style="position:absolute;top:50%;left:0;right:0;height:4px;background:#9A8A6A;transform:translateY(-50%);z-index:2"></div>
+      <div style="position:absolute;left:50%;top:0;bottom:0;width:4px;background:#9A8A6A;transform:translateX(-50%);z-index:2"></div>
     </div>
 
-    <!-- Floor -->
-    <div style="position:absolute;bottom:54px;left:0;right:0;height:28px;background:#C4B0DC;z-index:2"></div>
-
-    <!-- Interior elements container — populated by JS -->
-    <div id="work-items-container" style="position:absolute;inset:0;z-index:5;pointer-events:none"></div>
-
-    <!-- Inventory button -->
-    <div style="position:absolute;bottom:58px;right:10px;z-index:10">
-      <button class="cb sm" onclick="openModal('workInventory')" style="background:var(--lavender);color:#6A50A0;border:2px solid #B0A0D0">📦 Інвентар</button>
+    <!-- Big work desk -->
+    <div id="work-desk" style="position:absolute;bottom:82px;left:50%;transform:translateX(-50%);width:320px;z-index:5;cursor:pointer" onclick="openModal('tasks','Робота')">
+      <div style="width:320px;height:18px;background:#C49A6C;border-radius:6px 6px 0 0;border:2px solid #A07848"></div>
+      <div style="width:290px;height:60px;background:#D4B896;border:2px solid #A07848;border-top:none;margin:0 auto;border-radius:0 0 4px 4px;position:relative">
+        <!-- laptop on desk -->
+        <div style="position:absolute;top:6px;left:20px;width:80px;height:48px;background:#2C2C3A;border:2px solid #4A4A5A;border-radius:4px;overflow:hidden">
+          <div style="width:100%;height:36px;background:#0F1A30;display:flex;align-items:center;justify-content:center;font-size:7px;color:#7BE8D4;font-family:monospace">WORK</div>
+          <div style="height:5px;background:#3A3A4A;margin:0 8px 0 8px;border-radius:2px"></div>
+        </div>
+        <!-- coffee cup -->
+        <div style="position:absolute;top:10px;right:30px;width:22px;height:28px;background:#D4A07A;border-radius:2px 2px 5px 5px;border:2px solid #A07848">
+          <div style="position:absolute;top:4px;left:50%;transform:translateX(-50%);width:14px;height:10px;background:#8B4513;border-radius:50% 50% 0 0;opacity:0.8"></div>
+          <div style="position:absolute;right:-8px;top:6px;width:8px;height:10px;border:2px solid #A07848;border-left:none;border-radius:0 6px 6px 0"></div>
+        </div>
+        <!-- papers -->
+        <div style="position:absolute;top:8px;left:110px;width:50px;height:38px;background:white;border:1px solid #C0B0A0;border-radius:2px;transform:rotate(-4deg)">
+          <div style="margin:4px 3px;height:2px;background:#D0C0B0;border-radius:1px"></div>
+          <div style="margin:3px 3px;height:2px;background:#D0C0B0;border-radius:1px"></div>
+          <div style="margin:3px 3px;height:2px;background:#D0C0B0;border-radius:1px"></div>
+        </div>
+      </div>
+      <!-- Desk legs -->
+      <div style="position:absolute;bottom:-30px;left:10px;width:14px;height:30px;background:#A07848;border-radius:0 0 4px 4px"></div>
+      <div style="position:absolute;bottom:-30px;right:10px;width:14px;height:30px;background:#A07848;border-radius:0 0 4px 4px"></div>
     </div>
+
+    <!-- Clothes rack (fashion inventory) -->
+    <div id="work-clothes-rack" data-interior-label="Вішалка з одягом" style="position:absolute;bottom:82px;left:20px;width:80px;height:140px;z-index:5;cursor:pointer" onclick="openModal('workInventory','fashion')">
+      <!-- Rack pole -->
+      <div style="position:absolute;top:10px;left:38px;width:4px;height:120px;background:#8B6354;border-radius:2px"></div>
+      <!-- Horizontal bar -->
+      <div style="position:absolute;top:10px;left:5px;right:5px;height:6px;background:#A07848;border-radius:3px"></div>
+      <!-- Feet -->
+      <div style="position:absolute;bottom:0;left:0;right:0;height:8px;background:#8B6354;border-radius:4px"></div>
+      <!-- Hangers with clothes -->
+      <div style="position:absolute;top:20px;left:8px;width:20px;height:45px;background:#E85A7A;border-radius:4px 4px 6px 6px;opacity:0.9">
+        <div style="position:absolute;top:-8px;left:50%;transform:translateX(-50%);width:12px;height:8px;border:2px solid #A07848;border-bottom:none;border-radius:6px 6px 0 0"></div>
+      </div>
+      <div style="position:absolute;top:20px;left:30px;width:18px;height:40px;background:#7FB3CC;border-radius:4px 4px 6px 6px;opacity:0.9">
+        <div style="position:absolute;top:-8px;left:50%;transform:translateX(-50%);width:12px;height:8px;border:2px solid #A07848;border-bottom:none;border-radius:6px 6px 0 0"></div>
+      </div>
+      <div style="position:absolute;top:22px;left:52px;width:20px;height:42px;background:#B2DFD0;border-radius:4px 4px 6px 6px;opacity:0.9">
+        <div style="position:absolute;top:-8px;left:50%;transform:translateX(-50%);width:12px;height:8px;border:2px solid #A07848;border-bottom:none;border-radius:6px 6px 0 0"></div>
+      </div>
+      <div id="work-clothes-rack-lbl" style="position:absolute;bottom:-18px;left:0;right:0;font-size:7px;font-weight:700;color:var(--text-med);text-align:center;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">Вішалка з одягом</div>
+    </div>
+
+    <!-- Office shelving unit -->
+    <div id="work-office-shelf" data-interior-label="Офісна полиця" style="position:absolute;top:62px;right:20px;width:100px;height:180px;background:#E0D8CC;border:2px solid #B0A888;border-radius:4px;z-index:5;cursor:pointer" onclick="openModal('workInventory','office')">
+      <!-- Shelves -->
+      <div style="position:absolute;top:40px;left:0;right:0;height:3px;background:#B0A888"></div>
+      <div style="position:absolute;top:90px;left:0;right:0;height:3px;background:#B0A888"></div>
+      <div style="position:absolute;top:140px;left:0;right:0;height:3px;background:#B0A888"></div>
+      <!-- Items - binders -->
+      <div style="position:absolute;top:10px;left:5px;width:14px;height:30px;background:#E85A7A;border-radius:2px;border:1px solid #C04060"></div>
+      <div style="position:absolute;top:10px;left:22px;width:14px;height:30px;background:#7FB3CC;border-radius:2px;border:1px solid #5090A8"></div>
+      <div style="position:absolute;top:10px;left:39px;width:14px;height:30px;background:#B2DFD0;border-radius:2px;border:1px solid #80B0A0"></div>
+      <div style="position:absolute;top:10px;left:56px;width:14px;height:30px;background:#FFD166;border-radius:2px;border:1px solid #C0A040"></div>
+      <div style="position:absolute;top:10px;left:73px;width:14px;height:30px;background:#D4A0C0;border-radius:2px;border:1px solid #A07090"></div>
+      <!-- Items row 2 - books/boxes -->
+      <div style="position:absolute;top:50px;left:5px;width:30px;height:36px;background:#E8D8C0;border:1px solid #C0A880;border-radius:2px"></div>
+      <div style="position:absolute;top:50px;left:40px;width:22px;height:36px;background:#7BBE8A;border-radius:2px;border:1px solid #5A9A6A"></div>
+      <div style="position:absolute;top:50px;left:66px;width:24px;height:36px;background:#F4A261;border-radius:2px;border:1px solid #D08040"></div>
+      <!-- Items row 3 - small boxes -->
+      <div style="position:absolute;top:100px;left:5px;width:40px;height:35px;background:#B0C8E0;border-radius:3px;border:1px solid #8090A8"></div>
+      <div style="position:absolute;top:100px;left:50px;width:40px;height:35px;background:#F0D8B8;border-radius:3px;border:1px solid #C0A070"></div>
+      <div id="work-office-shelf-lbl" style="position:absolute;bottom:4px;left:0;right:0;font-size:7px;font-weight:700;color:#7A6A5A;text-align:center">Офісна полиця</div>
+    </div>
+
+    <!-- Whiteboard -->
+    <div id="work-whiteboard" data-interior-label="Дошка" style="position:absolute;top:62px;left:115px;width:150px;height:100px;background:#F8F8F8;border:4px solid #9A8A6A;border-radius:4px;z-index:5;cursor:pointer" onclick="openModal('workInventory','board')">
+      <div style="position:absolute;inset:6px">
+        <div style="width:80%;height:3px;background:#E85A7A;border-radius:2px;margin-bottom:6px"></div>
+        <div style="width:60%;height:3px;background:#7FB3CC;border-radius:2px;margin-bottom:6px"></div>
+        <div style="width:90%;height:3px;background:#B2DFD0;border-radius:2px;margin-bottom:6px"></div>
+        <div style="width:50%;height:3px;background:#FFD166;border-radius:2px"></div>
+      </div>
+      <div style="position:absolute;bottom:-2px;left:50%;transform:translateX(-50%);display:flex;gap:4px">
+        <div style="width:10px;height:6px;background:#E85A7A;border-radius:1px"></div>
+        <div style="width:10px;height:6px;background:#7FB3CC;border-radius:1px"></div>
+        <div style="width:10px;height:6px;background:#5A5A5A;border-radius:1px"></div>
+      </div>
+      <div id="work-whiteboard-lbl" style="position:absolute;bottom:-18px;left:0;right:0;font-size:7px;font-weight:700;color:var(--text-med);text-align:center">Дошка</div>
+    </div>
+
+    <!-- Plant in office -->
+    <div id="work-plant" data-interior-label="Офісна рослина" style="position:absolute;bottom:82px;right:130px;width:40px;height:60px;z-index:6;cursor:pointer" onclick="openModal('tasks','Рослини')">
+      <div style="position:absolute;bottom:0;left:8px;right:8px;height:20px;background:#A07848;border-radius:4px;border:2px solid #8B6354"></div>
+      <div style="position:absolute;bottom:16px;left:14px;width:12px;height:44px;background:#5A9A6A;border-radius:4px"></div>
+      <div style="position:absolute;bottom:40px;left:2px;width:20px;height:14px;background:#4A9A6A;border-radius:50%;transform:rotate(-20deg)"></div>
+      <div style="position:absolute;bottom:44px;right:2px;width:18px;height:13px;background:#5AAA6A;border-radius:50%;transform:rotate(20deg)"></div>
+      <div style="position:absolute;bottom:52px;left:8px;width:16px;height:12px;background:#6ABB7A;border-radius:50%"></div>
+      <div id="work-plant-lbl" style="position:absolute;bottom:-18px;left:50%;transform:translateX(-50%);font-size:7px;font-weight:700;color:var(--text-med);text-align:center;white-space:nowrap">Рослина</div>
+    </div>
+
+    <!-- Task board / pinboard -->
+    <div style="position:absolute;top:62px;left:280px;width:90px;height:100px;background:#F4E8C0;border:3px solid #C0A060;border-radius:4px;z-index:5;cursor:pointer" onclick="openModal('tasks','Робота')">
+      <div style="position:absolute;top:6px;left:6px;width:70%;height:3px;background:#E85A7A;border-radius:1px"></div>
+      <div style="position:absolute;top:14px;left:6px;width:55%;height:3px;background:#5A9A6A;border-radius:1px"></div>
+      <div style="position:absolute;top:22px;left:6px;width:65%;height:3px;background:#7FB3CC;border-radius:1px"></div>
+      <div style="position:absolute;top:34px;left:6px;right:6px;height:2px;background:#C0A060;opacity:0.4"></div>
+      <div style="position:absolute;top:40px;left:6px;width:60%;height:3px;background:#E07B54;border-radius:1px"></div>
+      <div style="position:absolute;top:48px;left:6px;width:75%;height:3px;background:#B2DFD0;border-radius:1px"></div>
+      <!-- pins -->
+      <div style="position:absolute;top:4px;left:4px;width:8px;height:8px;background:#E85A7A;border-radius:50%"></div>
+      <div style="position:absolute;top:4px;right:4px;width:8px;height:8px;background:#7FB3CC;border-radius:50%"></div>
+      <div style="position:absolute;bottom:6px;left:0;right:0;font-size:7px;font-weight:700;color:#7A6A4A;text-align:center">Завдання</div>
+    </div>
+
+    <!-- Tooltips -->
+    <div class="tip" id="tip-workdesk" style="bottom:186px;left:50%;transform:translateX(-50%)">💻 Завдання по роботі</div>
+    <div class="tip" id="tip-workrack" style="bottom:236px;left:10px">👗 Інвентар магазину</div>
+    <div class="tip" id="tip-workshelf" style="top:60px;right:14px">📁 Офісний інвентар</div>
 
     <!-- Back button -->
-    <div style="position:absolute;top:52px;left:10px;z-index:10">
+    <div style="position:absolute;top:48px;left:10px;z-index:10">
       <button class="cb sm" onclick="goScene('bedroom')">← Додому</button>
     </div>
   </div><!-- /scene-work -->
+
+  </div><!-- /scene-viewport -->
 
   <!-- ===== MODAL OVERLAY ===== -->
   <div id="modal-overlay">
@@ -1256,28 +1287,10 @@ select.ci{cursor:pointer}
 
 <script>
 // =====================================================================
-// MOBILE SCALING — fit 720×600 app into any screen
-// =====================================================================
-function scalApp(){
-  const app=document.getElementById('app');
-  if(!app)return;
-  const vw=window.innerWidth,vh=window.innerHeight;
-  const scaleX=vw/720,scaleY=vh/600;
-  const sc=Math.min(scaleX,scaleY,1); // never zoom in on desktop
-  const ox=Math.max(0,(vw-720*sc)/2);
-  const oy=Math.max(0,(vh-600*sc)/2);
-  app.style.transform=`scale(${sc})`;
-  app.style.left=ox+'px';
-  app.style.top=oy+'px';
-}
-window.addEventListener('resize',scalApp);
-scalApp();
-
-// =====================================================================
 // STATE
 // =====================================================================
 const S = {
-  xp:120, gold:80, level:2,
+  xp:120, gold:45, level:2,
   mascotName:'Руді',
   mascotColor:'#E8722A',
   mascotEyeColor:'#2C1A0E',
@@ -1294,8 +1307,7 @@ const S = {
   radioPlaying:null,
   soundMuted:false,
   equippedItems:[],
-  inventory:[], // purchased clothes
-  interiorInventory:[], // placed work-room interior items
+  inventory:[], // purchased items
   objPositions:{}, // saved furniture positions
   editMode:false,
   currentScene:'bedroom',
@@ -1306,12 +1318,17 @@ const S = {
   shopList:[
     {id:1,text:'Молоко',done:false},{id:2,text:'Хліб',done:false},{id:3,text:'Яблука',done:false},{id:4,text:'Яйця',done:false},{id:5,text:'Йогурт',done:false}
   ],
-  // Water tracker
-  waterCount:0, waterGoal:6, waterGlassML:250,
-  // Step tracker
-  stepCount:0, stepGoal:10000,
-  // Interior skins unlocked (from Meteor Storm)
-  interiorSkins:[],
+  steps:0, stepsGoal:10000, stepsHistory:[],
+  waterGlasses:0, waterGoal:6, waterMl:250,
+  waterHistory:[],
+  expenses:[],
+  meals:[
+    {id:1,name:'Вівсянка',ingredients:'Овсянка, молоко, банан, мед',recipe:'Залити овсянку гарячим молоком, настояти 5 хв. Додати нарізаний банан і мед.',done:false},
+    {id:2,name:'Паста',ingredients:'Паста, томатний соус, часник',recipe:'Відварити пасту. Обсмажити часник на олії, додати соус, тушкувати 5 хв. Перемішати.',done:false}
+  ],
+  nextMealId:3,
+  interiorLabels:{},
+  workNotes:''
 };
 
 function today(){return new Date().toISOString().slice(0,10)}
@@ -1344,9 +1361,6 @@ function goScene(name){
   setMascotState('happy');
   setTimeout(()=>setMascotState('idle'),1500);
   updateWindowEnv(targetScene);
-  if(name==='kitchen')updateWaterUI();
-  if(name==='yard')updateStepUI();
-  if(name==='work')renderWorkItems();
 }
 
 // =====================================================================
@@ -1432,10 +1446,6 @@ function updateWindowEnv(sceneEl){
   // Sync kitchen sky
   const ks=$('kit-sky');
   if(ks){ks.style.background=skyColor}
-  const bs=$('bath-sky');
-  if(bs){bs.style.background=skyColor}
-  const wks=$('work-sky');
-  if(wks){wks.style.background=skyColor}
 }
 
 updateWindowEnv();
@@ -1672,9 +1682,11 @@ function openModal(type,sub){
   else if(type==='shopList')renderShopList(content,sub);
   else if(type==='cosmicConnect')renderCosmicConnect(content);
   else if(type==='meteorGame')renderMeteorGame(content);
-  else if(type==='waterTracker')renderWaterTracker(content);
-  else if(type==='stepTracker')renderStepTracker(content);
-  else if(type==='workInventory')renderWorkInventory(content);
+  else if(type==='stepsModal')renderStepsModal(content);
+  else if(type==='waterModal')renderWaterModal(content);
+  else if(type==='expenseTracker')renderExpenseTracker(content);
+  else if(type==='mealsMenu')renderMealsMenu(content);
+  else if(type==='workInventory')renderWorkInventory(content,sub);
 }
 function closeModal(){
   $('modal-overlay').classList.remove('open');
@@ -1726,12 +1738,12 @@ ${all.map(t=>`
 <div class="task-item" id="ti-${t.id}">
   <div class="t-check${t.done?' done':''}" onclick="toggleTask(${t.id})">${t.done?'✓':''}</div>
   <div style="flex:1">
-    <div class="t-text${t.done?' done':''}" id="ttext-${t.id}">${t.text}</div>
+    <div class="t-text${t.done?' done':''}">${t.text}</div>
     <div style="font-size:10px;color:var(--text-med)">${t.date}</div>
   </div>
   <div class="t-cat">${t.cat}</div>
   ${!t.done?`<button class="start-task-btn" onclick="startTask(${t.id})"><i class="ti ti-player-play" style="font-size:12px"></i>Старт</button>`:''}
-  <button style="background:var(--peach);border:1.5px solid var(--orange);border-radius:7px;cursor:pointer;color:var(--accent);font-size:11px;padding:2px 6px;font-weight:700" onclick="editTask(${t.id})" title="Редагувати">✏️</button>
+  <button style="background:none;border:2px solid var(--peach);cursor:pointer;color:var(--text-med);font-size:11px;padding:2px 6px;border-radius:6px;margin-left:2px" onclick="editTaskPrompt(${t.id})" title="Редагувати">✏️</button>
   <button style="background:none;border:none;cursor:pointer;color:var(--text-med);font-size:14px;padding:2px 4px" onclick="deleteTask(${t.id})">✕</button>
 </div>`).join('')}
 </div>`;
@@ -1809,16 +1821,19 @@ function toggleTask(id){
   const t=S.tasks.find(x=>x.id===id);if(!t)return;
   t.done=!t.done;
   if(t.done){
-    S.xp+=25;S.gold+=15;
+    S.xp+=25;S.gold+=10;
     if(S.xp>=S.level*100){S.level++;spawnXPPop('РІВЕНЬ '+S.level+'! 🎉')}
-    setMascotState('happy');spawnConfetti();spawnXPPop('+25 XP +15🪙');
+    setMascotState('happy');spawnConfetti();spawnXPPop('+25 XP 🌟');
     playTaskComplete();
-    // Chance to unlock a random clothing item on task complete
-    const notOwned=allClothes.filter(c=>!S.inventory.includes(c.id));
-    if(notOwned.length>0&&Math.random()<0.25){
-      const item=notOwned[Math.floor(Math.random()*notOwned.length)];
-      S.inventory.push(item.id);
-      setTimeout(()=>showNotif(`🎁 Завдання виконано! Отримано: ${item.emoji} ${item.name}!`,'var(--lavender)'),500);
+    // Clothes unlock chance from tasks (every 5 completed tasks)
+    const doneCount=S.tasks.filter(x=>x.done).length;
+    if(doneCount>0&&doneCount%5===0){
+      // Find an unpurchased clothing item
+      const unlocked=allClothes.find(c=>!S.inventory.includes(c.id));
+      if(unlocked){
+        S.inventory.push(unlocked.id);
+        setTimeout(()=>showNotif(`🎁 Нова річ за завдання: ${unlocked.emoji} ${unlocked.name}!`,'var(--teal)'),800);
+      }
     }
     // Remove task after short animation delay
     setTimeout(()=>{
@@ -1826,6 +1841,8 @@ function toggleTask(id){
       updateClutter();updateTopBar();saveGameState();
       if($('modal-content')&&currentModal?.type==='tasks')
         renderTasks($('modal-content'),currentModal?.sub||null);
+      if($('modal-content')&&currentModal?.type==='calendar')
+        renderCalendar($('modal-content'));
     },700);
     // Still update UI immediately for animation
     updateClutter();updateTopBar();saveGameState();
@@ -1836,31 +1853,23 @@ function deleteTask(id){
   S.tasks=S.tasks.filter(t=>t.id!==id);updateClutter();
   renderTasks($('modal-content'),currentModal?.sub||null);
 }
-function editTask(id){
+function editTaskPrompt(id){
   const t=S.tasks.find(x=>x.id===id);if(!t)return;
-  const overlay=$('modal-overlay'),content=$('modal-content');
-  overlay.classList.add('open');
-  content.innerHTML=mHead('Редагувати завдання','✏️')+`
-<div class="lbl">Текст завдання</div>
-<div class="row"><input class="ci" id="et-text" value="${t.text}"></div>
-<div class="lbl">Категорія</div>
-<div class="row">
-  <select class="ci" id="et-cat">
-    ${['Робота','Читання','Рослини','Прибирання','Спорт','Кухня','Покупки','Відпочинок','Ванна','Зуби','Ліжко'].map(c=>`<option${t.cat===c?' selected':''}>${c}</option>`).join('')}
-  </select>
-</div>
-<div class="lbl">Дата</div>
-<div class="row"><input type="date" class="ci" id="et-date" value="${t.date}"></div>
-<button class="cb" style="width:100%;margin-top:8px" onclick="saveEditTask(${id})">💾 Зберегти</button>`;
-}
-function saveEditTask(id){
-  const t=S.tasks.find(x=>x.id===id);if(!t)return;
-  const txt=$('et-text'),cat=$('et-cat'),date=$('et-date');
-  if(txt&&txt.value.trim())t.text=txt.value.trim();
-  if(cat)t.cat=cat.value;
-  if(date&&date.value)t.date=date.value;
-  saveGameState();
-  openModal('tasks',S.currentCat||null);
+  // Inline edit: replace text div with input in the task-item
+  const textEl=document.querySelector(`#ti-${id} .t-text`);
+  if(!textEl)return;
+  const old=t.text;
+  const inp=document.createElement('input');
+  inp.value=old;inp.style.cssText='flex:1;padding:3px 6px;border:2px solid var(--orange);border-radius:6px;font-family:Nunito,sans-serif;font-size:12px;color:var(--text-dark);background:white;outline:none';
+  textEl.replaceWith(inp);
+  inp.focus();inp.select();
+  function save(){
+    const v=inp.value.trim();
+    if(v&&v!==old){t.text=v;saveGameState();}
+    renderTasks($('modal-content'),currentModal?.sub||null);
+  }
+  inp.addEventListener('blur',save);
+  inp.addEventListener('keydown',e=>{if(e.key==='Enter')inp.blur();if(e.key==='Escape'){inp.value=old;inp.blur();}});
 }
 function startTask(id){
   S.tasks.forEach(t=>t.active=false);
@@ -1992,7 +2001,7 @@ ${cells}
 </div>
 <div style="margin-top:8px;font-size:10px;color:var(--text-med)">🔵 = є завдання</div>
 ${selStr?`<div class="section-lbl">Завдання на ${selStr}</div>
-<div>${selTasks.length===0?'<p style="font-size:12px;color:var(--text-med);padding:4px 0">Завдань немає~</p>':selTasks.map(t=>`<div style="display:flex;align-items:center;gap:6px;padding:5px 0;border-bottom:1px solid var(--peach);cursor:pointer" onclick="editTask(${t.id});"><span>${catIcon(t.cat)}</span><span style="flex:1;font-size:12px;color:var(--text-dark);${t.done?'text-decoration:line-through;opacity:0.6':''}">${t.text}</span><span style="font-size:9px;color:var(--text-med)">${t.done?'✅':'⏳'}</span><button style="background:none;border:none;cursor:pointer;color:var(--text-med);font-size:11px" onclick="event.stopPropagation();deleteTask(${t.id});renderCalendar($('modal-content'))">✕</button></div>`).join('')}</div>`:''}
+<div>${selTasks.length===0?'<p style="font-size:12px;color:var(--text-med);padding:4px 0">Завдань немає~</p>':selTasks.map(t=>`<div style="display:flex;align-items:center;gap:6px;padding:5px 0;border-bottom:1px solid var(--peach);cursor:pointer" onclick="toggleTask(${t.id})"><span style="width:18px;height:18px;border:2px solid var(--orange);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;flex-shrink:0;background:${t.done?'var(--orange)':'white'};color:${t.done?'white':'transparent'};transition:all 0.2s">${t.done?'✓':''}</span><span>${catIcon(t.cat)}</span><span style="font-size:12px;color:var(--text-dark);${t.done?'text-decoration:line-through;opacity:0.6':''}">${t.text}</span></div>`).join('')}</div>`:''}
 <div class="section-lbl" style="margin-top:12px">Додати завдання на дату</div>
 <div class="row"><input class="ci" id="cal-ti" placeholder="Нове завдання..."></div>
 <div class="row">
@@ -2198,7 +2207,7 @@ function setAlarm(){
 function renderDoorMenu(el){
   el.innerHTML=mHead('Куди йдемо?','🚪')+`
 <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:8px">
-  ${[['yard','🌿','Двір','Спорт та прогулянки'],['shop','🛒','Магазин','Список покупок'],['kitchen','🍳','Кухня','Побутові справи'],['work','💼','Робота','Інтер\'єр та офіс']].map(([s,icon,name,desc])=>`
+  ${[['yard','🌿','Двір','Спорт та прогулянки'],['shop','🛒','Магазин','Список покупок'],['kitchen','🍳','Кухня','Побутові справи']].map(([s,icon,name,desc])=>`
   <div style="background:white;border:2px solid var(--peach);border-radius:14px;padding:14px;text-align:center;cursor:pointer;transition:all 0.15s" onmouseover="this.style.borderColor='var(--orange)'" onmouseout="this.style.borderColor='var(--peach)'" onclick="goScene('${s}');closeModal()">
     <div style="font-size:36px;margin-bottom:6px">${icon}</div>
     <div style="font-size:13px;font-weight:700;color:var(--text-dark)">${name}</div>
@@ -2214,14 +2223,17 @@ function renderShopList(el,shelf){
   el.innerHTML=mHead('Список Покупок','🛒')+`
 <div style="font-size:12px;color:var(--text-med);margin-bottom:10px">Відмічай товари прямо з полиці 🧺</div>
 <div id="slist">
-${S.shopList.map(item=>`<div class="task-item" id="sl-${item.id}">
+${S.shopList.map(item=>`<div class="task-item" id="sl-${item.id}" style="gap:6px">
   <div class="t-check${item.done?' done':''}" onclick="togShop(${item.id})">${item.done?'✓':''}</div>
-  <div class="t-text${item.done?' done':''}">${item.text}</div>
+  <div class="t-text${item.done?' done':''}" id="slt-${item.id}">${item.text}</div>
+  <button style="background:none;border:2px solid var(--peach);cursor:pointer;color:var(--text-med);font-size:10px;padding:2px 5px;border-radius:6px" onclick="editShopItem(${item.id})">✏️</button>
+  <button style="background:none;border:none;cursor:pointer;color:var(--text-med);font-size:13px;padding:2px 4px" onclick="deleteShopItem(${item.id})">✕</button>
 </div>`).join('')}
 </div>
 <hr class="divider">
 <div class="section-lbl">Додати товар</div>
-<div class="row"><input class="ci" id="sl-inp" placeholder="Назва товару..."><button class="cb" onclick="addShopItem()">+</button></div>`;
+<div class="row"><input class="ci" id="sl-inp" placeholder="Назва товару..."><button class="cb" onclick="addShopItem()">+</button></div>
+<button class="cb sec sm" style="width:100%;margin-top:6px" onclick="clearDoneShopItems()">🗑 Очистити куплені</button>`;
 }
 function togShop(id){
   const item=S.shopList.find(x=>x.id===id);if(!item)return;
@@ -2234,29 +2246,408 @@ function addShopItem(){
   S.shopList.push({id:Date.now(),text:inp.value.trim(),done:false});
   renderShopList($('modal-content'));
 }
+function deleteShopItem(id){
+  S.shopList=S.shopList.filter(x=>x.id!==id);
+  renderShopList($('modal-content'));
+}
+function editShopItem(id){
+  const item=S.shopList.find(x=>x.id===id);if(!item)return;
+  const textEl=$('slt-'+id);if(!textEl)return;
+  const old=item.text;
+  const inp=document.createElement('input');
+  inp.value=old;inp.style.cssText='flex:1;padding:3px 6px;border:2px solid var(--orange);border-radius:6px;font-family:Nunito,sans-serif;font-size:12px;color:var(--text-dark);background:white;outline:none';
+  textEl.replaceWith(inp);inp.focus();inp.select();
+  function save(){const v=inp.value.trim();if(v)item.text=v;saveGameState();renderShopList($('modal-content'));}
+  inp.addEventListener('blur',save);
+  inp.addEventListener('keydown',e=>{if(e.key==='Enter')inp.blur();if(e.key==='Escape'){inp.value=old;inp.blur();}});
+}
+function clearDoneShopItems(){
+  S.shopList=S.shopList.filter(x=>!x.done);
+  renderShopList($('modal-content'));
+}
+
+// =====================================================================
+// STEPS TRACKER
+// =====================================================================
+function renderStepsModal(el){
+  const pct=Math.min(100,Math.round((S.steps/S.stepsGoal)*100));
+  el.innerHTML=mHead('Кроки сьогодні','🏃')+`
+<div style="text-align:center;margin:10px 0">
+  <div style="font-size:38px;font-weight:800;color:var(--accent)">${S.steps.toLocaleString()}</div>
+  <div style="font-size:12px;color:var(--text-med)">з ${S.stepsGoal.toLocaleString()} кроків (${pct}%)</div>
+  <div style="background:var(--peach);border-radius:10px;height:14px;overflow:hidden;margin:8px 0">
+    <div style="height:100%;background:linear-gradient(90deg,var(--orange),#E85A7A);border-radius:10px;width:${pct}%;transition:width 0.4s"></div>
+  </div>
+  ${pct>=100?'<div style="font-size:18px;font-weight:800;color:#4A9A6A;margin:6px 0">🎉 Ціль досягнута!</div>':''}
+</div>
+<div class="section-lbl">Додати кроки</div>
+<div class="row">
+  <input class="ci" id="steps-inp" type="number" placeholder="Кількість кроків..." min="0" max="50000">
+  <button class="cb" onclick="addSteps()">+</button>
+</div>
+<div class="row" style="flex-wrap:wrap;gap:6px;margin-bottom:10px">
+  ${[500,1000,2000,5000].map(n=>`<button class="cb sec sm" onclick="addStepsN(${n})">+${n}</button>`).join('')}
+</div>
+<div class="section-lbl">Ціль кроків</div>
+<div class="row">
+  <input class="ci" id="steps-goal-inp" type="number" value="${S.stepsGoal}" min="1000" max="100000" step="500">
+  <button class="cb sec" onclick="setStepsGoal()">Зберегти</button>
+</div>
+<div class="section-lbl" style="margin-top:12px">Записати в кінці дня</div>
+<div class="row">
+  <input class="ci" id="steps-total-inp" type="number" placeholder="Всього кроків за день...">
+  <input class="ci" id="steps-date-inp" type="date" value="${today()}" style="max-width:130px">
+  <button class="cb sec" onclick="saveStepsHistory()">💾</button>
+</div>
+<div class="section-lbl">Історія</div>
+<div style="max-height:120px;overflow-y:auto">
+${(S.stepsHistory||[]).slice().reverse().map(h=>`<div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid var(--peach);font-size:12px"><span>${h.date}</span><span style="font-weight:700;color:var(--accent)">${h.steps.toLocaleString()} 🚶</span></div>`).join('')||'<p style="font-size:12px;color:var(--text-med)">Поки немає записів~</p>'}
+</div>`;
+}
+function addSteps(){
+  const inp=$('steps-inp');if(!inp||!inp.value)return;
+  S.steps+=parseInt(inp.value)||0;
+  inp.value='';
+  const prev=S.steps-parseInt(inp.value||0);
+  if(prev<S.stepsGoal&&S.steps>=S.stepsGoal){spawnFireworks();showNotif('🎉 10 000 кроків! Феєрверк!','var(--teal)');}
+  updateStepsWidget();saveGameState();
+  renderStepsModal($('modal-content'));
+}
+function addStepsN(n){S.steps+=n;if(S.steps>=S.stepsGoal&&S.steps-n<S.stepsGoal){spawnFireworks();showNotif('🎉 10 000 кроків! Феєрверк!','var(--teal)');}updateStepsWidget();saveGameState();renderStepsModal($('modal-content'));}
+function setStepsGoal(){const inp=$('steps-goal-inp');if(!inp)return;S.stepsGoal=parseInt(inp.value)||10000;updateStepsWidget();saveGameState();renderStepsModal($('modal-content'));}
+function saveStepsHistory(){
+  const si=$('steps-total-inp'),di=$('steps-date-inp');
+  if(!si||!si.value)return;
+  if(!S.stepsHistory)S.stepsHistory=[];
+  S.stepsHistory.push({date:di.value||today(),steps:parseInt(si.value)||0});
+  S.steps=0;updateStepsWidget();saveGameState();renderStepsModal($('modal-content'));
+}
+function updateStepsWidget(){
+  const d=$('steps-display');const b=$('steps-bar');
+  if(d)d.textContent=`${S.steps.toLocaleString()} / ${S.stepsGoal.toLocaleString()}`;
+  if(b)b.style.width=Math.min(100,(S.steps/S.stepsGoal)*100)+'%';
+}
+function spawnFireworks(){
+  const scene=$('scene-yard')||$('scene-bedroom');
+  const flag=$('finish-flag');
+  const colors=['#FFD166','#E07B54','#B2DFD0','#E85A7A','#7FB3CC','#FFE0A3'];
+  const cx=flag?flag.getBoundingClientRect().left-scene.getBoundingClientRect().left:500;
+  for(let i=0;i<30;i++){
+    const c=document.createElement('div');
+    c.style.cssText=`position:absolute;left:${cx+( Math.random()-0.5)*80}px;top:${50+Math.random()*100}px;width:8px;height:8px;border-radius:50%;background:${colors[~~(Math.random()*colors.length)]};pointer-events:none;animation:cFall 1.5s ease-out ${Math.random()*0.5}s forwards;z-index:20`;
+    scene.appendChild(c);setTimeout(()=>c.remove(),2000);
+  }
+}
+
+// =====================================================================
+// WATER TRACKER
+// =====================================================================
+function renderWaterModal(el){
+  const pct=Math.min(100,Math.round((S.waterGlasses/S.waterGoal)*100));
+  const ml=S.waterGlasses*S.waterMl;
+  const goalMl=S.waterGoal*S.waterMl;
+  el.innerHTML=mHead('Вода сьогодні','💧')+`
+<div style="text-align:center;margin:10px 0">
+  <div style="font-size:34px">💧</div>
+  <div style="font-size:28px;font-weight:800;color:#4A9AD4">${S.waterGlasses} / ${S.waterGoal} стаканів</div>
+  <div style="font-size:12px;color:var(--text-med)">${ml} мл з ${goalMl} мл</div>
+  <div style="background:var(--peach);border-radius:10px;height:14px;overflow:hidden;margin:8px 0">
+    <div style="height:100%;background:linear-gradient(90deg,#7FB3CC,#4A9AD4);border-radius:10px;width:${pct}%;transition:width 0.4s"></div>
+  </div>
+  <div style="display:flex;justify-content:center;gap:6px;margin:8px 0;flex-wrap:wrap">
+    ${Array.from({length:S.waterGoal},(_,i)=>`<div style="font-size:22px;opacity:${i<S.waterGlasses?1:0.25};transition:opacity 0.3s">${i<S.waterGlasses?'🥛':'🫙'}</div>`).join('')}
+  </div>
+  ${pct>=100?'<div style="font-size:14px;font-weight:800;color:#4A9AD4">🎉 Денна норма виконана!</div>':''}
+</div>
+<div style="display:flex;gap:8px;justify-content:center;margin:10px 0">
+  <button class="cb" onclick="addWater(1)" style="background:#4A9AD4;font-size:18px;padding:8px 18px">+💧</button>
+  <button class="cb sec" onclick="addWater(-1)" ${S.waterGlasses===0?'disabled':''}>−1</button>
+</div>
+<hr class="divider">
+<div class="section-lbl">Налаштування</div>
+<div class="row">
+  <div style="flex:1">
+    <div class="lbl">Ціль (стаканів)</div>
+    <input class="ci" type="number" id="wg-goal" value="${S.waterGoal}" min="1" max="20">
+  </div>
+  <div style="flex:1">
+    <div class="lbl">Об'єм склянки (мл)</div>
+    <input class="ci" type="number" id="wg-ml" value="${S.waterMl}" min="100" max="1000" step="50">
+  </div>
+</div>
+<div class="row"><button class="cb sec" style="width:100%" onclick="saveWaterSettings()">Зберегти налаштування</button></div>
+<div class="section-lbl">Скинути день</div>
+<button class="cb sec sm" onclick="resetWater()">↺ Новий день</button>`;
+}
+function addWater(n){
+  S.waterGlasses=Math.max(0,S.waterGlasses+n);
+  if(n>0&&S.waterGlasses===S.waterGoal){showNotif('🎉 Випила денну норму! 💧',null);}
+  updateWaterWidget();saveGameState();renderWaterModal($('modal-content'));
+}
+function saveWaterSettings(){
+  const g=$('wg-goal'),m=$('wg-ml');
+  if(g)S.waterGoal=parseInt(g.value)||6;
+  if(m)S.waterMl=parseInt(m.value)||250;
+  saveGameState();renderWaterModal($('modal-content'));
+}
+function resetWater(){S.waterGlasses=0;updateWaterWidget();saveGameState();renderWaterModal($('modal-content'));}
+function updateWaterWidget(){
+  const d=$('water-display');const b=$('water-bar');const wr=$('water-fill-rect');
+  if(d)d.textContent=`${S.waterGlasses}/${S.waterGoal} 💧`;
+  if(b)b.style.width=Math.min(100,(S.waterGlasses/S.waterGoal)*100)+'%';
+  if(wr){const fillH=Math.min(46,(S.waterGlasses/S.waterGoal)*46);wr.setAttribute('y',52-fillH);wr.setAttribute('height',fillH);}
+}
+
+// =====================================================================
+// EXPENSE TRACKER (Cash Register)
+// =====================================================================
+function renderExpenseTracker(el){
+  const total=(S.expenses||[]).reduce((s,e)=>s+e.amount,0);
+  const byDay={};
+  (S.expenses||[]).forEach(e=>{if(!byDay[e.date])byDay[e.date]=[];byDay[e.date].push(e);});
+  const days=Object.keys(byDay).sort().reverse();
+  el.innerHTML=mHead('Касовий облік витрат','💰')+`
+<div style="background:linear-gradient(135deg,#2A4A2A,#3A6A3A);border-radius:12px;padding:12px;text-align:center;margin-bottom:12px">
+  <div style="font-size:11px;color:#90D090;font-weight:700">ЗАГАЛЬНІ ВИТРАТИ</div>
+  <div style="font-size:28px;font-weight:800;color:#F0FFE0">${total.toFixed(2)} ₴</div>
+</div>
+<div class="section-lbl">Додати витрату</div>
+<div class="row">
+  <input class="ci" id="exp-desc" placeholder="Опис..." style="flex:2">
+  <input class="ci" id="exp-amt" type="number" placeholder="₴" min="0" step="0.01" style="flex:1;max-width:90px">
+  <select class="ci" id="exp-cat" style="flex:1;max-width:100px">
+    <option>🛒 Продукти</option><option>☕ Кафе</option><option>🚌 Транспорт</option>
+    <option>👗 Одяг</option><option>💊 Здоров'я</option><option>🎮 Розваги</option><option>📦 Інше</option>
+  </select>
+</div>
+<div class="row">
+  <input type="date" class="ci" id="exp-date" value="${today()}" style="max-width:140px">
+  <button class="cb" style="flex:1" onclick="addExpense()">+ Додати</button>
+</div>
+<hr class="divider">
+${days.length===0?'<p style="font-size:12px;color:var(--text-med);text-align:center;padding:10px">Витрат ще немає~</p>':''}
+${days.map(d=>{
+  const dayExps=byDay[d];
+  const dayTotal=dayExps.reduce((s,e)=>s+e.amount,0);
+  return`<div class="section-lbl">${d} · ${dayTotal.toFixed(2)} ₴</div>
+<div>${dayExps.map(e=>`<div style="display:flex;align-items:center;gap:6px;padding:5px 0;border-bottom:1px solid var(--peach)">
+  <span style="font-size:13px">${e.cat.split(' ')[0]}</span>
+  <span style="flex:1;font-size:12px;color:var(--text-dark)">${e.desc}</span>
+  <span style="font-size:12px;font-weight:700;color:var(--accent)">${e.amount.toFixed(2)} ₴</span>
+  <button onclick="deleteExpense(${e.id})" style="background:none;border:none;cursor:pointer;color:var(--text-med);font-size:12px">✕</button>
+</div>`).join('')}</div>`;
+}).join('')}
+${days.length>0?`<button class="cb sec sm" style="width:100%;margin-top:8px" onclick="clearAllExpenses()">🗑 Очистити всі</button>`:''}`;
+}
+function addExpense(){
+  const d=$('exp-desc'),a=$('exp-amt'),c=$('exp-cat'),dt=$('exp-date');
+  if(!d||!d.value.trim()||!a||!a.value)return;
+  if(!S.expenses)S.expenses=[];
+  S.expenses.push({id:Date.now(),desc:d.value.trim(),amount:parseFloat(a.value)||0,cat:c?c.value:'📦 Інше',date:dt?dt.value:today()});
+  saveGameState();renderExpenseTracker($('modal-content'));
+}
+function deleteExpense(id){S.expenses=S.expenses.filter(e=>e.id!==id);saveGameState();renderExpenseTracker($('modal-content'));}
+function clearAllExpenses(){if(confirm('Очистити всі витрати?')){S.expenses=[];saveGameState();renderExpenseTracker($('modal-content'));}}
+
+// =====================================================================
+// MEALS MENU (Fridge)
+// =====================================================================
+let _mealView=null;
+function renderMealsMenu(el){
+  if(_mealView!==null){
+    const m=S.meals.find(x=>x.id===_mealView);
+    if(m){renderMealDetail(el,m);return;}
+    _mealView=null;
+  }
+  el.innerHTML=mHead('Меню страв','🍽️')+`
+<div style="font-size:11px;color:var(--text-med);margin-bottom:10px">Твоя кулінарна книга 🥘 Натисни щоб побачити рецепт</div>
+<div id="meals-list">
+${(S.meals||[]).map(m=>`<div style="display:flex;align-items:center;gap:8px;padding:8px 0;border-bottom:1px solid var(--peach)">
+  <div style="font-size:20px">🍽</div>
+  <div style="flex:1;cursor:pointer" onclick="_mealView=${m.id};renderMealsMenu($('modal-content'))">
+    <div style="font-size:13px;font-weight:700;color:var(--text-dark)">${m.name}</div>
+    <div style="font-size:10px;color:var(--text-med)">${m.ingredients}</div>
+  </div>
+  <button onclick="deleteMeal(${m.id})" style="background:none;border:none;cursor:pointer;color:var(--text-med);font-size:14px">✕</button>
+</div>`).join('')||'<p style="font-size:12px;color:var(--text-med);text-align:center;padding:10px">Додай свої улюблені страви~</p>'}
+</div>
+<hr class="divider">
+<div class="section-lbl">Нова страва</div>
+<div class="row"><input class="ci" id="meal-name" placeholder="Назва страви..."></div>
+<div class="row"><input class="ci" id="meal-ing" placeholder="Інгредієнти..."></div>
+<div class="row"><textarea class="ci" id="meal-rec" placeholder="Рецепт приготування..." rows="3" style="resize:vertical"></textarea></div>
+<button class="cb" style="width:100%" onclick="addMeal()">+ Додати страву</button>`;
+}
+function renderMealDetail(el,m){
+  el.innerHTML=mHead(m.name,'🍽️')+`
+<button onclick="_mealView=null;renderMealsMenu($('modal-content'))" style="background:var(--peach);border:none;border-radius:8px;padding:4px 12px;cursor:pointer;font-family:Nunito,sans-serif;font-size:11px;font-weight:700;color:var(--accent);margin-bottom:10px">← Назад до меню</button>
+<div class="section-lbl">Інгредієнти</div>
+<div style="background:var(--peach);border-radius:10px;padding:10px;font-size:12px;color:var(--text-dark);line-height:1.6">${m.ingredients||'—'}</div>
+<div class="section-lbl">Рецепт</div>
+<div style="background:#F0FFF0;border-radius:10px;padding:10px;font-size:12px;color:var(--text-dark);line-height:1.7;white-space:pre-wrap">${m.recipe||'Рецепт не вказано'}</div>
+<hr class="divider">
+<div class="section-lbl">Редагувати</div>
+<div class="row"><input class="ci" id="meal-edit-name" value="${m.name}" placeholder="Назва..."></div>
+<div class="row"><input class="ci" id="meal-edit-ing" value="${m.ingredients||''}" placeholder="Інгредієнти..."></div>
+<div class="row"><textarea class="ci" id="meal-edit-rec" rows="4" placeholder="Рецепт..." style="resize:vertical">${m.recipe||''}</textarea></div>
+<button class="cb sec" style="width:100%" onclick="saveMealEdit(${m.id})">💾 Зберегти зміни</button>`;
+}
+function addMeal(){
+  const n=$('meal-name'),i=$('meal-ing'),r=$('meal-rec');
+  if(!n||!n.value.trim())return;
+  if(!S.meals)S.meals=[];
+  S.meals.push({id:S.nextMealId++,name:n.value.trim(),ingredients:(i?i.value.trim():''),recipe:(r?r.value.trim():''),done:false});
+  saveGameState();renderMealsMenu($('modal-content'));
+}
+function deleteMeal(id){S.meals=S.meals.filter(m=>m.id!==id);saveGameState();renderMealsMenu($('modal-content'));}
+function saveMealEdit(id){
+  const m=S.meals.find(x=>x.id===id);if(!m)return;
+  const n=$('meal-edit-name'),i=$('meal-edit-ing'),r=$('meal-edit-rec');
+  if(n&&n.value.trim())m.name=n.value.trim();
+  if(i)m.ingredients=i.value.trim();
+  if(r)m.recipe=r.value.trim();
+  _mealView=null;saveGameState();renderMealsMenu($('modal-content'));
+}
+
+// =====================================================================
+// WORK INVENTORY
+// =====================================================================
+const WORK_INVENTORY={
+  fashion:[
+    {id:'wi1',emoji:'👗',name:'Плаття',desc:'Вечірнє плаття'},
+    {id:'wi2',emoji:'👔',name:'Сорочка',desc:'Ділова сорочка'},
+    {id:'wi3',emoji:'👖',name:'Джинси',desc:'Класичні джинси'},
+    {id:'wi4',emoji:'🧥',name:'Пальто',desc:'Зимове пальто'},
+    {id:'wi5',emoji:'👠',name:'Туфлі',desc:'На підборах'},
+    {id:'wi6',emoji:'👜',name:'Сумка',desc:'Шкіряна сумка'},
+    {id:'wi7',emoji:'🧣',name:'Шарф',desc:'Вовняний шарф'},
+    {id:'wi8',emoji:'🎀',name:'Аксесуар',desc:'Прикраса'},
+  ],
+  office:[
+    {id:'wo1',emoji:'🖥️',name:'Монітор',desc:'Робочий монітор'},
+    {id:'wo2',emoji:'⌨️',name:'Клавіатура',desc:'Механічна'},
+    {id:'wo3',emoji:'📁',name:'Папка',desc:'Для документів'},
+    {id:'wo4',emoji:'📋',name:'Планер',desc:'Тижневий'},
+    {id:'wo5',emoji:'✏️',name:'Олівець',desc:'Простий олівець'},
+    {id:'wo6',emoji:'📎',name:'Скріпка',desc:'Канцелярія'},
+    {id:'wo7',emoji:'🖨️',name:'Принтер',desc:'Лазерний'},
+    {id:'wo8',emoji:'☕',name:'Кава',desc:'Ранкова кава'},
+  ],
+  board:[
+    {id:'wb1',emoji:'📌',name:'Стікер',desc:'Нагадування'},
+    {id:'wb2',emoji:'📝',name:'Завдання',desc:'На сьогодні'},
+    {id:'wb3',emoji:'🎯',name:'Ціль',desc:'Тижнева ціль'},
+    {id:'wb4',emoji:'💡',name:'Ідея',desc:'Нова ідея'},
+    {id:'wb5',emoji:'⭐',name:'Пріоритет',desc:'Важливе'},
+    {id:'wb6',emoji:'✅',name:'Виконано',desc:'Зроблено'},
+  ]
+};
+const tabLabels={fashion:'👗 Магазин одягу',office:'💼 Офіс',board:'📋 Дошка'};
+
+function renderWorkInventory(el,tab){
+  tab=tab||'fashion';
+  const items=WORK_INVENTORY[tab]||[];
+  el.innerHTML=mHead('Робочий інвентар','💼')+`
+<div style="display:flex;gap:4px;margin-bottom:10px;flex-wrap:wrap">
+  ${Object.entries(tabLabels).map(([k,v])=>`<button onclick="openModal('workInventory','${k}')"
+    style="flex:1;min-width:80px;padding:6px 4px;border:2px solid var(--peach);border-radius:8px;
+    background:${tab===k?'var(--orange)':'white'};color:${tab===k?'white':'var(--text-dark)'};
+    font-family:Nunito,sans-serif;font-size:10px;font-weight:700;cursor:pointer">${v}</button>`).join('')}
+</div>
+<div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:12px">
+${items.map(item=>`<div style="background:var(--peach);border-radius:10px;padding:8px 4px;text-align:center;cursor:pointer;transition:transform 0.15s" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'" onclick="showWorkItemDetail('${item.id}','${tab}')">
+  <div style="font-size:24px">${item.emoji}</div>
+  <div style="font-size:9px;font-weight:700;color:var(--text-dark);margin-top:3px">${item.name}</div>
+</div>`).join('')}
+</div>
+<hr class="divider">
+<div class="section-lbl">Нотатки по роботі</div>
+<textarea class="ci" id="work-notes-ta" rows="4" placeholder="Нотатки, задачі, ідеї..." style="resize:vertical;line-height:1.5">${S.workNotes||''}</textarea>
+<button class="cb sec" style="width:100%;margin-top:6px" onclick="saveWorkNotes()">💾 Зберегти нотатки</button>`;
+}
+function showWorkItemDetail(itemId,tab){
+  const allItems=[...WORK_INVENTORY.fashion,...WORK_INVENTORY.office,...WORK_INVENTORY.board];
+  const item=allItems.find(i=>i.id===itemId);if(!item)return;
+  showNotif(`${item.emoji} ${item.name}: ${item.desc}`,null);
+}
+function saveWorkNotes(){
+  const ta=$('work-notes-ta');if(!ta)return;
+  S.workNotes=ta.value;saveGameState();showNotif('💾 Нотатки збережено!',null);
+}
+
+// =====================================================================
+// INTERIOR LABEL EDITING
+// =====================================================================
+// Click on interior element label to rename it
+function editInteriorLabel(elId){
+  const el=$(elId);const lblEl=$(elId+'-lbl');if(!el||!lblEl)return;
+  const oldName=lblEl.textContent;
+  const inp=document.createElement('input');
+  inp.value=oldName;
+  inp.style.cssText='font-size:7px;font-weight:700;color:var(--text-dark);background:white;border:1.5px solid var(--orange);border-radius:4px;padding:1px 4px;width:80px;text-align:center;outline:none;font-family:Nunito,sans-serif';
+  lblEl.replaceWith(inp);inp.focus();inp.select();
+  function save(){
+    const v=inp.value.trim()||oldName;
+    const newLbl=document.createElement('div');
+    newLbl.id=elId+'-lbl';
+    newLbl.style.cssText=lblEl.getAttribute?lblEl.getAttribute('style')||'':inp.style.cssText;
+    newLbl.style.cssText='position:absolute;bottom:-18px;left:0;right:0;font-size:7px;font-weight:700;color:var(--text-med);text-align:center;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;cursor:pointer';
+    newLbl.textContent=v;
+    newLbl.onclick=()=>editInteriorLabel(elId);
+    inp.replaceWith(newLbl);
+    if(!S.interiorLabels)S.interiorLabels={};
+    S.interiorLabels[elId]=v;saveGameState();
+  }
+  inp.addEventListener('blur',save);
+  inp.addEventListener('keydown',e=>{if(e.key==='Enter')inp.blur();if(e.key==='Escape'){inp.value=oldName;inp.blur();}});
+}
+
+// Attach click-to-edit on interior label elements after load
+function initInteriorLabels(){
+  const labelIds=['work-clothes-rack','work-office-shelf','work-whiteboard','work-plant'];
+  labelIds.forEach(id=>{
+    const lblEl=$(id+'-lbl');if(!lblEl)return;
+    // Restore saved label
+    if(S.interiorLabels&&S.interiorLabels[id])lblEl.textContent=S.interiorLabels[id];
+    lblEl.style.cursor='pointer';
+    lblEl.title='Натисни щоб перейменувати';
+    lblEl.onclick=()=>editInteriorLabel(id);
+  });
+}
 
 // =====================================================================
 // WARDROBE (INVENTORY)
 // =====================================================================
 const allClothes=[
-  {id:'hat1',cat:'Капелюхи',emoji:'🎩',name:'Циліндр',price:80},
-  {id:'hat2',cat:'Капелюхи',emoji:'🧢',name:'Кепка',price:60},
-  {id:'hat3',cat:'Капелюхи',emoji:'👒',name:'Солом\'яний',price:70},
-  {id:'hat4',cat:'Капелюхи',emoji:'❄️',name:'Зимова шапка',price:90},
-  {id:'gl1',cat:'Окуляри',emoji:'🕶️',name:'Круглі',price:55},
-  {id:'gl2',cat:'Окуляри',emoji:'🧐',name:'Монокль',price:45},
-  {id:'sc1',cat:'Шиї',emoji:'🧣',name:'Шарфик',price:65},
-  {id:'sc2',cat:'Шиї',emoji:'👔',name:'Краватка',price:60},
-  {id:'bow1',cat:'Банти',emoji:'🎀',name:'Рожевий бант',price:50},
-  {id:'bow2',cat:'Банти',emoji:'💜',name:'Фіолетовий бант',price:50},
-  {id:'cr1',cat:'Корони',emoji:'👑',name:'Золота корона',price:200},
-  {id:'cr2',cat:'Корони',emoji:'🌸',name:'Квіткова корона',price:130},
-  {id:'hb1',cat:'Обруч',emoji:'🐱',name:'Вушка',price:75},
-  {id:'hb2',cat:'Обруч',emoji:'⭐',name:'Зірки',price:75},
+  {id:'hat1',cat:'Капелюхи',emoji:'🎩',name:'Циліндр',price:120},
+  {id:'hat2',cat:'Капелюхи',emoji:'🧢',name:'Кепка',price:80},
+  {id:'hat3',cat:'Капелюхи',emoji:'👒',name:'Солом\'яний',price:100},
+  {id:'hat4',cat:'Капелюхи',emoji:'❄️',name:'Зимова шапка',price:150},
+  {id:'gl1',cat:'Окуляри',emoji:'🕶️',name:'Круглі',price:80},
+  {id:'gl2',cat:'Окуляри',emoji:'🧐',name:'Монокль',price:60},
+  {id:'sc1',cat:'Шиї',emoji:'🧣',name:'Шарфик',price:100},
+  {id:'sc2',cat:'Шиї',emoji:'👔',name:'Краватка',price:90},
+  {id:'bow1',cat:'Банти',emoji:'🎀',name:'Рожевий бант',price:70},
+  {id:'bow2',cat:'Банти',emoji:'💜',name:'Фіолетовий бант',price:70},
+  {id:'cr1',cat:'Корони',emoji:'👑',name:'Золота корона',price:300},
+  {id:'cr2',cat:'Корони',emoji:'🌸',name:'Квіткова корона',price:200},
+  {id:'hb1',cat:'Обруч',emoji:'🐱',name:'Вушка',price:110},
+  {id:'hb2',cat:'Обруч',emoji:'⭐',name:'Зірки',price:110},
 ];
 
-// Active wardrobe tab: 'clothes' | 'backgrounds' | 'interior'
 let _wardrobeTab='clothes';
+
+// Interior skins data
+const INTERIOR_SKINS=[
+  {id:'is1',name:'Рожева подушка',emoji:'🌸',desc:'Для ліжка',target:'bed-obj',cssKey:'background',cssVal:'#FFB8D0'},
+  {id:'is2',name:'Синя подушка',emoji:'💙',desc:'Для ліжка',target:'bed-obj',cssKey:'background',cssVal:'#B8D8FF'},
+  {id:'is3',name:'Зелений килим',emoji:'🌿',desc:'Для кімнати',target:'rug-obj',cssKey:'background',cssVal:'#90D0A0'},
+  {id:'is4',name:'Фіолетовий килим',emoji:'💜',desc:'Для кімнати',target:'rug-obj',cssKey:'background',cssVal:'#C0A0E0'},
+  {id:'is5',name:'Золота полиця',emoji:'✨',desc:'Для книжкової полиці',target:'shelf-obj',cssKey:'filter',cssVal:'sepia(0.5) hue-rotate(10deg) saturate(1.5)'},
+  {id:'is6',name:'Темний стіл',emoji:'🌑',desc:'Для стола',target:'desk-obj',cssKey:'filter',cssVal:'brightness(0.7)'},
+  {id:'is7',name:'Рожевий стіл',emoji:'🌷',desc:'Для стола',target:'desk-obj',cssKey:'filter',cssVal:'hue-rotate(280deg) saturate(1.5)'},
+  {id:'is8',name:'Неоновий монітор',emoji:'💜',desc:'Монітор',target:'monitor',cssKey:'filter',cssVal:'hue-rotate(180deg) saturate(2)'},
+];
 
 function renderWardrobe(el){
   const owned=S.inventory;
@@ -2264,29 +2655,29 @@ function renderWardrobe(el){
   const cats=[...new Set(allClothes.map(c=>c.cat))];
   const unlockedBGs=MG.unlockedBGs||['bg_deep_space'];
   const activeBG=MG.activeBG||null;
-  const intSkins=S.interiorSkins||[];
+  const ownedSkins=S.ownedSkins||[];
 
   el.innerHTML=mHead('Гардероб','👗')+`
 <!-- Tab switcher -->
-<div style="display:flex;gap:5px;margin-bottom:12px">
+<div style="display:flex;gap:4px;margin-bottom:12px">
   <button onclick="_wardrobeTab='clothes';renderWardrobe($('modal-content'))"
-    style="flex:1;padding:6px 4px;border:2px solid var(--peach);border-radius:10px;background:${_wardrobeTab==='clothes'?'var(--orange)':'white'};color:${_wardrobeTab==='clothes'?'white':'var(--text-dark)'};font-family:Nunito,sans-serif;font-size:10px;font-weight:700;cursor:pointer">
-    👗 Одяг (${owned.length})
+    style="flex:1;padding:6px 3px;border:2px solid var(--peach);border-radius:10px;background:${_wardrobeTab==='clothes'?'var(--orange)':'white'};color:${_wardrobeTab==='clothes'?'white':'var(--text-dark)'};font-family:Nunito,sans-serif;font-size:10px;font-weight:700;cursor:pointer">
+    👗 Одяг
   </button>
   <button onclick="_wardrobeTab='backgrounds';renderWardrobe($('modal-content'))"
-    style="flex:1;padding:6px 4px;border:2px solid var(--peach);border-radius:10px;background:${_wardrobeTab==='backgrounds'?'var(--orange)':'white'};color:${_wardrobeTab==='backgrounds'?'white':'var(--text-dark)'};font-family:Nunito,sans-serif;font-size:10px;font-weight:700;cursor:pointer">
-    🎨 Фони (${unlockedBGs.length})
+    style="flex:1;padding:6px 3px;border:2px solid var(--peach);border-radius:10px;background:${_wardrobeTab==='backgrounds'?'var(--orange)':'white'};color:${_wardrobeTab==='backgrounds'?'white':'var(--text-dark)'};font-family:Nunito,sans-serif;font-size:10px;font-weight:700;cursor:pointer">
+    🎨 Фони
   </button>
   <button onclick="_wardrobeTab='interior';renderWardrobe($('modal-content'))"
-    style="flex:1;padding:6px 4px;border:2px solid var(--peach);border-radius:10px;background:${_wardrobeTab==='interior'?'var(--orange)':'white'};color:${_wardrobeTab==='interior'?'white':'var(--text-dark)'};font-family:Nunito,sans-serif;font-size:10px;font-weight:700;cursor:pointer">
-    🏠 Інтер'єр (${intSkins.length})
+    style="flex:1;padding:6px 3px;border:2px solid var(--peach);border-radius:10px;background:${_wardrobeTab==='interior'?'var(--orange)':'white'};color:${_wardrobeTab==='interior'?'white':'var(--text-dark)'};font-family:Nunito,sans-serif;font-size:10px;font-weight:700;cursor:pointer">
+    🛋️ Інтер'єр
   </button>
 </div>
 
 ${_wardrobeTab==='clothes'?`
 <!-- CLOTHES TAB -->
-<div style="font-size:11px;color:var(--text-med);margin-bottom:6px">💡 Одяг можна купити в <b>Treats Shop</b> або отримати за <b>виконані завдання</b>!</div>
-${owned.length===0?'<div style="text-align:center;padding:20px;color:var(--text-med);font-size:13px">🛍️ Поки порожньо! Виконуй завдання або купи у Treats Shop~</div>':''}
+<div style="font-size:11px;color:var(--text-med);margin-bottom:8px">Одяг купується у <b>Treats Shop</b> за монети із завдань 🪙</div>
+${owned.length===0?'<div style="text-align:center;padding:20px;color:var(--text-med);font-size:13px">🛍️ Поки порожньо! Заробляй монети завданнями~</div>':''}
 ${cats.map(cat=>{
   const items=allClothes.filter(c=>c.cat===cat&&owned.includes(c.id));
   if(items.length===0)return'';
@@ -2298,10 +2689,10 @@ ${cats.map(cat=>{
   <div class="i-name">${item.name}</div>
 </div>`).join('')}</div>`;
 }).join('')}
-`:`${_wardrobeTab==='backgrounds'?`
+`:_wardrobeTab==='backgrounds'?`
 <!-- BACKGROUNDS TAB -->
 <div style="font-size:11px;color:var(--text-med);margin-bottom:8px">
-  🚀 Фони розблоковуються у грі <b>Зоряна Буря</b> (кожні 200 очків).
+  Фони розблоковуються у грі <b>Зоряна Буря 🚀</b> (кожні 200 очків).
 </div>
 ${activeBG?`<div style="background:var(--peach);border-radius:8px;padding:6px 10px;font-size:11px;font-weight:700;color:var(--accent);margin-bottom:8px">Зараз: ${BACKGROUNDS_50.find(b=>b.id===activeBG)?.name||activeBG}</div>`:''}
 <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px">
@@ -2314,12 +2705,12 @@ ${BACKGROUNDS_50.map(bg=>{
     cursor:${isOwned?'pointer':'default'};transition:transform 0.15s;${isOwned?'':'opacity:0.55'}"
     ${isOwned?'onmouseover="this.style.transform=\'scale(1.05)\'" onmouseout="this.style.transform=\'scale(1)\'"':''}>
     <div style="width:100%;height:46px;background:${bg.css};position:relative">
-      ${isActive?'<div style="position:absolute;top:2px;right:3px;font-size:9px;background:var(--orange);color:white;border-radius:4px;padding:1px 4px;font-weight:700">✓ Активний</div>':''}
+      ${isActive?'<div style="position:absolute;top:2px;right:3px;font-size:9px;background:var(--orange);color:white;border-radius:4px;padding:1px 4px;font-weight:700">✓</div>':''}
       ${!isOwned?'<div style="position:absolute;inset:0;background:rgba(0,0,0,0.35);display:flex;align-items:center;justify-content:center;font-size:14px">🔒</div>':''}
     </div>
     <div style="background:${isOwned?'white':'#F8F4F0'};padding:4px 5px">
-      <div style="font-size:8px;font-weight:700;color:${isOwned?'var(--text-dark)':'var(--text-med)'};line-height:1.2">${bg.name}</div>
-      <div style="font-size:7px;color:${isOwned?'var(--teal)':'#B0A090'};font-weight:600">${isOwned?bg.reward:'🔒 '+unlockScore+' очків'}</div>
+      <div style="font-size:8px;font-weight:700;color:${isOwned?'var(--text-dark)':'var(--text-med)'}">${bg.name}</div>
+      <div style="font-size:7px;color:${isOwned?'var(--teal)':'#B0A090'}">${isOwned?bg.reward:'🔒 '+unlockScore+' очків'}</div>
     </div>
   </div>`;
 }).join('')}
@@ -2327,21 +2718,51 @@ ${BACKGROUNDS_50.map(bg=>{
 `:`
 <!-- INTERIOR SKINS TAB -->
 <div style="font-size:11px;color:var(--text-med);margin-bottom:8px">
-  🌟 Скіни на інтер'єр отримуються у грі <b>Зоряна Буря</b>! Застосовуй їх на локації <b>Робота</b>.
+  Скіни на меблі та інтер'єр — розблоковуються у грі <b>Зоряна Буря 🚀</b>. Натисни щоб застосувати.
 </div>
-${intSkins.length===0?`<div style="text-align:center;padding:24px;color:#8090B0">
-  <div style="font-size:32px;margin-bottom:8px">🚀</div>
-  <div style="font-size:12px">Зіграй в Зоряну Бурю щоб отримати скіни на інтер'єр!</div>
-</div>`:`
-<div style="display:grid;grid-template-columns:repeat(2,1fr);gap:10px">
-${intSkins.map(sk=>`
-<div style="background:white;border:2px solid var(--teal);border-radius:12px;padding:10px;text-align:center">
-  <div style="font-size:28px;margin-bottom:4px">${sk.emoji}</div>
-  <div style="font-size:10px;font-weight:700;color:var(--text-dark)">${sk.name}</div>
-  <div style="font-size:9px;color:var(--text-med);margin-top:2px">${sk.desc}</div>
-</div>`).join('')}
-</div>`}
-`}`}`;
+<div class="inv-grid">
+${INTERIOR_SKINS.map(sk=>{
+  const isOwned=ownedSkins.includes(sk.id);
+  const isActive=(S.activeInteriorSkins||{})[sk.id];
+  return`<div class="inv-item${isActive?' equipped':''}"
+    style="${!isOwned?'opacity:0.45;':''}cursor:${isOwned?'pointer':'default'}"
+    onclick="${isOwned?`applyInteriorSkin('${sk.id}')`:''}"
+    title="${isOwned?'Натисни щоб застосувати':'🔒 Заробиш в грі'}">
+    ${isActive?'<div class="equipped-badge">✓</div>':''}
+    ${!isOwned?'<div style="position:absolute;top:2px;right:2px;font-size:10px">🔒</div>':''}
+    <span class="i-emoji">${sk.emoji}</span>
+    <div class="i-name">${sk.name}</div>
+    <div style="font-size:7px;color:var(--text-med)">${sk.desc}</div>
+  </div>`;
+}).join('')}
+</div>
+<div style="font-size:10px;color:var(--text-med);margin-top:8px;padding:8px;background:var(--peach);border-radius:8px">
+  💡 Грай у <b>Зоряну Бурю</b> щоб відкривати нові скіни для інтер'єру!
+</div>
+`}`;
+}
+function applyInteriorSkin(id){
+  const sk=INTERIOR_SKINS.find(s=>s.id===id);if(!sk)return;
+  const el=$(sk.target);if(!el)return;
+  if(!S.activeInteriorSkins)S.activeInteriorSkins={};
+  // Toggle
+  if(S.activeInteriorSkins[id]){
+    delete S.activeInteriorSkins[id];
+    el.style[sk.cssKey]='';
+    showNotif(`${sk.emoji} Скін знято`,null);
+  } else {
+    S.activeInteriorSkins[id]=true;
+    el.style[sk.cssKey]=sk.cssVal;
+    showNotif(`${sk.emoji} "${sk.name}" застосовано!`,null);
+  }
+  saveGameState();renderWardrobe($('modal-content'));
+}
+function restoreInteriorSkins(){
+  if(!S.ownedSkins||!S.activeInteriorSkins)return;
+  Object.keys(S.activeInteriorSkins).forEach(id=>{
+    const sk=INTERIOR_SKINS.find(s=>s.id===id);if(!sk)return;
+    const el=$(sk.target);if(el)el.style[sk.cssKey]=sk.cssVal;
+  });
 }
 function toggleEquip(id){
   const item=allClothes.find(c=>c.id===id);if(!item)return;
@@ -2458,13 +2879,18 @@ function changeName(){
 }
 function changeFur(c){
   S.mascotColor=c;
-  // Update all orange/brown fills in mascot SVG
-  const svg=$('mascot-svg');if(!svg)return;
-  // Target the main orange fill (#E8722A) and darker accent (#D4602A)
-  svg.querySelectorAll('[fill="#E8722A"]').forEach(e=>e.setAttribute('fill',c));
-  svg.querySelectorAll('[fill="#D4602A"]').forEach(e=>e.setAttribute('fill',darkenColor(c,0.1)));
-  svg.querySelectorAll('[fill="#C85020"]').forEach(e=>e.setAttribute('fill',darkenColor(c,0.18)));
+  applyMascotColor(c);
+  saveGameState();
   renderProfile($('modal-content'));
+}
+function applyMascotColor(c){
+  const svg=$('mascot-svg');if(!svg)return;
+  const dark=darkenColor(c,0.12);
+  const darker=darkenColor(c,0.22);
+  // Reset all fur-colored elements by class
+  svg.querySelectorAll('.fur-main').forEach(e=>e.setAttribute('fill',c));
+  svg.querySelectorAll('.fur-dark').forEach(e=>e.setAttribute('fill',dark));
+  svg.querySelectorAll('.fur-darker').forEach(e=>e.setAttribute('fill',darker));
 }
 function changeEyes(c){
   S.mascotEyeColor=c;
@@ -2657,7 +3083,7 @@ function ccConnectStars(from,to){
 function ccVictory(){
   ccState.completed++;ccState.points+=10;ccState.partProgress++;
   ccState.level++;
-  playChime();spawnXPPop('+15 XP ⭐');S.xp+=15;updateTopBar();
+  playChime();spawnXPPop('+10 XP ⭐');S.xp+=10;S.gold+=5;updateTopBar();
   const msg=$('cc-msg');
   if(msg)msg.innerHTML=`<span style="color:#FFD166;font-weight:800">✨ Сузір'я ${ccState.name} зібрано! +10 очок</span>`;
   setTimeout(()=>{
@@ -2672,12 +3098,12 @@ function ccVictory(){
     const pct=(ccState.partProgress%20)/20*100;
     vp.innerHTML=`
 <div style="font-size:13px;font-weight:800;margin-bottom:8px">🏆 ${ccState.name} зібрано!</div>
-<div style="font-size:11px;color:#8090B0;margin-bottom:8px">Прогрес до нового скіну інтер'єру:</div>
+<div style="font-size:11px;color:#8090B0;margin-bottom:8px">Прогрес до нової частини одягу:</div>
 <div style="background:#1A2040;border-radius:6px;height:10px;overflow:hidden;margin-bottom:6px">
   <div style="height:100%;background:linear-gradient(90deg,#4060D0,#80A0FF);border-radius:6px;width:${pct}%;transition:width 0.5s"></div>
 </div>
-<div style="font-size:11px;color:#6080B0">${ccState.partProgress%20}/20 сузір'їв</div>
-${ccState.partProgress>0&&ccState.partProgress%20===0?`<div style="margin-top:8px;font-size:12px;font-weight:700;color:#FFD166">🏠 Новий скін інтер'єру відкрито! Перевір Гардероб.</div>`:''}
+<div style="font-size:11px;color:#6080B0">${ccState.partProgress%20}/20 сузір'їв для відкриття наступної частини</div>
+${ccState.partProgress>0&&ccState.partProgress%20===0?`<div style="margin-top:8px;font-size:12px;font-weight:700;color:#FFD166">🎉 Нова частина одягу відкрита! (${Math.floor(ccState.partProgress/20)*parts}/5)</div>`:''}
 <button onclick="this.parentElement.remove()" style="margin-top:10px;width:100%;background:#2A3870;border:none;color:#C0D0FF;border-radius:8px;padding:6px;cursor:pointer;font-family:'Nunito',sans-serif;font-size:12px;font-weight:700">▶ Наступне сузір'я</button>
 `;
     mc.appendChild(vp);
@@ -3035,18 +3461,6 @@ function mgUpdateUI(){
   if(lv)lv.textContent='❤️'.repeat(Math.max(0,MG.lives));
 }
 
-// Interior skins available from Meteor Storm
-const INTERIOR_SKINS=[
-  {id:'is_neon_desk',emoji:'💻',name:'Неоновий Стіл',desc:'Космічний стіл з підсвіткою',score:150},
-  {id:'is_space_shelf',emoji:'📚',name:'Космічна Полиця',desc:'Полиця у стилі космосу',score:300},
-  {id:'is_galaxy_rug',emoji:'🌌',name:'Галактичний Килим',desc:'Килим з галактикою',score:450},
-  {id:'is_star_lamp',emoji:'⭐',name:'Зоряний Світильник',desc:'Лампа у вигляді зірки',score:600},
-  {id:'is_meteor_plant',emoji:'🪐',name:'Планетарний Кактус',desc:'Кактус у формі планети',score:800},
-  {id:'is_rocket_chair',emoji:'🚀',name:'Крісло Ракета',desc:'Офісне крісло ракетного дизайну',score:1000},
-  {id:'is_nebula_curtain',emoji:'🎆',name:'Туманні Штори',desc:'Штори з туманністю',score:1200},
-  {id:'is_comet_clock',emoji:'🕐',name:'Годинник Комета',desc:'Настінний годинник комета',score:1500},
-];
-
 async function mgGameOver(){
   MG.running=false;
   if(MG.raf){cancelAnimationFrame(MG.raf);MG.raf=null;}
@@ -3065,17 +3479,17 @@ async function mgGameOver(){
     }
   }
 
-  // Check interior skin unlock
+  // Check interior skin unlock: every 150 pts
+  if(!S.ownedSkins)S.ownedSkins=[];
+  const skinIdx=Math.floor(MG.score/150);
   let newSkin=null;
-  const skins=S.interiorSkins||[];
-  for(const sk of INTERIOR_SKINS){
-    if(MG.score>=sk.score&&!skins.find(s=>s.id===sk.id)){
-      S.interiorSkins=skins;S.interiorSkins.push(sk);newSkin=sk;break;
-    }
+  if(skinIdx<INTERIOR_SKINS.length){
+    const sk=INTERIOR_SKINS[skinIdx];
+    if(!S.ownedSkins.includes(sk.id)){S.ownedSkins.push(sk.id);newSkin=sk;}
   }
 
-  // No gold from games — only XP and skins/BGs
-  S.xp+=Math.floor(MG.score/8);
+  // Games give NO gold — only backgrounds unlock
+  S.xp+=Math.floor(MG.score/20); // small XP only
   updateTopBar();saveGameState();
   await idbSet('gameState','mgHighScore',MG.highScore);
   await idbSet('gameState','mgUnlockedBGs',MG.unlockedBGs);
@@ -3085,10 +3499,9 @@ async function mgGameOver(){
   if(fs)fs.textContent=`Рахунок: ${MG.score} | Рівень ${MG.level}`;
   if(nr)nr.textContent=isNew?`🏆 НОВИЙ РЕКОРД! ${MG.score}`:'';
   if(bgr){
-    let rewardText=`+${Math.floor(MG.score/8)} XP`;
-    if(newSkin)rewardText=`🏠 Новий скін інтер'єру: "${newSkin.emoji} ${newSkin.name}"!`;
-    else if(newBG)rewardText=`🎨 Новий фон: "${newBG.name}" (${newBG.reward})!`;
-    bgr.textContent=rewardText;
+    if(newBG)bgr.textContent=`🎨 Новий фон: "${newBG.name}"!`;
+    else if(newSkin)bgr.textContent=`🛋️ Новий скін інтер'єру: ${newSkin.emoji} "${newSkin.name}"!`;
+    else bgr.textContent=`+${Math.floor(MG.score/20)} XP · Монети за ігри не нараховуються 🎯`;
   }
   if(hsel)hsel.textContent='Рекорд: '+MG.highScore;
 }
@@ -3156,9 +3569,10 @@ const DRAGGABLE_IDS=[
   'desk-obj','monitor','bed-obj','rug-obj','shelf-obj','cactus-obj','radio-obj','cactus-stand',
   'cassiopeia-painting','moon-lamp',
   'kit-fridge-wrap','kit-stove-wrap','kit-sink-wrap','kit-window',
-  'shop-shelf1','shop-shelf2','shop-shelf3','shop-cashier',
+  'yard-tree1','yard-tree2','yard-bench',
+  'shop-shelf1','shop-shelf2','shop-shelf3','shop-register',
   'bath-tub','bath-toilet','bath-sink','bath-mirror','bath-cabinet','bath-window',
-  'work-window','step-flag','water-tracker','step-tracker'
+  'work-desk','work-clothes-rack','work-office-shelf','work-whiteboard','work-plant','work-window'
 ];
 const OBJ_STATE={};
 
@@ -3171,6 +3585,16 @@ function sceneScale(){
   const m=new DOMMatrix(getComputedStyle(scene).transform);
   // m.a is the X scale component
   return m.a||1;
+}
+
+// Get the origin rect for drag calculations (scene or viewport)
+function getSceneOrigin(sceneEl){
+  const vp=$('scene-viewport');
+  if(vp && getComputedStyle(vp).overflow!=='hidden'){
+    // Mobile scrollable viewport: use scene el itself
+    return sceneEl.getBoundingClientRect();
+  }
+  return sceneEl?sceneEl.getBoundingClientRect():appRect();
 }
 
 function captureState(el){
@@ -3336,7 +3760,6 @@ function startDrag(el,cx,cy){
   eDrag=el;captureState(el);
   // Normalize element (remove translateX(-50%) etc.) BEFORE computing cursor offset
   applyState(el,OBJ_STATE[el.id]);
-  const r=el.getBoundingClientRect();
   const sc=sceneScale();
   const scene=el.closest('.scene')||document.querySelector('.scene.active');
   const origin=scene?scene.getBoundingClientRect():appRect();
@@ -3384,213 +3807,11 @@ document.addEventListener('touchstart',e=>{
 },{passive:false});
 document.addEventListener('touchmove',e=>{
   if(S.editMode&&eDrag){e.preventDefault();doDrag(e.touches[0].clientX,e.touches[0].clientY);}
+  // Don't prevent default otherwise, allow viewport scroll
 },{passive:false});
 document.addEventListener('touchend',()=>{if(S.editMode)endDrag();});
 
 loadObjPositions();
-
-// =====================================================================
-// WATER TRACKER
-// =====================================================================
-function updateWaterUI(){
-  const lbl=$('water-count-svg'),fill=$('water-fill-svg');
-  if(lbl)lbl.textContent=`${S.waterCount}/${S.waterGoal}`;
-  if(fill){
-    const pct=Math.min(1,S.waterCount/S.waterGoal);
-    // Fill from bottom: height goes from 0 to 34 (the rect height area)
-    const h=Math.round(pct*34);
-    fill.setAttribute('y',42-h);fill.setAttribute('height',h);
-  }
-}
-function renderWaterTracker(el){
-  el.innerHTML=mHead(`Трекер Води 💧`,'💧')+`
-<div style="text-align:center;margin:10px 0">
-  <div style="font-size:36px;margin-bottom:4px">💧</div>
-  <div style="font-size:22px;font-weight:800;color:var(--accent)">${S.waterCount} / ${S.waterGoal} стаканів</div>
-  <div style="font-size:12px;color:var(--text-med);margin-top:2px">${Math.round(S.waterCount*S.waterGlassML)} мл / ${S.waterGoal*S.waterGlassML} мл</div>
-</div>
-<div style="display:flex;gap:6px;justify-content:center;flex-wrap:wrap;margin-bottom:14px">
-${Array.from({length:S.waterGoal},(_,i)=>`
-  <div style="width:36px;height:48px;border:2.5px solid #6ABCD8;border-radius:3px 3px 6px 6px;background:${i<S.waterCount?'rgba(80,180,230,0.7)':'rgba(160,220,248,0.2)'};cursor:pointer;transition:all 0.2s;display:flex;align-items:flex-end;justify-content:center;padding-bottom:3px" onclick="addWaterGlass()" title="Додати склянку">
-    <span style="font-size:7px;font-weight:700;color:#3A9CBF">${i+1}</span>
-  </div>`).join('')}
-</div>
-${S.waterCount>0?`<button class="cb sec" style="width:100%;margin-bottom:8px" onclick="removeWaterGlass()">↩ Відмінити останній стакан</button>`:''}
-<button class="cb" style="width:100%;margin-bottom:10px" onclick="addWaterGlass()">＋ Додати стакан (${S.waterGlassML} мл)</button>
-${S.waterCount>=S.waterGoal?`<div style="background:var(--teal);border-radius:10px;padding:10px;text-align:center;font-weight:700;color:#2A7A5A">🎉 Ціль на сьогодні виконана! Молодець!</div>`:''}
-<div class="section-lbl" style="margin-top:12px">Налаштування</div>
-<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
-  <div><div class="lbl">Ціль (стаканів)</div>
-    <input type="number" class="ci" id="wg-goal" value="${S.waterGoal}" min="1" max="20" oninput="S.waterGoal=parseInt(this.value)||6;renderWaterTracker($('modal-content'))">
-  </div>
-  <div><div class="lbl">Об'єм склянки (мл)</div>
-    <input type="number" class="ci" id="wg-ml" value="${S.waterGlassML}" min="100" max="1000" step="50" oninput="S.waterGlassML=parseInt(this.value)||250;renderWaterTracker($('modal-content'))">
-  </div>
-</div>`;
-}
-function addWaterGlass(){
-  if(S.waterCount>=S.waterGoal){showNotif('🎉 Ціль вже виконана!','var(--teal)');return;}
-  S.waterCount++;
-  if(S.waterCount===S.waterGoal){S.xp+=20;spawnXPPop('+20 XP 💧');updateTopBar();spawnConfetti();}
-  updateWaterUI();saveGameState();
-  renderWaterTracker($('modal-content'));
-}
-function removeWaterGlass(){
-  if(S.waterCount<=0)return;
-  S.waterCount--;
-  updateWaterUI();saveGameState();
-  renderWaterTracker($('modal-content'));
-}
-
-// =====================================================================
-// STEP TRACKER
-// =====================================================================
-function updateStepUI(){
-  const lbl=$('step-count-lbl');
-  if(lbl){
-    const k=Math.round(S.stepCount/1000*10)/10;
-    lbl.textContent=`${k}k / ${Math.round(S.stepGoal/1000)}k 👟`;
-    if(S.stepCount>=S.stepGoal){lbl.style.color='#E85A7A';lbl.textContent='🎉 '+lbl.textContent;}
-  }
-}
-function renderStepTracker(el){
-  const pct=Math.min(100,Math.round(S.stepCount/S.stepGoal*100));
-  el.innerHTML=mHead('Трекер Кроків 👟','👟')+`
-<div style="text-align:center;margin:10px 0">
-  <div style="font-size:36px;margin-bottom:4px">🏃</div>
-  <div style="font-size:22px;font-weight:800;color:var(--accent)">${S.stepCount.toLocaleString()} кроків</div>
-  <div style="font-size:12px;color:var(--text-med)">Ціль: ${S.stepGoal.toLocaleString()} кроків</div>
-</div>
-<div style="background:var(--peach);border-radius:8px;height:12px;overflow:hidden;margin-bottom:6px">
-  <div style="height:100%;background:linear-gradient(90deg,#5A9A6A,#8BCB8A);border-radius:8px;width:${pct}%;transition:width 0.5s"></div>
-</div>
-<div style="text-align:center;font-size:11px;color:var(--text-med);margin-bottom:14px">${pct}% виконано</div>
-${S.stepCount>=S.stepGoal?`<div style="background:var(--teal);border-radius:10px;padding:10px;text-align:center;font-weight:700;color:#2A7A5A;margin-bottom:10px">🎉 10к кроків досягнуто! Феєрверк!</div>`:''}
-<div class="section-lbl">Додати кроки вручну</div>
-<div class="row">
-  <input type="number" class="ci" id="step-inp" placeholder="Кількість кроків..." min="1">
-  <button class="cb" onclick="addSteps()">＋ Додати</button>
-</div>
-<div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px">
-  ${[1000,2000,5000].map(n=>`<button class="cb sec sm" onclick="addStepsN(${n})">+${n}</button>`).join('')}
-  <button class="cb sec sm" style="background:#FFD0D0;color:#A04040" onclick="resetSteps()">↺ Скинути</button>
-</div>
-<div class="lbl">Денна ціль</div>
-<input type="number" class="ci" id="step-goal-inp" value="${S.stepGoal}" min="1000" step="1000" oninput="S.stepGoal=parseInt(this.value)||10000;updateStepUI()">`;
-}
-function addSteps(){
-  const inp=$('step-inp');if(!inp||!inp.value)return;
-  const prev=S.stepCount;S.stepCount=Math.min(S.stepGoal*2,S.stepCount+parseInt(inp.value)||0);
-  if(prev<S.stepGoal&&S.stepCount>=S.stepGoal){stepFireworks();S.xp+=30;spawnXPPop('+30 XP 🏃');updateTopBar();}
-  updateStepUI();saveGameState();
-  renderStepTracker($('modal-content'));
-}
-function addStepsN(n){
-  const prev=S.stepCount;S.stepCount=Math.min(S.stepGoal*2,S.stepCount+n);
-  if(prev<S.stepGoal&&S.stepCount>=S.stepGoal){stepFireworks();S.xp+=30;spawnXPPop('+30 XP 🏃');updateTopBar();}
-  updateStepUI();saveGameState();
-  renderStepTracker($('modal-content'));
-}
-function resetSteps(){S.stepCount=0;updateStepUI();saveGameState();renderStepTracker($('modal-content'));}
-function stepFireworks(){
-  const c=$('step-fireworks');if(!c)return;
-  const colors=['#E85A7A','#FFD166','#7BBE8A','#7FB3CC','#D4A0C0'];
-  for(let i=0;i<30;i++){
-    const d=document.createElement('div');
-    d.style.cssText=`position:absolute;width:8px;height:8px;border-radius:50%;background:${colors[i%colors.length]};left:${20+Math.random()*60}%;top:${10+Math.random()*40}%;animation:cFall ${0.8+Math.random()*0.6}s ease-out forwards;animation-delay:${Math.random()*0.4}s`;
-    c.appendChild(d);setTimeout(()=>d.remove(),1500);
-  }
-}
-
-// =====================================================================
-// WORK INVENTORY (interior elements for Work scene)
-// =====================================================================
-const WORK_ITEMS_CATALOG=[
-  // Clothing Store
-  {id:'wi_clothes_rack1',cat:'Магазин одягу',emoji:'👗',name:'Вішалка 1',svgW:70,svgH:90,svg:`<g><rect x="28" y="0" width="14" height="5" rx="2" fill="#C49A6C"/><path d="M35 5 L35 20" stroke="#C49A6C" stroke-width="3"/><path d="M5 20 L65 20" stroke="#C49A6C" stroke-width="3" stroke-linecap="round"/><line x1="5" y1="20" x2="5" y2="90" stroke="#A0785A" stroke-width="2.5"/><line x1="65" y1="20" x2="65" y2="90" stroke="#A0785A" stroke-width="2.5"/><rect x="10" y="28" width="14" height="50" rx="3" fill="#E85A7A"/><rect x="28" y="25" width="14" height="52" rx="3" fill="#7FB3CC"/><rect x="46" y="30" width="14" height="48" rx="3" fill="#7BBE8A"/></g>`},
-  {id:'wi_clothes_rack2',cat:'Магазин одягу',emoji:'👔',name:'Вішалка 2',svgW:70,svgH:90,svg:`<g><rect x="28" y="0" width="14" height="5" rx="2" fill="#8B6354"/><path d="M35 5 L35 20" stroke="#8B6354" stroke-width="3"/><path d="M5 20 L65 20" stroke="#8B6354" stroke-width="3" stroke-linecap="round"/><line x1="5" y1="20" x2="5" y2="90" stroke="#6A4A3A" stroke-width="2.5"/><line x1="65" y1="20" x2="65" y2="90" stroke="#6A4A3A" stroke-width="2.5"/><rect x="10" y="28" width="14" height="50" rx="3" fill="#D4A0C0"/><rect x="28" y="25" width="14" height="52" rx="3" fill="#F4C261"/><rect x="46" y="30" width="14" height="48" rx="3" fill="#A07888"/></g>`},
-  {id:'wi_mannequin',cat:'Магазин одягу',emoji:'🪆',name:'Манекен',svgW:50,svgH:100,svg:`<g><ellipse cx="25" cy="12" rx="10" ry="10" fill="#F4D4B0"/><rect x="15" y="22" width="20" height="30" rx="5" fill="#E07B54"/><rect x="17" y="52" width="7" height="30" rx="3" fill="#4A3728"/><rect x="26" y="52" width="7" height="30" rx="3" fill="#4A3728"/><rect x="24" y="22" width="2" height="3" rx="1" fill="#C49A6C"/></g>`},
-  {id:'wi_display_table',cat:'Магазин одягу',emoji:'🛋️',name:'Стіл Показу',svgW:90,svgH:50,svg:`<g><rect x="0" y="8" width="90" height="14" rx="4" fill="#C49A6C"/><rect x="8" y="22" width="74" height="24" rx="3" fill="#A07848"/><rect x="15" y="8" width="20" height="16" rx="2" fill="#F8E8D0" opacity="0.7"/><rect x="45" y="8" width="20" height="16" rx="2" fill="#F8E8D0" opacity="0.7"/></g>`},
-  // Office
-  {id:'wi_office_desk',cat:'Офіс',emoji:'💼',name:'Офісний Стіл',svgW:100,svgH:60,svg:`<g><rect x="0" y="12" width="100" height="12" rx="4" fill="#8B6354"/><rect x="10" y="24" width="80" height="34" rx="3" fill="#7A5C4A"/><rect x="30" y="0" width="40" height="14" rx="3" fill="#2C2C3A"/><rect x="34" y="3" width="32" height="9" rx="2" fill="#0F1A30"/></g>`},
-  {id:'wi_bookshelf_office',cat:'Офіс',emoji:'📚',name:'Полиця Офісна',svgW:70,svgH:100,svg:`<g><rect x="0" y="0" width="70" height="6" rx="2" fill="#C49A6C"/><rect x="0" y="34" width="70" height="6" rx="2" fill="#C49A6C"/><rect x="0" y="68" width="70" height="6" rx="2" fill="#C49A6C"/><rect x="0" y="0" width="6" height="100" rx="2" fill="#A07848"/><rect x="64" y="0" width="6" height="100" rx="2" fill="#A07848"/><rect x="8" y="-28" width="10" height="34" rx="2" fill="#E07B54"/><rect x="22" y="-24" width="10" height="30" rx="2" fill="#7FB3CC"/><rect x="36" y="-30" width="10" height="36" rx="2" fill="#7BBE8A"/><rect x="50" y="-26" width="10" height="32" rx="2" fill="#D4A0C0"/><rect x="8" y="8" width="10" height="28" rx="2" fill="#F4C261"/><rect x="22" y="6" width="10" height="30" rx="2" fill="#A07888"/><rect x="36" y="8" width="10" height="28" rx="2" fill="#78A8A0"/></g>`},
-  {id:'wi_office_chair',cat:'Офіс',emoji:'🪑',name:'Офісне Крісло',svgW:60,svgH:80,svg:`<g><rect x="10" y="0" width="40" height="40" rx="8" fill="#3A3A4A"/><rect x="15" y="40" width="30" height="10" rx="4" fill="#2C2C3A"/><circle cx="30" cy="56" r="8" fill="#4A4A5A"/><line x1="30" y1="64" x2="15" y2="78" stroke="#4A4A5A" stroke-width="3"/><line x1="30" y1="64" x2="45" y2="78" stroke="#4A4A5A" stroke-width="3"/><line x1="30" y1="64" x2="30" y2="78" stroke="#4A4A5A" stroke-width="3"/></g>`},
-  {id:'wi_whiteboard',cat:'Офіс',emoji:'📋',name:'Дошка',svgW:100,svgH:70,svg:`<g><rect x="5" y="5" width="90" height="60" rx="4" fill="white" stroke="#C0C0D0" stroke-width="2"/><line x1="15" y1="25" x2="75" y2="25" stroke="#60A0D0" stroke-width="2"/><line x1="15" y1="38" x2="65" y2="38" stroke="#60A0D0" stroke-width="2"/><line x1="15" y1="51" x2="50" y2="51" stroke="#60A0D0" stroke-width="2"/><rect x="0" y="62" width="100" height="8" rx="2" fill="#C0C0D0"/></g>`},
-  // General
-  {id:'wi_sofa',cat:'Загальне',emoji:'🛋️',name:'Диван',svgW:120,svgH:70,svg:`<g><rect x="0" y="20" width="120" height="48" rx="8" fill="#7FB3CC"/><rect x="0" y="10" width="20" height="60" rx="6" fill="#6A9EBB"/><rect x="100" y="10" width="20" height="60" rx="6" fill="#6A9EBB"/><rect x="20" y="10" width="80" height="25" rx="5" fill="#90C4DA"/></g>`},
-  {id:'wi_plant_pot',cat:'Загальне',emoji:'🌱',name:'Горщик з рослиною',svgW:40,svgH:60,svg:`<g><rect x="10" y="36" width="20" height="22" rx="4" fill="#A07848"/><rect x="7" y="34" width="26" height="6" rx="2" fill="#8B6354"/><ellipse cx="20" cy="30" rx="14" ry="16" fill="#5A9A4A"/><ellipse cx="20" cy="22" rx="9" ry="12" fill="#6AAA5A"/><ellipse cx="20" cy="16" rx="6" ry="8" fill="#7ABA6A"/></g>`},
-  {id:'wi_mirror_wall',cat:'Загальне',emoji:'🪞',name:'Велике Дзеркало',svgW:60,svgH:90,svg:`<g><rect x="5" y="5" width="50" height="80" rx="6" fill="#D8F0F8" stroke="#C0C8D0" stroke-width="3"/><rect x="10" y="10" width="15" height="50" rx="8" fill="rgba(255,255,255,0.4)" transform="rotate(-15 17 35)"/></g>`},
-];
-
-let _workTab='Магазин одягу';
-function renderWorkInventory(el){
-  const cats=[...new Set(WORK_ITEMS_CATALOG.map(i=>i.cat))];
-  el.innerHTML=mHead('Інвентар Роботи','🏢')+`
-<div style="font-size:11px;color:var(--text-med);margin-bottom:8px">Обери предмет для розміщення на локації Робота. Назву можна редагувати прямо на сцені.</div>
-<div style="display:flex;gap:5px;flex-wrap:wrap;margin-bottom:10px">
-${cats.map(c=>`<button onclick="_workTab='${c}';renderWorkInventory($('modal-content'))" style="padding:4px 10px;border:2px solid var(--peach);border-radius:8px;background:${_workTab===c?'var(--orange)':'white'};color:${_workTab===c?'white':'var(--text-dark)'};font-family:Nunito,sans-serif;font-size:10px;font-weight:700;cursor:pointer">${c}</button>`).join('')}
-</div>
-<div style="display:grid;grid-template-columns:repeat(2,1fr);gap:10px">
-${WORK_ITEMS_CATALOG.filter(i=>i.cat===_workTab).map(item=>`
-<div style="background:white;border:2px solid var(--peach);border-radius:12px;padding:10px;text-align:center;cursor:pointer;transition:all 0.15s" onmouseover="this.style.borderColor='var(--orange)'" onmouseout="this.style.borderColor='var(--peach)'" onclick="placeWorkItem('${item.id}')">
-  <div style="font-size:26px;margin-bottom:4px">${item.emoji}</div>
-  <div style="font-size:11px;font-weight:700;color:var(--text-dark)">${item.name}</div>
-  <div style="font-size:9px;color:var(--text-med)">${item.cat}</div>
-  <div style="font-size:9px;color:var(--teal);font-weight:700;margin-top:3px">＋ Розмістити</div>
-</div>`).join('')}
-</div>
-<div class="section-lbl" style="margin-top:14px">Розміщені предмети (${(S.interiorInventory||[]).length})</div>
-${(S.interiorInventory||[]).length===0?'<p style="font-size:12px;color:var(--text-med)">Ще нічого не розміщено~</p>':''}
-${(S.interiorInventory||[]).map((it,i)=>`
-<div style="display:flex;align-items:center;gap:8px;padding:5px 0;border-bottom:1px solid var(--peach)">
-  <span style="font-size:18px">${it.emoji}</span>
-  <span style="flex:1;font-size:12px;color:var(--text-dark)">${it.name}</span>
-  <button style="background:none;border:none;cursor:pointer;color:#E07B54;font-size:12px" onclick="removeWorkItem(${i})">✕</button>
-</div>`).join('')}`;
-}
-
-function placeWorkItem(id){
-  const tpl=WORK_ITEMS_CATALOG.find(i=>i.id===id);if(!tpl)return;
-  if(!S.interiorInventory)S.interiorInventory=[];
-  const inst={...tpl,uid:'wi_'+Date.now(),x:100+Math.random()*400,y:200+Math.random()*150,customName:tpl.name};
-  S.interiorInventory.push(inst);
-  saveGameState();
-  renderWorkInventory($('modal-content'));
-  showNotif(`${tpl.emoji} Розміщено на локації Робота!`,null);
-}
-function removeWorkItem(idx){
-  S.interiorInventory.splice(idx,1);
-  saveGameState();
-  renderWorkInventory($('modal-content'));
-  renderWorkItems();
-}
-function renderWorkItems(){
-  const c=$('work-items-container');if(!c)return;
-  c.innerHTML='';
-  c.style.pointerEvents='all';
-  (S.interiorInventory||[]).forEach(it=>{
-    const wrap=document.createElement('div');
-    wrap.className='int-item';
-    wrap.style.cssText=`left:${it.x||120}px;top:${it.y||200}px;position:absolute;z-index:6;cursor:pointer`;
-    wrap.innerHTML=`<svg width="${it.svgW}" height="${it.svgH}" viewBox="0 0 ${it.svgW} ${it.svgH}">${it.svg}</svg><div class="int-item-lbl" id="lbl-${it.uid}" onclick="editIntItemName('${it.uid}')">${it.customName||it.name}</div>`;
-    c.appendChild(wrap);
-    // Make draggable in edit mode
-    wrap.id=it.uid;
-    DRAGGABLE_IDS.push(it.uid);
-  });
-}
-function editIntItemName(uid){
-  const lbl=$('lbl-'+uid);if(!lbl)return;
-  lbl.contentEditable='true';lbl.focus();
-  const range=document.createRange();range.selectNodeContents(lbl);
-  const sel=window.getSelection();sel.removeAllRanges();sel.addRange(range);
-  lbl.onblur=()=>{
-    lbl.contentEditable='false';
-    const it=(S.interiorInventory||[]).find(x=>x.uid===uid);
-    if(it){it.customName=lbl.textContent.trim()||it.name;saveGameState();}
-  };
-  lbl.onkeydown=e=>{if(e.key==='Enter'){e.preventDefault();lbl.blur();}};
-}
 // =====================================================================
 // GAME STATE PERSISTENCE (IndexedDB + localStorage fallback)
 // =====================================================================
@@ -3602,12 +3823,13 @@ async function saveGameState(){
     inventory:S.inventory,equippedItems:S.equippedItems,
     shopList:S.shopList,pomWork:S.pomWork,pomBreak:S.pomBreak,
     nextTaskId:S.nextTaskId,nextNoteId:S.nextNoteId,
+    steps:S.steps,stepsGoal:S.stepsGoal,stepsHistory:S.stepsHistory,
+    waterGlasses:S.waterGlasses,waterGoal:S.waterGoal,waterMl:S.waterMl,waterHistory:S.waterHistory,
+    expenses:S.expenses,meals:S.meals,nextMealId:S.nextMealId,
+    interiorLabels:S.interiorLabels,workNotes:S.workNotes,
+    ownedSkins:S.ownedSkins||[],activeInteriorSkins:S.activeInteriorSkins||{},
     ccCompleted:ccState.completed,ccPoints:ccState.points,
-    ccLevel:ccState.level,ccPartProgress:ccState.partProgress,
-    waterCount:S.waterCount,waterGoal:S.waterGoal,waterGlassML:S.waterGlassML,
-    stepCount:S.stepCount,stepGoal:S.stepGoal,
-    interiorSkins:S.interiorSkins||[],
-    interiorInventory:S.interiorInventory||[]
+    ccLevel:ccState.level,ccPartProgress:ccState.partProgress
   };
   await idbSet('gameState','main',toSave);
 }
@@ -3615,6 +3837,21 @@ async function loadGameState(){
   const data=await idbGet('gameState','main');
   if(!data)return;
   Object.assign(S,data);
+  // Ensure new fields have defaults
+  if(S.steps===undefined)S.steps=0;
+  if(S.stepsGoal===undefined)S.stepsGoal=10000;
+  if(S.stepsHistory===undefined)S.stepsHistory=[];
+  if(S.waterGlasses===undefined)S.waterGlasses=0;
+  if(S.waterGoal===undefined)S.waterGoal=6;
+  if(S.waterMl===undefined)S.waterMl=250;
+  if(S.waterHistory===undefined)S.waterHistory=[];
+  if(!S.expenses)S.expenses=[];
+  if(!S.meals||S.meals.length===0)S.meals=[{id:1,name:'Вівсянка',ingredients:'Овсянка, молоко, банан',recipe:'Залити гарячим молоком, настояти 5 хв.',done:false},{id:2,name:'Паста',ingredients:'Паста, томатний соус',recipe:'Відварити пасту, додати соус.',done:false}];
+  if(!S.nextMealId)S.nextMealId=3;
+  if(!S.interiorLabels)S.interiorLabels={};
+  if(S.workNotes===undefined)S.workNotes='';
+  if(!S.ownedSkins)S.ownedSkins=[];
+  if(!S.activeInteriorSkins)S.activeInteriorSkins={};
   if(data.ccCompleted!==undefined){
     ccState.completed=data.ccCompleted||0;
     ccState.points=data.ccPoints||0;
@@ -3634,13 +3871,14 @@ async function init(){
   updateTopBar();
   updateClutter();
   // Re-apply mascot cosmetics
-  if(S.mascotColor&&S.mascotColor!=='#F4A261')setTimeout(()=>changeFur(S.mascotColor),100);
-  if(S.mascotEyeColor&&S.mascotEyeColor!=='#2C1A0E')setTimeout(()=>changeEyes(S.mascotEyeColor),100);
+  if(S.mascotColor)setTimeout(()=>applyMascotColor(S.mascotColor),100);
+  if(S.mascotEyeColor)setTimeout(()=>changeEyes(S.mascotEyeColor),100);
   if(S.equippedItems&&S.equippedItems.length>0){
     setTimeout(()=>S.equippedItems.forEach(id=>{
       const item=allClothes.find(c=>c.id===id);if(item)applyAccessory(item);
     }),150);
   }
+  setTimeout(()=>{updateStepsWidget();updateWaterWidget();initInteriorLabels();restoreInteriorSkins();},300);
 }
 init();
 
