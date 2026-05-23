@@ -19,45 +19,45 @@
 }
 
 /* ─── BASE: body fills the whole screen always ─── */
-html, body {
-  width: 100%;
-  height: 100%;
-  margin: 0;
-  padding: 0;
-  overflow: hidden;
-  background: #E8DCC8; [cite: 2]
-  font-family: 'Nunito', sans-serif; [cite: 2]
-  /* Запобігаємо випадковим зсувам та жестам оновлення сторінки */
-  position: fixed;
-  touch-action: none;
+html,body{
+  width:100%;height:100%;
+  overflow:hidden;
+  background:#E8DCC8;
+  font-family:'Nunito',sans-serif;
+}
+body{
+  display:flex;
+  align-items:center;
+  justify-content:center;
 }
 
-body {
-  display: flex; [cite: 3]
-  align-items: center; [cite: 3]
-  justify-content: center; [cite: 3]
+/* ─── #app: on desktop it's a 720×600 card; on mobile it fills the viewport ─── */
+#app{
+  position:relative;
+  overflow:hidden;
+  background:var(--wall);
+  /* Desktop default */
+  width:720px;
+  height:600px;
+  border-radius:20px;
+  box-shadow:0 20px 60px rgba(0,0,0,0.25);
+  flex-shrink:0;
 }
 
-/* ─── #app: Головний контейнер з фіксованими пропорціями ─── */
-#app {
-  position: relative; 
-  overflow: hidden; 
-  background: var(--wall); 
-  width: 720px;
-  height: 600px;
-  border-radius: 20px; 
-  box-shadow: 0 20px 60px rgba(0,0,0,0.25); [cite: 5]
-  flex-shrink: 0;
-  /* Центрування трансформації */
-  transform-origin: center center;
-  will-change: transform;
-}
-
-/* На мобільних пристроях ми скидаємо жорсткі радіуси, але масштабуванням керуватимемо через JS */
-@media (max-width: 760px) {
-  #app {
-    border-radius: 0 !important;
-    box-shadow: none !important; 
+/* On any screen smaller than 760px wide: fill 100% */
+@media (max-width:760px){
+  body{
+    padding:0;
+    align-items:stretch;
+    justify-content:stretch;
+  }
+  #app{
+    width:100vw !important;
+    height:100dvh !important;
+    max-width:100vw !important;
+    max-height:100dvh !important;
+    border-radius:0 !important;
+    box-shadow:none !important;
   }
 }
 
@@ -374,7 +374,7 @@ select.ci{cursor:pointer}
   overflow:hidden;
 }
 
-/* ── ≤760px: Оновлений блок для мобільних ── */
+/* ── ≤760px: app fills 100% of viewport ── */
 @media (max-width:760px){
   body{
     padding:0;
@@ -382,13 +382,15 @@ select.ci{cursor:pointer}
     justify-content:stretch;
   }
   #app{
-    /* Дозволяємо JavaScript повністю контролювати позиціонування та розмір */
-    position: absolute !important;
+    width:100vw !important;
+    height:100dvh !important;
+    max-width:100vw !important;
+    max-height:100dvh !important;
     border-radius:0 !important;
     box-shadow:none !important;
   }
 }
-  
+
 /* ── ≤600px: compact top/bottom bars ── */
 @media (max-width:600px){
   #top-bar{padding:0 6px;gap:3px}
@@ -3981,65 +3983,6 @@ console.log('🦊 Dopamine Task RPG v3 — IndexedDB + Cosmic Connect!');
       }, 2000);
     });
   }
-function fitScenes() {
-  const app = document.getElementById('app');
-  if (!app) return;
-
-  const windowWidth = window.innerWidth;
-  const windowHeight = window.innerHeight;
-
-  const baseWidth = 720;
-  const baseHeight = 600;
-
-  if (windowWidth <= 760 || windowHeight <= 650) {
-    // Масштабуємо строго по ширині екрана смартфона
-    let scale = windowWidth / baseWidth;
-    
-    // Якщо при такій ширині додаток задовгий для екрана, зменшуємо його під висоту
-    if (baseHeight * scale > windowHeight) {
-      scale = windowHeight / baseHeight;
-    }
-
-    // Рахуємо чисті відступи, щоб застосунок був ІДЕАЛЬНО по центру екрана
-    const leftOffset = (windowWidth - baseWidth * scale) / 2;
-    const topOffset = (windowHeight - baseHeight * scale) / 2;
-
-    // Скидаємо будь-які старі стилі, які могли заважати в CSS
-    app.style.setProperty('width', '720px', 'important');
-    app.style.setProperty('height', '600px', 'important');
-    app.style.setProperty('max-width', 'none', 'important');
-    app.style.setProperty('max-height', 'none', 'important');
-
-    // Повне центрування та масштабування
-    app.style.position = 'absolute';
-    app.style.left = `${leftOffset}px`;
-    app.style.top = `${topOffset}px`;
-    app.style.transform = `scale(${scale})`;
-    app.style.transformOrigin = 'left top';
-    app.style.margin = '0';
-  } else {
-    // Повернення до стандартного десктопного вигляду (усі обмеження знімаються)
-    app.style.position = 'relative';
-    app.style.left = 'auto';
-    app.style.top = 'auto';
-    app.style.transform = 'none';
-    app.style.margin = '0';
-    app.style.width = '720px';
-    app.style.height = '600px';
-    app.style.maxWidth = '';
-    app.style.maxHeight = '';
-  }
-}
-
-// Запобігаємо дублюванню слухачів подій браузера
-window.removeEventListener('resize', fitScenes);
-window.addEventListener('resize', fitScenes);
-
-window.removeEventListener('orientationchange', fitScenes);
-window.addEventListener('orientationchange', () => {
-  setTimeout(fitScenes, 150);
-});
-  
 </script>
 </body>
 </html>
