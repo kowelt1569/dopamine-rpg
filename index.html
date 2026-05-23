@@ -17,8 +17,50 @@
   --accent:#E07B54;--text-dark:#4A3728;--text-med:#7A5C4A;--shadow:rgba(74,55,40,0.13);
   --green-dark:#5A9A6A;--sky:#B8E4F7;--grass:#7DBF6E;
 }
-body{font-family:'Nunito',sans-serif;background:#E8DCC8;display:flex;align-items:center;justify-content:center;min-height:100vh;padding:10px}
-#app{width:720px;height:600px;background:var(--wall);position:relative;overflow:hidden;border-radius:20px;box-shadow:0 20px 60px rgba(0,0,0,0.25);flex-shrink:0}
+
+/* ─── BASE: body fills the whole screen always ─── */
+html,body{
+  width:100%;height:100%;
+  overflow:hidden;
+  background:#E8DCC8;
+  font-family:'Nunito',sans-serif;
+}
+body{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+}
+
+/* ─── #app: on desktop it's a 720×600 card; on mobile it fills the viewport ─── */
+#app{
+  position:relative;
+  overflow:hidden;
+  background:var(--wall);
+  /* Desktop default */
+  width:720px;
+  height:600px;
+  border-radius:20px;
+  box-shadow:0 20px 60px rgba(0,0,0,0.25);
+  flex-shrink:0;
+}
+
+/* On any screen smaller than 760px wide: fill 100% */
+@media (max-width:760px){
+  body{
+    padding:0;
+    align-items:stretch;
+    justify-content:stretch;
+  }
+  #app{
+    width:100vw !important;
+    height:100dvh !important;
+    max-width:100vw !important;
+    max-height:100dvh !important;
+    border-radius:0 !important;
+    box-shadow:none !important;
+  }
+}
+
 
 /* ===== SCENES ===== */
 .scene{position:absolute;inset:0;display:none;overflow:hidden}
@@ -316,66 +358,48 @@ select.ci{cursor:pointer}
 .badge{display:inline-block;background:var(--peach);border-radius:8px;padding:2px 7px;font-size:10px;font-weight:700;color:var(--accent)}
 .section-lbl{font-size:10px;font-weight:700;color:var(--text-med);letter-spacing:0.5px;text-transform:uppercase;margin-bottom:6px;margin-top:10px}
 /* =====================================================
-   RESPONSIVE SCALING — fit scene to any screen
+   RESPONSIVE — scene content scaling
+   Scenes are 720×560 logical px.
+   JS fitScenes() applies a CSS transform scale+translate
+   so they fill #scene-viewport without scrolling.
    ===================================================== */
 
-/* All scenes share the same base logical size */
+/* All scenes: fixed logical canvas, JS transform positions them */
 .scene{
   position:absolute;
-  top:0;left:0;
+  top:0; left:0;
   width:720px;
   height:560px;
   transform-origin:top left;
   display:none;
-  overflow:hidden;
+  overflow:visible;   /* allow mascot/effects to overflow scene slightly */
 }
 .scene.active{display:block}
 
-/* ── TABLETS (601–900px) ── */
-@media (max-width:900px) and (min-width:601px){
-  body{padding:0;overflow:hidden}
-  #app{width:100vw;height:100dvh;max-width:100vw;max-height:100dvh;border-radius:0;overflow:hidden}
-  #scene-viewport{position:absolute;top:42px;left:0;right:0;bottom:54px;overflow:hidden}
+/* scene-viewport clips the scaled scene */
+#scene-viewport{
+  position:absolute;
+  top:42px; left:0; right:0; bottom:54px;
+  overflow:hidden;
+  /* no pointer-events override — children handle their own */
 }
 
-/* ── PHONES (≤600px) ── */
+/* ── top bar compact on narrow screens ── */
 @media (max-width:600px){
-  body{padding:0;overflow:hidden}
-  #app{width:100vw;height:100dvh;max-width:100vw;max-height:100dvh;border-radius:0;overflow:hidden}
-
-  #scene-viewport{
-    position:absolute;
-    top:42px;left:0;right:0;bottom:54px;
-    overflow:hidden;
-  }
-
-  #top-bar{
-    position:absolute;top:0;left:0;right:0;z-index:30;
-    height:42px;padding:0 6px;gap:3px;flex-wrap:nowrap;
-  }
-  .top-stat{font-size:9px;padding:2px 7px}
-  .loc-tab{font-size:12px;padding:3px 5px}
-
-  #bottom-nav{
-    position:absolute;bottom:0;left:0;right:0;z-index:35;
-    height:54px;padding-bottom:env(safe-area-inset-bottom);
-    background:rgba(255,248,240,0.98)
-  }
-  .nav-btn{font-size:7px;min-width:auto;padding:2px 3px}
-  .nav-btn i{font-size:14px}
-
+  #top-bar{padding:0 6px;gap:3px}
+  .top-stat{font-size:9px;padding:2px 6px}
+  .loc-tab{font-size:13px;padding:3px 5px}
+  .nav-btn{font-size:7px;min-width:auto;padding:2px 4px}
+  .nav-btn i{font-size:15px}
   .mbox{width:96vw;max-height:88dvh}
-
-  #edit-btn,#reset-pos-btn{top:46px;z-index:40}
-  #edit-hint{top:72px;z-index:40;font-size:9px}
+  #edit-btn,#reset-pos-btn{z-index:40}
+  #edit-hint{z-index:40;font-size:9px}
 }
-
-/* ── SMALL PHONES (≤400px) ── */
 @media (max-width:400px){
-  .top-stat{font-size:8px;padding:2px 5px}
+  .top-stat{font-size:8px;padding:2px 4px}
+  .loc-tab{font-size:11px;padding:2px 3px}
   .nav-btn{font-size:6px}
   .nav-btn i{font-size:13px}
-  .loc-tab{font-size:11px;padding:2px 3px}
 }
 
 </style>
@@ -822,7 +846,7 @@ select.ci{cursor:pointer}
     </div>
 
     <!-- Oven below stove -->
-    <div style="position:absolute;bottom:82px;left:160px;width:140px;height:80px;background:#C8C0B0;border:3px solid #B0A898;border-radius:0 0 4px 4px;z-index:4">
+    <div id="kit-oven" style="position:absolute;bottom:82px;left:160px;width:140px;height:80px;background:#C8C0B0;border:3px solid #B0A898;border-radius:0 0 4px 4px;z-index:4">
       <div style="position:absolute;top:20px;left:15px;right:15px;height:30px;background:#B8B0A0;border-radius:4px;border:2px solid #A0988A"></div>
       <div style="position:absolute;top:32px;left:50%;transform:translateX(-50%);width:30px;height:6px;background:#909080;border-radius:3px"></div>
     </div>
@@ -973,13 +997,20 @@ select.ci{cursor:pointer}
       <div style="position:absolute;bottom:44px;left:10px;right:10px;height:26px;background:#B8E4B8;border:1.5px solid #80A880;border-radius:3px;display:flex;align-items:center;justify-content:center;font-size:7px;font-weight:800;color:#2A5A2A">💰 КАСА</div>
       <!-- Keys -->
       <div style="position:absolute;bottom:18px;left:10px;right:10px;display:grid;grid-template-columns:repeat(4,1fr);gap:2px">
-        ${[...Array(8)].map(()=>`<div style="height:8px;background:#C4A070;border-radius:1px;border:1px solid #A07848"></div>`).join('')}
+        <div style="height:8px;background:#C4A070;border-radius:1px;border:1px solid #A07848"></div>
+        <div style="height:8px;background:#C4A070;border-radius:1px;border:1px solid #A07848"></div>
+        <div style="height:8px;background:#C4A070;border-radius:1px;border:1px solid #A07848"></div>
+        <div style="height:8px;background:#C4A070;border-radius:1px;border:1px solid #A07848"></div>
+        <div style="height:8px;background:#C4A070;border-radius:1px;border:1px solid #A07848"></div>
+        <div style="height:8px;background:#C4A070;border-radius:1px;border:1px solid #A07848"></div>
+        <div style="height:8px;background:#C4A070;border-radius:1px;border:1px solid #A07848"></div>
+        <div style="height:8px;background:#C4A070;border-radius:1px;border:1px solid #A07848"></div>
       </div>
       <!-- Drawer -->
       <div style="position:absolute;bottom:2px;left:8px;right:8px;height:14px;background:#C4A070;border-radius:2px;border:1.5px solid #A07848"></div>
       <!-- Print paper -->
       <div style="position:absolute;top:0;left:28px;width:24px;height:14px;background:white;border-radius:2px 2px 0 0;border:1px solid #C0B0A0"></div>
-      <div style="position:absolute;bottom:-18px;left:0;right:0;font-size:8px;font-weight:800;color:#6A50A0;text-align:center">Витрати</div>
+      <div style="position:absolute;bottom:-18px;left:0;right:0;font-size:8px;font-weight:800;color:#6A50A0;text-align:center">Касовий апарат</div>
     </div>
     <div class="tip" id="tip-register" style="bottom:190px;right:10px">💰 Каса — облік витрат</div>
 
@@ -3554,7 +3585,7 @@ const DRAGGABLE_IDS=[
   'window-obj','clock-obj','cal-wall-obj','notepad-obj','door-obj',
   'desk-obj','monitor','bed-obj','rug-obj','shelf-obj','cactus-obj','radio-obj','cactus-stand',
   'cassiopeia-painting','moon-lamp',
-  'kit-fridge-wrap','kit-stove-wrap','kit-sink-wrap','kit-window',
+  'kit-fridge-wrap','kit-stove-wrap','kit-sink-wrap','kit-window','kit-oven','water-widget',
   'yard-tree1','yard-tree2','yard-bench',
   'shop-shelf1','shop-shelf2','shop-shelf3','shop-register',
   'bath-tub','bath-toilet','bath-sink','bath-mirror','bath-cabinet','bath-window',
@@ -3736,25 +3767,29 @@ function findDrag(target){
 function startDrag(el,cx,cy){
   eDrag=el;captureState(el);
   applyState(el,OBJ_STATE[el.id]);
-  const sc = sceneScale();
-  const vp = $('scene-viewport') || document.getElementById('app');
-  const vpRect = vp.getBoundingClientRect();
-  const tx = getSceneTx(), ty = getSceneTy();
-  // Convert pointer from screen → scene logical coords
-  const sx = (cx - vpRect.left - tx) / sc;
-  const sy = (cy - vpRect.top  - ty) / sc;
+  const sc  = sceneScale();
+  const vp  = document.getElementById('scene-viewport');
+  const vpR = vp ? vp.getBoundingClientRect() : {left:0,top:0};
+  const tx  = getSceneTx();
+  const ty  = getSceneTy();
+  // pointer → scene-logical coords
+  const sx = (cx - vpR.left - tx) / sc;
+  const sy = (cy - vpR.top  - ty) / sc;
   eOX = sx - OBJ_STATE[el.id].x;
   eOY = sy - OBJ_STATE[el.id].y;
-  el.style.zIndex='50';showEPanel(el);
+  el.style.zIndex = '50';
+  showEPanel(el);
 }
+
 function doDrag(cx,cy){
-  if(!eDrag)return;
-  const sc = sceneScale();
-  const vp = $('scene-viewport') || document.getElementById('app');
-  const vpRect = vp.getBoundingClientRect();
-  const tx = getSceneTx(), ty = getSceneTy();
-  const sx = (cx - vpRect.left - tx) / sc;
-  const sy = (cy - vpRect.top  - ty) / sc;
+  if(!eDrag) return;
+  const sc  = sceneScale();
+  const vp  = document.getElementById('scene-viewport');
+  const vpR = vp ? vp.getBoundingClientRect() : {left:0,top:0};
+  const tx  = getSceneTx();
+  const ty  = getSceneTy();
+  const sx = (cx - vpR.left - tx) / sc;
+  const sy = (cy - vpR.top  - ty) / sc;
   const ew = eDrag.offsetWidth  || 10;
   const eh = eDrag.offsetHeight || 10;
   const nx = Math.max(0, Math.min(sx - eOX, SCENE_W - ew));
@@ -3768,25 +3803,28 @@ function doDrag(cx,cy){
 }
 function endDrag(){if(eDrag){eDrag.style.zIndex='';eDrag=null;}}
 
+// ── Single canonical set of drag event listeners ──
 document.addEventListener('mousedown',e=>{
-  if(!S.editMode)return;
-  const d=findDrag(e.target);if(!d)return;
+  if(!S.editMode) return;
+  const d=findDrag(e.target);
+  if(!d) return;
   e.preventDefault();e.stopPropagation();
   startDrag(d,e.clientX,e.clientY);
 },true);
 document.addEventListener('mousemove',e=>{if(S.editMode&&eDrag)doDrag(e.clientX,e.clientY);},true);
-document.addEventListener('mouseup',e=>{if(S.editMode)endDrag();},true);
+document.addEventListener('mouseup',()=>{if(S.editMode&&eDrag)endDrag();},true);
+
 document.addEventListener('touchstart',e=>{
-  if(!S.editMode)return;
-  const d=findDrag(e.target);if(!d)return;
+  if(!S.editMode) return;
+  const d=findDrag(e.target);
+  if(!d) return;
   e.preventDefault();e.stopPropagation();
   startDrag(d,e.touches[0].clientX,e.touches[0].clientY);
 },{passive:false});
 document.addEventListener('touchmove',e=>{
   if(S.editMode&&eDrag){e.preventDefault();doDrag(e.touches[0].clientX,e.touches[0].clientY);}
-  // Don't prevent default otherwise, allow viewport scroll
 },{passive:false});
-document.addEventListener('touchend',()=>{if(S.editMode)endDrag();});
+document.addEventListener('touchend',()=>{if(S.editMode&&eDrag)endDrag();});
 
 loadObjPositions();
 // =====================================================================
@@ -3843,7 +3881,7 @@ setInterval(saveGameState,30000);
 // INIT
 // =====================================================================
 // =====================================================================
-// FIT SCENES — scale scenes to fill viewport without scrolling
+// FIT SCENES — scale the 720×560 scene canvas to fill the viewport
 // =====================================================================
 const SCENE_W = 720;
 const SCENE_H = 560;
@@ -3851,27 +3889,29 @@ const SCENE_H = 560;
 function fitScenes() {
   const vp = document.getElementById('scene-viewport');
   if (!vp) return;
-  const vpW = vp.clientWidth  || window.innerWidth;
-  const vpH = vp.clientHeight || (window.innerHeight - 96); // top+bottom bars
+
+  // Use the actual rendered size of the viewport element
+  const vpW = vp.offsetWidth  || vp.clientWidth  || window.innerWidth;
+  const vpH = vp.offsetHeight || vp.clientHeight || (window.innerHeight - 96);
+
+  // Scale so the scene fills the viewport, keeping aspect ratio
   const scale = Math.min(vpW / SCENE_W, vpH / SCENE_H);
 
-  // Centre the scaled scene inside the viewport
-  const tx = Math.max(0, (vpW - SCENE_W * scale) / 2);
-  const ty = Math.max(0, (vpH - SCENE_H * scale) / 2);
+  // Centre the scaled scene
+  const tx = Math.round((vpW - SCENE_W * scale) / 2);
+  const ty = Math.round((vpH - SCENE_H * scale) / 2);
 
   document.querySelectorAll('.scene').forEach(s => {
-    s.style.transform = `translate(${tx}px, ${ty}px) scale(${scale})`;
-    s.style.transformOrigin = 'top left';
-    // Store scale for drag math
+    s.style.transform        = `translate(${tx}px,${ty}px) scale(${scale})`;
+    s.style.transformOrigin  = 'top left';
     s.dataset.scale = scale;
-    s.dataset.tx = tx;
-    s.dataset.ty = ty;
+    s.dataset.tx    = tx;
+    s.dataset.ty    = ty;
   });
 }
 
 window.addEventListener('resize', fitScenes);
-// Also handle orientation change on mobile
-window.addEventListener('orientationchange', () => setTimeout(fitScenes, 120));
+window.addEventListener('orientationchange', () => setTimeout(fitScenes, 200));
 
 async function init(){
   await loadGameState();
