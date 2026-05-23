@@ -4001,36 +4001,38 @@ function fitScenes() {
     const scaleX = windowWidth / baseWidth;
     const scaleY = windowHeight / baseHeight;
     
-    // Беремо мінімальний коефіцієнт, щоб нічого не обрізалося за краї
+    // Беремо мінімальний коефіцієнт, щоб нічого не вилазило і не обрізалося
     const scale = Math.min(scaleX, scaleY);
 
-    // Застосовуємо CSS трансформацію
-    app.style.transform = `scale(${scale})`;
-    
-    // Робимо фіксацію позиціонування додатка по центру
+    // Ідеальне центрування + масштабування в один рядок
     app.style.position = 'absolute';
-    app.style.left = '50%';
     app.style.top = '50%';
+    app.style.left = '50%';
+    app.style.transform = `translate(-50%, -50%) scale(${scale})`;
+    
+    // Скидаємо марджини, які могли заважати
     app.style.margin = '0';
-    app.style.marginLeft = `-${(baseWidth / 2)}px`;
-    app.style.marginTop = `-${(baseHeight / 2)}px`;
   } else {
     // Для великих десктопних екранів повертаємо стандартний вигляд
-    app.style.transform = 'none';
     app.style.position = 'relative';
-    app.style.left = 'auto';
     app.style.top = 'auto';
+    app.style.left = 'auto';
+    app.style.transform = 'none';
     app.style.margin = '0';
   }
 }
 
-// Запуск функції при завантаженні та зміні розмірів екрану
+// Переконаймося, що події підв'язані правильно
+window.removeEventListener('resize', fitScenes);
 window.addEventListener('resize', fitScenes);
+
+window.removeEventListener('orientationchange', fitScenes);
 window.addEventListener('orientationchange', () => {
   setTimeout(fitScenes, 200);
 });
-document.addEventListener('DOMContentLoaded', fitScenes);
-window.addEventListener('load', fitScenes);
+
+// Запуск при завантаженні сторінки
+fitScenes();
 </script>
 </body>
 </html>
