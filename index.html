@@ -374,7 +374,7 @@ select.ci{cursor:pointer}
   overflow:hidden;
 }
 
-/* ── ≤760px: app fills 100% of viewport ── */
+/* ── ≤760px: Оновлений блок для мобільних ── */
 @media (max-width:760px){
   body{
     padding:0;
@@ -382,15 +382,13 @@ select.ci{cursor:pointer}
     justify-content:stretch;
   }
   #app{
-    width:100vw !important;
-    height:100dvh !important;
-    max-width:100vw !important;
-    max-height:100dvh !important;
+    /* Дозволяємо JavaScript повністю контролювати позиціонування та розмір */
+    position: absolute !important;
     border-radius:0 !important;
     box-shadow:none !important;
   }
 }
-
+  
 /* ── ≤600px: compact top/bottom bars ── */
 @media (max-width:600px){
   #top-bar{padding:0 6px;gap:3px}
@@ -3987,52 +3985,49 @@ function fitScenes() {
   const app = document.getElementById('app');
   if (!app) return;
 
-  // Отримуємо поточні розміри вікна браузера
   const windowWidth = window.innerWidth;
   const windowHeight = window.innerHeight;
 
-  // Базові (десктопні) розміри вашої робочої області
   const baseWidth = 720;
   const baseHeight = 600;
 
-  // Перевіряємо, чи ми на мобільному/малому екрані
   if (windowWidth <= 760 || windowHeight <= 650) {
-    // Рахуємо коефіцієнт масштабування по ширині та висоті
-    const scaleX = windowWidth / baseWidth;
-    const scaleY = windowHeight / baseHeight;
+    // Масштабуємо по ширині, щоб гра була великою на телефоні
+    let scale = windowWidth / baseWidth;
     
-    // Беремо мінімальний коефіцієнт, щоб нічого не вилазило і не обрізалося
-    const scale = Math.min(scaleX, scaleY);
+    // Якщо при такій ширині додаток починає обрізатися знизу, зменшуємо під висоту екрана
+    if (baseHeight * scale > windowHeight) {
+      scale = windowHeight / baseHeight;
+    }
 
-    // Ідеальне центрування + масштабування в один рядок
+    // Розрахунок точного зміщення для центрування
+    const leftOffset = (windowWidth - baseWidth * scale) / 2;
+    const topOffset = (windowHeight - baseHeight * scale) / 2;
+
     app.style.position = 'absolute';
-    app.style.top = '50%';
-    app.style.left = '50%';
-    app.style.transform = `translate(-50%, -50%) scale(${scale})`;
-    
-    // Скидаємо марджини, які могли заважати
+    app.style.left = `${leftOffset}px`;
+    app.style.top = `${topOffset}px`;
+    app.style.transform = `scale(${scale})`;
     app.style.margin = '0';
   } else {
-    // Для великих десктопних екранів повертаємо стандартний вигляд
+    // Стандартний десктопний режим
     app.style.position = 'relative';
-    app.style.top = 'auto';
     app.style.left = 'auto';
+    app.style.top = 'auto';
     app.style.transform = 'none';
     app.style.margin = '0';
   }
 }
 
-// Переконаймося, що події підв'язані правильно
+// Слухачі подій для миттєвого реагування на поворот екрана
 window.removeEventListener('resize', fitScenes);
 window.addEventListener('resize', fitScenes);
-
 window.removeEventListener('orientationchange', fitScenes);
 window.addEventListener('orientationchange', () => {
-  setTimeout(fitScenes, 200);
+  setTimeout(fitScenes, 150);
 });
 
-// Запуск при завантаженні сторінки
-fitScenes();
+fitScenes();;
 </script>
 </body>
 </html>
