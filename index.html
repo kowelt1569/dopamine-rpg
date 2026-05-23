@@ -98,13 +98,6 @@ body{
 /* Bathroom objects must appear ABOVE the scene background */
 .bath-obj{z-index:6!important}
 
-/* ===== SCENE VIEWPORT (wraps all scenes, sits between top-bar and bottom-nav) ===== */
-#scene-viewport{
-  position:absolute;
-  top:42px;left:0;right:0;bottom:54px;
-  overflow:hidden;
-}
-
 /* ===== TOP BAR ===== */
 #top-bar{position:absolute;top:0;left:0;right:0;height:42px;background:rgba(255,248,240,0.92);border-bottom:2px solid var(--peach);display:flex;align-items:center;justify-content:space-between;padding:0 12px;z-index:30;backdrop-filter:blur(4px)}
 .top-stat{display:flex;align-items:center;gap:5px;background:var(--peach);border-radius:20px;padding:3px 10px;font-size:12px;font-weight:700;color:var(--accent)}
@@ -372,6 +365,8 @@ select.ci{cursor:pointer}
   position:absolute;
   top:42px; left:0; right:0; bottom:54px;
   overflow:hidden;
+  /* Fallback bg visible when scaled scene doesn't fill full height */
+  background: var(--wall);
 }
 
 /* ── ≤760px: app fills 100% of viewport ── */
@@ -403,9 +398,17 @@ select.ci{cursor:pointer}
   #edit-hint{z-index:40;font-size:9px}
 }
 
+/* ── ≤480px: hide mascot label to free up top bar space ── */
+@media (max-width:480px){
+  #mascot-name-display{display:none!important}
+  .top-stat{font-size:8px;padding:2px 5px;gap:3px}
+  .loc-tab{font-size:12px;padding:3px 5px}
+  #top-bar > div:first-child{gap:3px}
+}
+
 /* ── ≤400px: very small phones ── */
 @media (max-width:400px){
-  .top-stat{font-size:8px;padding:2px 4px}
+  .top-stat{font-size:7px;padding:2px 4px}
   .loc-tab{font-size:11px;padding:2px 3px}
   .nav-btn{font-size:6px}
   .nav-btn i{font-size:13px}
@@ -3604,8 +3607,11 @@ const OBJ_STATE={};
 
 function appRect(){return $('app').getBoundingClientRect();}
 
-// Scale is always 1 — scenes fill viewport natively, no CSS transform
-function sceneScale(){ return 1; }
+// Scale is read from the active scene's dataset (set by fitScenes)
+function sceneScale() {
+  const s = document.querySelector('.scene.active');
+  return s ? (parseFloat(s.dataset.scale) || 1) : 1;
+}
 function getSceneTx(){ return 0; }
 function getSceneTy(){ return 0; }
 
@@ -3773,9 +3779,10 @@ function startDrag(el,cx,cy){
   applyState(el,OBJ_STATE[el.id]);
   const vp  = document.getElementById('scene-viewport');
   const vpR = vp ? vp.getBoundingClientRect() : {left:0,top:0};
-  // scene scale is always 1 now (no transform)
-  const sx = cx - vpR.left;
-  const sy = cy - vpR.top;
+  const sc  = sceneScale();
+  // Convert from viewport screen-space to scene logical-space
+  const sx = (cx - vpR.left) / sc;
+  const sy = (cy - vpR.top)  / sc;
   eOX = sx - OBJ_STATE[el.id].x;
   eOY = sy - OBJ_STATE[el.id].y;
   el.style.zIndex = '50';
@@ -3786,8 +3793,10 @@ function doDrag(cx,cy){
   if(!eDrag) return;
   const vp  = document.getElementById('scene-viewport');
   const vpR = vp ? vp.getBoundingClientRect() : {left:0,top:0};
-  const sx = cx - vpR.left;
-  const sy = cy - vpR.top;
+  const sc  = sceneScale();
+  // Convert from viewport screen-space to scene logical-space
+  const sx = (cx - vpR.left) / sc;
+  const sy = (cy - vpR.top)  / sc;
   const scene = eDrag.closest('.scene') || document.querySelector('.scene.active');
   const sw = scene ? scene.offsetWidth  : (vp ? vp.offsetWidth  : SCENE_W);
   const sh = scene ? scene.offsetHeight : (vp ? vp.offsetHeight : SCENE_H);
@@ -3905,16 +3914,37 @@ function fitScenes() {
   vp.style.bottom   = BOT_NAV + 'px';
   vp.style.overflow = 'hidden';
 
-  // Scenes fill viewport via inset:0 — no transform needed
-  // Store actual px dims in dataset for drag calculations
   const vpW = vp.offsetWidth  || app.offsetWidth;
   const vpH = vp.offsetHeight || Math.max(app.offsetHeight - TOP_BAR - BOT_NAV, 100);
 
+  // On screens narrower than 720 px we scale the scene down to fit the width.
+  // The scene is authored at 720×560, so we compute how much to shrink it.
+  const isMobile = vpW < 720;
+  const scale = isMobile ? vpW / 720 : 1;
+
   document.querySelectorAll('.scene').forEach(s => {
-    // No transform — scene fills naturally
-    s.style.transform = 'none';
-    // Store real dims for drag clamping
-    s.dataset.scale = 1;
+    if (isMobile) {
+      // Override inset:0 — fix left/top and let width/height + scale do the rest
+      s.style.top    = '0';
+      s.style.left   = '0';
+      s.style.right  = 'auto';
+      s.style.bottom = 'auto';
+      s.style.width  = '720px';
+      s.style.height = '560px';
+      s.style.transform       = `scale(${scale})`;
+      s.style.transformOrigin = 'top left';
+    } else {
+      // Desktop — fill viewport naturally (inset:0 behaviour)
+      s.style.top    = '0';
+      s.style.left   = '0';
+      s.style.right  = '0';
+      s.style.bottom = '0';
+      s.style.width  = '';
+      s.style.height = '';
+      s.style.transform       = 'none';
+      s.style.transformOrigin = '';
+    }
+    s.dataset.scale = scale;
     s.dataset.tx    = 0;
     s.dataset.ty    = 0;
     s.dataset.vpW   = vpW;
