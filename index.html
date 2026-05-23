@@ -62,6 +62,15 @@ body{
 }
 
 
+/* ===== SCENE INNER — scaled content wrapper (720×560 reference) ===== */
+.scene-inner{
+  position:absolute;
+  top:0;left:0;
+  width:720px;
+  height:560px;
+  transform-origin:top left;
+}
+
 /* ===== SCENES — fill the viewport between bars ===== */
 .scene{
   position:absolute;
@@ -459,6 +468,7 @@ select.ci{cursor:pointer}
   <!-- SCENE: BEDROOM                                        -->
   <!-- ===================================================== -->
   <div class="scene active" id="scene-bedroom">
+<div class="scene-inner">
 
     <!-- Window -->
     <div id="window-obj" style="top:9%;left:50%;transform:translateX(-50%)">
@@ -716,12 +726,14 @@ select.ci{cursor:pointer}
       </svg>
     </div>
 
+</div><!-- /scene-inner -->
   </div><!-- /scene-bedroom -->
 
   <!-- ===================================================== -->
   <!-- SCENE: YARD                                           -->
   <!-- ===================================================== -->
   <div class="scene" id="scene-yard">
+<div class="scene-inner">
     <!-- Sky gradient changes with time via JS -->
     <div id="yard-sky" style="position:absolute;inset:0;z-index:0;background:#87CEEB;transition:background 3s"></div>
 
@@ -830,12 +842,14 @@ select.ci{cursor:pointer}
     <style>@keyframes flagWave{from{transform:skewY(0deg)}to{transform:skewY(-6deg)}}</style>
 
     <!-- Mascot clone for yard (hidden, mascot moves via JS) -->
+</div><!-- /scene-inner -->
   </div><!-- /scene-yard -->
 
   <!-- ===================================================== -->
   <!-- SCENE: KITCHEN                                        -->
   <!-- ===================================================== -->
   <div class="scene" id="scene-kitchen">
+<div class="scene-inner">
     <!-- Wall band (lighter top, gradient handles rest) -->
     <div style="position:absolute;top:42px;left:0;right:0;bottom:14%;background:transparent;z-index:0;pointer-events:none"></div>
 
@@ -903,12 +917,14 @@ select.ci{cursor:pointer}
       <div id="water-display" style="font-size:10px;font-weight:800;color:#4A9AD4;margin-top:2px">0/6 💧</div>
       <div style="background:rgba(127,179,204,0.2);border-radius:4px;height:4px;width:44px;overflow:hidden;margin-top:2px"><div id="water-bar" style="height:100%;background:#4A9AD4;border-radius:4px;width:0%;transition:width 0.4s"></div></div>
     </div>
+</div><!-- /scene-inner -->
   </div><!-- /scene-kitchen -->
 
   <!-- ===================================================== -->
   <!-- SCENE: GROCERY SHOP                                   -->
   <!-- ===================================================== -->
   <div class="scene" id="scene-shop">
+<div class="scene-inner">
     <!-- Shop background handled by CSS gradient -->
     <div style="position:absolute;top:42px;left:0;right:0;bottom:14%;background:transparent;z-index:0;pointer-events:none"></div>
 
@@ -1030,12 +1046,14 @@ select.ci{cursor:pointer}
     <div style="position:absolute;top:8%;left:10px;z-index:10">
       <button class="cb sm" onclick="goScene('bedroom')">← Додому</button>
     </div>
+</div><!-- /scene-inner -->
   </div><!-- /scene-shop -->
 
   <!-- ===================================================== -->
   <!-- SCENE: BATHROOM                                       -->
   <!-- ===================================================== -->
   <div class="scene" id="scene-bathroom">
+<div class="scene-inner">
     <!-- Bathroom background handled by CSS gradient -->
     <div style="position:absolute;top:42px;left:0;right:0;bottom:14%;background:transparent;z-index:0;pointer-events:none"></div>
 
@@ -1138,12 +1156,14 @@ select.ci{cursor:pointer}
     <div style="position:absolute;top:8%;left:10px;z-index:10">
       <button class="cb sm" onclick="goScene('bedroom')">← Додому</button>
     </div>
+</div><!-- /scene-inner -->
   </div><!-- /scene-bathroom -->
 
   <!-- ===================================================== -->
   <!-- SCENE: WORK                                           -->
   <!-- ===================================================== -->
   <div class="scene" id="scene-work">
+<div class="scene-inner">
 
     <!-- Work window -->
     <div id="work-window" style="position:absolute;top:11%;left:50%;transform:translateX(-50%);width:130px;height:90px;border:4px solid #9A8A6A;border-radius:6px;background:#B8D8F0;z-index:5;overflow:hidden">
@@ -1270,6 +1290,7 @@ select.ci{cursor:pointer}
     <div style="position:absolute;top:8%;left:10px;z-index:10">
       <button class="cb sm" onclick="goScene('bedroom')">← Додому</button>
     </div>
+</div><!-- /scene-inner -->
   </div><!-- /scene-work -->
 
   </div><!-- /scene-viewport -->
@@ -3621,8 +3642,9 @@ function captureState(el){
   // Find the scene containing this element
   const scene=el.closest('.scene')||document.querySelector('.scene.active');
   if(scene){
-    // Use the scene's own bounding rect as the coordinate origin
-    const sr=scene.getBoundingClientRect();
+    // Use scene-inner as coordinate origin (it's the scaled 720×560 reference)
+    const inner=scene.querySelector('.scene-inner')||scene;
+    const sr=inner.getBoundingClientRect();
     const r=el.getBoundingClientRect();
     // Convert screen-space to scene-space (pre-scale)
     OBJ_STATE[el.id]={x:(r.left-sr.left)/sc,y:(r.top-sr.top)/sc,rot:0,sx:1,sy:1};
@@ -3798,8 +3820,10 @@ function doDrag(cx,cy){
   const sx = (cx - vpR.left) / sc;
   const sy = (cy - vpR.top)  / sc;
   const scene = eDrag.closest('.scene') || document.querySelector('.scene.active');
-  const sw = scene ? scene.offsetWidth  : (vp ? vp.offsetWidth  : SCENE_W);
-  const sh = scene ? scene.offsetHeight : (vp ? vp.offsetHeight : SCENE_H);
+  const inner = scene ? scene.querySelector('.scene-inner') : null;
+  // Use scene-inner (720×560) dimensions for clamping bounds
+  const sw = inner ? inner.offsetWidth  : SCENE_W;
+  const sh = inner ? inner.offsetHeight : SCENE_H;
   const ew = eDrag.offsetWidth  || 10;
   const eh = eDrag.offsetHeight || 10;
   const nx = Math.max(0, Math.min(sx - eOX, sw - ew));
@@ -3917,38 +3941,24 @@ function fitScenes() {
   const vpW = vp.offsetWidth  || app.offsetWidth;
   const vpH = vp.offsetHeight || Math.max(app.offsetHeight - TOP_BAR - BOT_NAV, 100);
 
-  // On screens narrower than 720 px we scale the scene down to fit the width.
-  // The scene is authored at 720×560, so we compute how much to shrink it.
-  const isMobile = vpW < 720;
-  const scale = isMobile ? vpW / 720 : 1;
+  // Scale the content wrapper to fit the viewport width.
+  // The .scene background fills the full viewport (inset:0),
+  // while .scene-inner (720×560) is scaled so objects stay proportional.
+  const scale = vpW < 720 ? vpW / 720 : 1;
 
+  // Keep .scene filling the full viewport (no change to inset:0)
   document.querySelectorAll('.scene').forEach(s => {
-    if (isMobile) {
-      // Override inset:0 — fix left/top and let width/height + scale do the rest
-      s.style.top    = '0';
-      s.style.left   = '0';
-      s.style.right  = 'auto';
-      s.style.bottom = 'auto';
-      s.style.width  = '720px';
-      s.style.height = '560px';
-      s.style.transform       = `scale(${scale})`;
-      s.style.transformOrigin = 'top left';
-    } else {
-      // Desktop — fill viewport naturally (inset:0 behaviour)
-      s.style.top    = '0';
-      s.style.left   = '0';
-      s.style.right  = '0';
-      s.style.bottom = '0';
-      s.style.width  = '';
-      s.style.height = '';
-      s.style.transform       = 'none';
-      s.style.transformOrigin = '';
-    }
     s.dataset.scale = scale;
     s.dataset.tx    = 0;
     s.dataset.ty    = 0;
     s.dataset.vpW   = vpW;
     s.dataset.vpH   = vpH;
+  });
+
+  // Scale only the inner content wrapper
+  document.querySelectorAll('.scene-inner').forEach(inner => {
+    inner.style.transform       = scale < 1 ? `scale(${scale})` : 'none';
+    inner.style.transformOrigin = 'top left';
   });
 }
 
