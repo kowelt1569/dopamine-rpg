@@ -3992,42 +3992,54 @@ function fitScenes() {
   const baseHeight = 600;
 
   if (windowWidth <= 760 || windowHeight <= 650) {
-    // Масштабуємо по ширині, щоб гра була великою на телефоні
+    // Масштабуємо строго по ширині екрана смартфона
     let scale = windowWidth / baseWidth;
     
-    // Якщо при такій ширині додаток починає обрізатися знизу, зменшуємо під висоту екрана
+    // Якщо при такій ширині додаток задовгий для екрана, зменшуємо його під висоту
     if (baseHeight * scale > windowHeight) {
       scale = windowHeight / baseHeight;
     }
 
-    // Розрахунок точного зміщення для центрування
+    // Рахуємо чисті відступи, щоб застосунок був ІДЕАЛЬНО по центру екрана
     const leftOffset = (windowWidth - baseWidth * scale) / 2;
     const topOffset = (windowHeight - baseHeight * scale) / 2;
 
+    // Скидаємо будь-які старі стилі, які могли заважати в CSS
+    app.style.setProperty('width', '720px', 'important');
+    app.style.setProperty('height', '600px', 'important');
+    app.style.setProperty('max-width', 'none', 'important');
+    app.style.setProperty('max-height', 'none', 'important');
+
+    // Повне центрування та масштабування
     app.style.position = 'absolute';
     app.style.left = `${leftOffset}px`;
     app.style.top = `${topOffset}px`;
     app.style.transform = `scale(${scale})`;
+    app.style.transformOrigin = 'left top';
     app.style.margin = '0';
   } else {
-    // Стандартний десктопний режим
+    // Повернення до стандартного десктопного вигляду (усі обмеження знімаються)
     app.style.position = 'relative';
     app.style.left = 'auto';
     app.style.top = 'auto';
     app.style.transform = 'none';
     app.style.margin = '0';
+    app.style.width = '720px';
+    app.style.height = '600px';
+    app.style.maxWidth = '';
+    app.style.maxHeight = '';
   }
 }
 
-// Слухачі подій для миттєвого реагування на поворот екрана
+// Запобігаємо дублюванню слухачів подій браузера
 window.removeEventListener('resize', fitScenes);
 window.addEventListener('resize', fitScenes);
+
 window.removeEventListener('orientationchange', fitScenes);
 window.addEventListener('orientationchange', () => {
   setTimeout(fitScenes, 150);
 });
-
-fitScenes();;
+  
 </script>
 </body>
 </html>
