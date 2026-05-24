@@ -1085,48 +1085,6 @@ select.ci{cursor:pointer}
     </div>
 
     <!-- Clothes rack (fashion inventory) -->
-    <div id="work-clothes-rack" data-interior-label="Вішалка з одягом" style="position:absolute;bottom:14%;left:20px;width:80px;height:140px;z-index:5;cursor:pointer" onclick="openModal('workInventory','fashion')">
-      <!-- Rack pole -->
-      <div style="position:absolute;top:10px;left:38px;width:4px;height:120px;background:#8B6354;border-radius:2px"></div>
-      <!-- Horizontal bar -->
-      <div style="position:absolute;top:10px;left:5px;right:5px;height:6px;background:#A07848;border-radius:3px"></div>
-      <!-- Feet -->
-      <div style="position:absolute;bottom:0;left:0;right:0;height:8px;background:#8B6354;border-radius:4px"></div>
-      <!-- Hangers with clothes -->
-      <div style="position:absolute;top:20px;left:8px;width:20px;height:45px;background:#E85A7A;border-radius:4px 4px 6px 6px;opacity:0.9">
-        <div style="position:absolute;top:-8px;left:50%;transform:translateX(-50%);width:12px;height:8px;border:2px solid #A07848;border-bottom:none;border-radius:6px 6px 0 0"></div>
-      </div>
-      <div style="position:absolute;top:20px;left:30px;width:18px;height:40px;background:#7FB3CC;border-radius:4px 4px 6px 6px;opacity:0.9">
-        <div style="position:absolute;top:-8px;left:50%;transform:translateX(-50%);width:12px;height:8px;border:2px solid #A07848;border-bottom:none;border-radius:6px 6px 0 0"></div>
-      </div>
-      <div style="position:absolute;top:22px;left:52px;width:20px;height:42px;background:#B2DFD0;border-radius:4px 4px 6px 6px;opacity:0.9">
-        <div style="position:absolute;top:-8px;left:50%;transform:translateX(-50%);width:12px;height:8px;border:2px solid #A07848;border-bottom:none;border-radius:6px 6px 0 0"></div>
-      </div>
-      <div id="work-clothes-rack-lbl" style="position:absolute;bottom:-18px;left:0;right:0;font-size:7px;font-weight:700;color:var(--text-med);text-align:center;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">Вішалка з одягом</div>
-    </div>
-
-    <!-- Office shelving unit -->
-    <div id="work-office-shelf" data-interior-label="Офісна полиця" style="position:absolute;top:11%;right:20px;width:100px;height:180px;background:#E0D8CC;border:2px solid #B0A888;border-radius:4px;z-index:5;cursor:pointer" onclick="openModal('workInventory','office')">
-      <!-- Shelves -->
-      <div style="position:absolute;top:40px;left:0;right:0;height:3px;background:#B0A888"></div>
-      <div style="position:absolute;top:90px;left:0;right:0;height:3px;background:#B0A888"></div>
-      <div style="position:absolute;top:140px;left:0;right:0;height:3px;background:#B0A888"></div>
-      <!-- Items - binders -->
-      <div style="position:absolute;top:10px;left:5px;width:14px;height:30px;background:#E85A7A;border-radius:2px;border:1px solid #C04060"></div>
-      <div style="position:absolute;top:10px;left:22px;width:14px;height:30px;background:#7FB3CC;border-radius:2px;border:1px solid #5090A8"></div>
-      <div style="position:absolute;top:10px;left:39px;width:14px;height:30px;background:#B2DFD0;border-radius:2px;border:1px solid #80B0A0"></div>
-      <div style="position:absolute;top:10px;left:56px;width:14px;height:30px;background:#FFD166;border-radius:2px;border:1px solid #C0A040"></div>
-      <div style="position:absolute;top:10px;left:73px;width:14px;height:30px;background:#D4A0C0;border-radius:2px;border:1px solid #A07090"></div>
-      <!-- Items row 2 - books/boxes -->
-      <div style="position:absolute;top:50px;left:5px;width:30px;height:36px;background:#E8D8C0;border:1px solid #C0A880;border-radius:2px"></div>
-      <div style="position:absolute;top:50px;left:40px;width:22px;height:36px;background:#7BBE8A;border-radius:2px;border:1px solid #5A9A6A"></div>
-      <div style="position:absolute;top:50px;left:66px;width:24px;height:36px;background:#F4A261;border-radius:2px;border:1px solid #D08040"></div>
-      <!-- Items row 3 - small boxes -->
-      <div style="position:absolute;top:100px;left:5px;width:40px;height:35px;background:#B0C8E0;border-radius:3px;border:1px solid #8090A8"></div>
-      <div style="position:absolute;top:100px;left:50px;width:40px;height:35px;background:#F0D8B8;border-radius:3px;border:1px solid #C0A070"></div>
-      <div id="work-office-shelf-lbl" style="position:absolute;bottom:4px;left:0;right:0;font-size:7px;font-weight:700;color:#7A6A5A;text-align:center">Офісна полиця</div>
-    </div>
-
     <!-- Whiteboard -->
     <div id="work-whiteboard" data-interior-label="Дошка" style="position:absolute;top:11%;left:115px;width:150px;height:100px;background:#F8F8F8;border:4px solid #9A8A6A;border-radius:4px;z-index:5;cursor:pointer" onclick="openModal('drawingBoard')">
       <!-- Drawing preview renders here as an img -->
@@ -1172,8 +1130,6 @@ select.ci{cursor:pointer}
 
     <!-- Tooltips -->
     <div class="tip" id="tip-workdesk" style="bottom:186px;left:50%;transform:translateX(-50%)">💻 Завдання по роботі</div>
-    <div class="tip" id="tip-workrack" style="bottom:236px;left:10px">👗 Інвентар магазину</div>
-    <div class="tip" id="tip-workshelf" style="top:11%;right:14px">📁 Офісний інвентар</div>
 
     <!-- Back button -->
     <div style="position:absolute;top:8%;left:10px;z-index:10">
@@ -2245,21 +2201,47 @@ ${(S.stepsHistory||[]).slice().reverse().map(h=>`<div style="display:flex;justif
 }
 function addSteps(){
   const inp=$('steps-inp');if(!inp||!inp.value)return;
-  S.steps+=parseInt(inp.value)||0;
+  const n=parseInt(inp.value)||0;
   inp.value='';
-  const prev=S.steps-parseInt(inp.value||0);
-  if(prev<S.stepsGoal&&S.steps>=S.stepsGoal){spawnFireworks();showNotif('🎉 10 000 кроків! Феєрверк!','var(--teal)');}
+  const prevSteps=S.steps;
+  S.steps+=n;
+  S.stepsDate=today();
+  if(prevSteps<S.stepsGoal&&S.steps>=S.stepsGoal){spawnFireworks();showNotif('🎉 Ціль кроків досягнута! Феєрверк!','var(--teal)');}
   updateStepsWidget();saveGameState();
   renderStepsModal($('modal-content'));
 }
-function addStepsN(n){S.steps+=n;if(S.steps>=S.stepsGoal&&S.steps-n<S.stepsGoal){spawnFireworks();showNotif('🎉 10 000 кроків! Феєрверк!','var(--teal)');}updateStepsWidget();saveGameState();renderStepsModal($('modal-content'));}
+function addStepsN(n){
+  const prev=S.steps;
+  S.steps+=n;S.stepsDate=today();
+  if(prev<S.stepsGoal&&S.steps>=S.stepsGoal){spawnFireworks();showNotif('🎉 Ціль кроків досягнута!','var(--teal)');}
+  updateStepsWidget();saveGameState();renderStepsModal($('modal-content'));
+}
 function setStepsGoal(){const inp=$('steps-goal-inp');if(!inp)return;S.stepsGoal=parseInt(inp.value)||10000;updateStepsWidget();saveGameState();renderStepsModal($('modal-content'));}
 function saveStepsHistory(){
   const si=$('steps-total-inp'),di=$('steps-date-inp');
   if(!si||!si.value)return;
   if(!S.stepsHistory)S.stepsHistory=[];
-  S.stepsHistory.push({date:di.value||today(),steps:parseInt(si.value)||0});
-  S.steps=0;updateStepsWidget();saveGameState();renderStepsModal($('modal-content'));
+  const d=di.value||today();
+  // Remove existing entry for same date
+  S.stepsHistory=S.stepsHistory.filter(h=>h.date!==d);
+  S.stepsHistory.push({date:d,steps:parseInt(si.value)||0});
+  if(d===today()){S.steps=0;S.stepsDate=today();}
+  updateStepsWidget();saveGameState();renderStepsModal($('modal-content'));
+}
+function checkStepsDayReset(){
+  const todayStr=today();
+  if(S.stepsDate&&S.stepsDate!==todayStr){
+    // New day — archive yesterday and reset
+    if(!S.stepsHistory)S.stepsHistory=[];
+    if(S.steps>0){
+      S.stepsHistory=S.stepsHistory.filter(h=>h.date!==S.stepsDate);
+      S.stepsHistory.push({date:S.stepsDate,steps:S.steps});
+    }
+    S.steps=0;
+    S.stepsDate=todayStr;
+    updateStepsWidget();saveGameState();
+  }
+  if(!S.stepsDate)S.stepsDate=todayStr;
 }
 function updateStepsWidget(){
   const d=$('steps-display');const b=$('steps-bar');
@@ -2659,7 +2641,7 @@ function editInteriorLabel(elId){
 
 // Attach click-to-edit on interior label elements after load
 function initInteriorLabels(){
-  const labelIds=['work-clothes-rack','work-office-shelf','work-whiteboard','work-plant'];
+  const labelIds=['work-whiteboard','work-plant'];
   labelIds.forEach(id=>{
     const lblEl=$(id+'-lbl');if(!lblEl)return;
     // Restore saved label
@@ -3635,7 +3617,7 @@ const DRAGGABLE_IDS=[
   'yard-tree1','yard-tree2','yard-bench',
   'shop-shelf1','shop-shelf2','shop-shelf3','shop-register',
   'bath-tub','bath-toilet','bath-sink','bath-mirror','bath-cabinet','bath-window',
-  'work-desk','work-clothes-rack','work-office-shelf','work-whiteboard','work-plant','work-window','work-task-board'
+  'work-desk','work-whiteboard','work-plant','work-window','work-task-board'
 ];
 const OBJ_STATE={};
 
@@ -3909,7 +3891,7 @@ async function saveGameState(){
     inventory:S.inventory,equippedItems:S.equippedItems,
     shopList:S.shopList,pomWork:S.pomWork,pomBreak:S.pomBreak,
     nextTaskId:S.nextTaskId,nextNoteId:S.nextNoteId,
-    steps:S.steps,stepsGoal:S.stepsGoal,stepsHistory:S.stepsHistory,
+    steps:S.steps,stepsGoal:S.stepsGoal,stepsHistory:S.stepsHistory,stepsDate:S.stepsDate||today(),
     waterGlasses:S.waterGlasses,waterGoal:S.waterGoal,waterMl:S.waterMl,waterHistory:S.waterHistory,
     expenses:S.expenses,meals:S.meals,nextMealId:S.nextMealId,
     interiorLabels:S.interiorLabels,workNotes:S.workNotes,whiteboardDrawing:S.whiteboardDrawing||null,
@@ -3927,6 +3909,8 @@ async function loadGameState(){
   if(S.steps===undefined)S.steps=0;
   if(S.stepsGoal===undefined)S.stepsGoal=10000;
   if(S.stepsHistory===undefined)S.stepsHistory=[];
+  if(!S.stepsDate)S.stepsDate=today();
+  checkStepsDayReset();
   if(S.waterGlasses===undefined)S.waterGlasses=0;
   if(S.waterGoal===undefined)S.waterGoal=6;
   if(S.waterMl===undefined)S.waterMl=250;
@@ -3988,6 +3972,8 @@ async function init(){
     }),150);
   }
   setTimeout(()=>{updateStepsWidget();updateWaterWidget();initInteriorLabels();restoreInteriorSkins();fitScenes();updateWhiteboardPreview();},300);
+  // Check for day rollover every minute
+  setInterval(checkStepsDayReset, 60000);
 }
 
 // Run fitScenes as soon as DOM is ready (before fonts/images finish)
